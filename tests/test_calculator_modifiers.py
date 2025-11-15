@@ -1,6 +1,6 @@
 """Tests for ModifierSystem."""
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
@@ -525,7 +525,7 @@ class TestModifierSystem:
                 conditions={"requires_attribute": "strength"},
             )
         )
-        context = {}  # No strength in context
+        context: dict[str, Any] = {}  # No strength in context
         result = modifier_system.calculate_stat("Life", 100.0, context)
         # With missing attribute, should default to 0.0 and no bonus
         assert result == 100.0
@@ -600,7 +600,7 @@ class TestModifierSystem:
                 },  # Uses "str" alias (covers line 139)
             )
         )
-        context = {"strength": 100.0, "requires_attribute": True}
+        context: dict[str, Any] = {"strength": 100.0, "requires_attribute": True}
         result = modifier_system.calculate_stat("LifePerStr", 100.0, context)
         # Original modifier: 1.0% increased, temp_mod: 1.0*100=100% increased
         # Result: 100 * (1 + (1.0 + 100)/100) = 201.0
@@ -621,7 +621,7 @@ class TestModifierSystem:
                 },  # Uses "dex" alias (covers line 141)
             )
         )
-        context = {"dexterity": 200.0, "requires_attribute": True}
+        context: dict[str, Any] = {"dexterity": 200.0, "requires_attribute": True}
         result = modifier_system.calculate_stat("EvasionPerDex", 100.0, context)
         # Original modifier: 0.5% increased, temp_mod: 0.5*200=100% increased
         # Result: 100 * (1 + (0.5 + 100)/100) = 200.5
@@ -642,7 +642,7 @@ class TestModifierSystem:
                 },  # Uses "int" alias (covers line 143)
             )
         )
-        context = {"intelligence": 300.0, "requires_attribute": True}
+        context: dict[str, Any] = {"intelligence": 300.0, "requires_attribute": True}
         result = modifier_system.calculate_stat("EnergyShieldPerInt", 100.0, context)
         # Original modifier: 0.2% increased, temp_mod: 0.2*300=60% increased
         # Result: 100 * (1 + (0.2 + 60)/100) = 160.2
@@ -664,7 +664,7 @@ class TestModifierSystem:
             )
         )
         # Test with zero attribute value
-        context_zero = {"strength": 0.0, "requires_attribute": True}
+        context_zero: dict[str, Any] = {"strength": 0.0, "requires_attribute": True}
         result_zero = modifier_system.calculate_stat(
             "LifePerStrength", 100.0, context_zero
         )
@@ -673,7 +673,10 @@ class TestModifierSystem:
         assert result_zero == pytest.approx(101.0, rel=1e-6)
 
         # Test with negative attribute value (edge case)
-        context_negative = {"strength": -10.0, "requires_attribute": True}
+        context_negative: dict[str, Any] = {
+            "strength": -10.0,
+            "requires_attribute": True,
+        }
         result_negative = modifier_system.calculate_stat(
             "LifePerStrength", 100.0, context_negative
         )

@@ -1,8 +1,5 @@
 from abc import ABC
 from dataclasses import asdict, dataclass
-from typing import Dict, List, Optional, Tuple, Union
-
-from dataslots import with_slots
 
 __all__ = ["Gem", "GrantedAbility", "SkillGroup", "Tree", "Keystones", "Item", "Set"]
 
@@ -19,7 +16,6 @@ class Ability(ABC):
     level: int
 
 
-@with_slots
 @dataclass
 class Gem(Ability):
     """Class that holds the data of an ability granted by a skill gem.
@@ -36,8 +32,19 @@ class Gem(Ability):
     quality: int
     support: bool
 
+    def __post_init__(self):
+        """Validate gem data after initialization."""
+        from pobapi.model_validators import (
+            ModelValidator,
+            validate_gem_level,
+            validate_gem_quality,
+        )
 
-@with_slots
+        ModelValidator.validate_not_empty(self.name, "name")
+        validate_gem_level(self.level, "level")
+        validate_gem_quality(self.quality, "quality")
+
+
 @dataclass
 class GrantedAbility(Ability):
     """Class that holds the data of an ability granted by an item.
@@ -51,11 +58,10 @@ class GrantedAbility(Ability):
     name: str
     enabled: bool
     level: int
-    quality: int = None
+    quality: int | None = None
     support: bool = False
 
 
-@with_slots
 @dataclass
 class SkillGroup:
     """Class that holds a (linked) socket group.
@@ -68,11 +74,10 @@ class SkillGroup:
 
     enabled: bool
     label: str
-    active: Optional[int]
-    abilities: List[Union[Gem, GrantedAbility]]
+    active: int | None
+    abilities: list[Gem | GrantedAbility]
 
 
-@with_slots
 @dataclass
 class Tree:
     """Class that holds a passive skill tree.
@@ -83,11 +88,10 @@ class Tree:
         {<passive skill tree jewel socket location> : <jewel set ID>}."""
 
     url: str
-    nodes: List[int]
-    sockets: Dict[int, int]
+    nodes: list[int]
+    sockets: dict[int, int]
 
 
-@with_slots
 @dataclass
 class Keystones:
     """Keystones(*args)
@@ -155,11 +159,10 @@ class Keystones:
                 yield k
 
 
-SocketGroup = Tuple[str]
-GroupOfSocketGroups = Tuple[SocketGroup]
+SocketGroup = tuple[str]
+GroupOfSocketGroups = tuple[SocketGroup]
 
 
-@with_slots
 @dataclass
 class Item:
     """Class that holds an item.
@@ -196,12 +199,30 @@ class Item:
     shaper: bool
     elder: bool
     crafted: bool
-    quality: Optional[int]
-    sockets: Optional[GroupOfSocketGroups]
+    quality: int | None
+    sockets: GroupOfSocketGroups | None
     level_req: int
     item_level: int
-    implicit: Optional[int]
+    implicit: int | None
     text: str
+
+    def __post_init__(self):
+        """Validate item data after initialization."""
+        from pobapi.model_validators import (
+            ModelValidator,
+            validate_item_level_req,
+            validate_rarity,
+        )
+
+        validate_rarity(self.rarity, "rarity")
+        ModelValidator.validate_not_empty(self.name, "name")
+        ModelValidator.validate_not_empty(self.base, "base")
+        validate_item_level_req(self.level_req, "level_req")
+        ModelValidator.validate_positive(self.item_level, "item_level")
+        if self.quality is not None:
+            ModelValidator.validate_range(
+                self.quality, min_value=0, max_value=30, field_name="quality"
+            )
 
     def __str__(self):
         text = ""
@@ -209,11 +230,11 @@ class Item:
         text += f"Name: {self.name}\n"
         text += f"Base: {self.base}\n"
         if self.shaper:
-            text += f"Shaper Item\n"
+            text += "Shaper Item\n"
         if self.elder:
-            text += f"Elder Item\n"
+            text += "Elder Item\n"
         if self.crafted:
-            text += f"Crafted Item\n"
+            text += "Crafted Item\n"
         if self.quality:
             text += f"Quality: {self.quality}\n"
         if self.sockets:
@@ -226,7 +247,6 @@ class Item:
         return text
 
 
-@with_slots
 @dataclass
 class Set:
     """Set(*args)
@@ -268,38 +288,38 @@ class Set:
     :param flask4: Flask bound to '4' by default.
     :param flask5: Flask bound to '5' by default."""
 
-    weapon1: Optional[int]
-    weapon1_as1: Optional[int]
-    weapon1_as2: Optional[int]
-    weapon1_swap: Optional[int]
-    weapon1_swap_as1: Optional[int]
-    weapon1_swap_as2: Optional[int]
-    weapon2: Optional[int]
-    weapon2_as1: Optional[int]
-    weapon2_as2: Optional[int]
-    weapon2_swap: Optional[int]
-    weapon2_swap_as1: Optional[int]
-    weapon2_swap_as2: Optional[int]
-    helmet: Optional[int]
-    helmet_as1: Optional[int]
-    helmet_as2: Optional[int]
-    body_armour: Optional[int]
-    body_armour_as1: Optional[int]
-    body_armour_as2: Optional[int]
-    gloves: Optional[int]
-    gloves_as1: Optional[int]
-    gloves_as2: Optional[int]
-    boots: Optional[int]
-    boots_as1: Optional[int]
-    boots_as2: Optional[int]
-    amulet: Optional[int]
-    ring1: Optional[int]
-    ring2: Optional[int]
-    belt: Optional[int]
-    belt_as1: Optional[int]
-    belt_as2: Optional[int]
-    flask1: Optional[int]
-    flask2: Optional[int]
-    flask3: Optional[int]
-    flask4: Optional[int]
-    flask5: Optional[int]
+    weapon1: int | None
+    weapon1_as1: int | None
+    weapon1_as2: int | None
+    weapon1_swap: int | None
+    weapon1_swap_as1: int | None
+    weapon1_swap_as2: int | None
+    weapon2: int | None
+    weapon2_as1: int | None
+    weapon2_as2: int | None
+    weapon2_swap: int | None
+    weapon2_swap_as1: int | None
+    weapon2_swap_as2: int | None
+    helmet: int | None
+    helmet_as1: int | None
+    helmet_as2: int | None
+    body_armour: int | None
+    body_armour_as1: int | None
+    body_armour_as2: int | None
+    gloves: int | None
+    gloves_as1: int | None
+    gloves_as2: int | None
+    boots: int | None
+    boots_as1: int | None
+    boots_as2: int | None
+    amulet: int | None
+    ring1: int | None
+    ring2: int | None
+    belt: int | None
+    belt_as1: int | None
+    belt_as2: int | None
+    flask1: int | None
+    flask2: int | None
+    flask3: int | None
+    flask4: int | None
+    flask5: int | None

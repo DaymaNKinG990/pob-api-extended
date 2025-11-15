@@ -208,6 +208,7 @@ class GameDataLoader:
         self._skill_gems: dict[str, SkillGem] = {}
         self._unique_items: dict[str, UniqueItem] = {}
         self.data_directory = data_directory
+        self._data_paths: list[str] = []  # For testing purposes
 
     def _find_data_file(self, filename: str) -> str | None:
         """Find data file in standard locations.

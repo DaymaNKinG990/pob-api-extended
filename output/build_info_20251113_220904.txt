@@ -1,0 +1,3692 @@
+
+================================================================================
+  Path of Building API Demo
+================================================================================
+
+Loading build from import code...
+Build loaded successfully!
+
+================================================================================
+  1. Basic Build Information
+================================================================================
+
+Class: Ranger
+Ascendancy: Deadeye
+Level: 97
+Bandit: None
+Second Weapon Set: False
+
+Notes:
+  Leveling guide: https://pobb.in/48gQClJF_Nyi
+
+  Warden is only for single target damage (T17 or ubers) I wouldn't play warden in t16 or t16.5 content.
+
+  fill out suffixes with resist, chaos is lowest priority.
+
+  Light radius setup is extremely good if it's cheap on league start, by far the best thing you can do until late t16s.
+
+  Flat on wand can be anything, lightning is best but doesn't matter in the early/mid game all that much.
+
+  Attributes: Can be a rough early. Str is that not that important, you can always lower the lvl of your shield charge/steelskin(or replace with immortal call). Just make sure you reach int/dex requirements.
+
+  ---Basic wand crafting---
+  1) Spam essence of wrath until t2 or better crit chance or attack speed.
+  Other options (and probably cheaper, but cost gold/dust).
+  Recomb flat lightning damage/t1 atk speed together (crit chance also works, but atk speed is better)
+  2) multimod and your done
+  Pretty effective wand for anywhere around 3-4d.
+
+  For starter wands, you can just use screaming essence on the new bases "cannot roll caster mods" You just want 1 high flat, attack speed and crit chance.
+
+  Necrotic armour: is just spamming dense fossils until desirable ES/evasion, 400+ is good for early and 500+ for endgame.
+
+  Ring uniques: Can use taming or death rush, both are good. Taming isn't that high value on wander because you already have so much inc damage.
+
+  Helmet: Fledgling is the best for the deadeye setup for map clearing, a rare blizzard crown is also quite strong if Fledgling is too expensive.
+
+  Shield: high % block and higher % spell dmg, the base doesn't matter that much. Can easily make this with recombs.
+
+  Rings: spam torment until desirable mods, fracture would help here (can get any fracture really, life, resist, attack speed)
+  Endgame GG ring would be multi essence on suffix (would need fracture t1 flat or fracture multi essence).
+
+  Gloves: Thunderfist is pretty euivalant to that of a 6l. If kinetic rain is good, than putting a 4l kinetic rain in your gloves and 6l KB will be the way to go.
+  Otherwise just use rare gloves with life/resist/attack speed. - Rage implicit is really important for damage, should be the 1st eldritch implicit you should go for on any item.
+
+  Amulet: Life/multi/flat damage is pretty good, you do want a str or str hybrid base to help fill your requirements.
+  For deadeye yoke of suffering is by far the best option - If you're warden, stick to a rare amulet.
+
+  Jewels: ilvl 68 for t2 or ilvl 83 for t1 mods - Needs to be "Searching eye"
+  Spam reforge attack until desired mods, can usually get 3 decent attack mods.
+
+================================================================================
+  2. Character Stats
+================================================================================
+
+
+Damage:
+  Average Damage: 927262.56223774
+  Bleed Dps: 411.10400151797
+  Poison Damage: 152.5672575
+  Poison Dps: 108.9766125
+  Total Dot: 0.0
+  Total Dps: 6723391.6772232
+  Total Dps With Ignite: 6723391.6772232
+  Total Dps With Poison: 6723446.9889262
+
+Speed & Cooldown:
+  Cast Speed: 7.250796
+  Effective Movement Speed Modifier: 2.4
+
+Critical:
+  Crit Chance: 96.8
+  Crit Multiplier: 5.05
+  Hit Chance: 100.0
+  Pre Effective Crit Chance: 96.8
+
+Attributes:
+  Dexterity: 258.0
+  Dexterity Required: 173.0
+  Intelligence: 152.0
+  Intelligence Required: 188.0
+  Strength: 117.0
+  Strength Required: 148.0
+
+Life:
+  Life: 3580.0
+  Life Increased: 100.0
+  Life Leech Rate Per Hit: 874.7924324
+  Life Unreserved: 3580.0
+  Life Unreserved Percent: 100.0
+
+Mana:
+  Mana: 747.0
+  Mana Cost: 37.0
+  Mana Increased: 8.0
+  Mana Leech Rate Per Hit: 190.98331506
+  Mana Unreserved: 115.0
+  Mana Unreserved Percent: 15.394912985274
+
+Energy Shield:
+  Energy Shield: 1413.0
+  Energy Shield Increased: 40.0
+  Energy Shield Leech Rate Per Hit: 192.52687374
+
+Defense:
+  Armour: 512.0
+  Armour Increased: 0.0
+  Attack Dodge Chance: 0.0
+  Evasion: 11946.0
+  Evasion Increased: 23.0
+  Melee Evade Chance: 64.0
+  Physical Damage Reduction: 9.0
+  Projectile Evade Chance: 64.0
+  Spell Dodge Chance: 0.0
+
+Resistances:
+  Chaos Resistance: -17.0
+  Chaos Resistance Over Cap: 0.0
+  Cold Resistance: 75.0
+  Cold Resistance Over Cap: 73.0
+  Fire Resistance: 75.0
+  Fire Resistance Over Cap: 73.0
+  Lightning Resistance: 75.0
+  Lightning Resistance Over Cap: 92.0
+
+Charges:
+  Endurance Charges: 0.0
+  Endurance Charges Maximum: 3.0
+  Frenzy Charges: 3.0
+  Frenzy Charges Maximum: 3.0
+  Power Charges: 4.0
+  Power Charges Maximum: 4.0
+
+Other:
+  Net Life Regen: -128.12
+  Net Mana Regen: 13.1
+
+================================================================================
+  3. Build Configuration
+================================================================================
+
+Character Level: 97
+
+General:
+  Detonate Dead Corpse Life: 16161
+  Enemy Level: 84
+  Enemy Physical Hit Damage: 1233.0
+  Resistance Penalty: -60
+
+
+================================================================================
+  4. Skill Groups
+================================================================================
+
+Active Skill Group:
+  Enabled: True
+  Label: (no label)
+  Main Active Skill Index: 1
+  Number of abilities: 5
+
+    Ability 1:
+      Name: Kinetic Blast
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+    Ability 2:
+      Name: Sacred Wisps
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+    Ability 3:
+      Name: Returning Projectiles
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+    Ability 4:
+      Name: Trinity
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+    Ability 5:
+      Name: Elemental Damage with Attacks
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+Number of skill groups: 49
+
+  Skill Group 1:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 5
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 2:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+  Skill Group 3:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Shield Charge
+        Enabled: True
+        Level: 10
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 4:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 5:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Kinetic Bolt
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Ballista Totem
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Added Cold Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Barrage Support
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 6:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+  Skill Group 7:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 8:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Assassin's Mark
+        Enabled: False
+        Level: 20
+        Quality: 20%
+        Support: False
+
+  Skill Group 9:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Blood Rage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Momentum
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Shield Charge
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 10:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 11:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 12:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+  Skill Group 13:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 14:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+  Skill Group 15:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 1
+
+      Ability 1:
+        Name: Blood Rage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+  Skill Group 16:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 17:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 18:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Flame Dash
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+  Skill Group 19:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 20:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+  Skill Group 21:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Blood Rage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Momentum
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Shield Charge
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 22:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 23:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 24:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+  Skill Group 25:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 26:
+    Enabled: True
+    Label: Kinetic Rain
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 2:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 27:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+  Skill Group 28:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 29:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Shield Charge
+        Enabled: True
+        Level: 15
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 30:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+  Skill Group 31:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 32:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+  Skill Group 33:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Blood Rage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Momentum
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Shield Charge
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 34:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 35:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 36:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+  Skill Group 37:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 38:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+  Skill Group 39:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Blood Rage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Momentum
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Shield Charge
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 40:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 41:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 42:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+  Skill Group 43:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 6
+
+      Ability 1:
+        Name: Kinetic Blast
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Elemental Damage with Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 3:
+        Name: Sacred Wisps
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 4:
+        Name: Returning Projectiles
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 5:
+        Name: Trinity
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+      Ability 6:
+        Name: Increased Critical Damage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 44:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Sniper's Mark
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Lifetap
+        Enabled: True
+        Level: 19
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Mark On Hit
+        Enabled: True
+        Level: 18
+        Quality: 20%
+        Support: True
+
+  Skill Group 45:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Blood Rage
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Momentum
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: True
+
+      Ability 3:
+        Name: Shield Charge
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: Faster Attacks
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 46:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Spellslinger
+        Enabled: True
+        Level: 20
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Hydrosphere
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Tornado
+        Enabled: True
+        Level: 1
+        Quality: 0%
+        Support: False
+
+  Skill Group 47:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 4
+
+      Ability 1:
+        Name: Automation
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 2:
+        Name: Steelskin
+        Enabled: True
+        Level: 19
+        Quality: 20%
+        Support: False
+
+      Ability 3:
+        Name: Sigil of Power
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+      Ability 4:
+        Name: More Duration
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: True
+
+  Skill Group 48:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 3
+
+      Ability 1:
+        Name: Precision
+        Enabled: True
+        Level: 11
+        Quality: 0%
+        Support: False
+
+      Ability 2:
+        Name: Wrath
+        Enabled: True
+        Level: 21
+        Quality: 0%
+        Support: False
+
+      Ability 3:
+        Name: Frostblink
+        Enabled: True
+        Level: 20
+        Quality: 20%
+        Support: False
+
+  Skill Group 49:
+    Enabled: True
+    Label:
+    Main Active Skill Index: 1
+    Number of abilities: 1
+
+      Ability 1:
+        Name: Unbound Avatar
+        Enabled: True
+        Level: 20
+        Support: False
+
+================================================================================
+  5. Active Skill
+================================================================================
+
+Name: Kinetic Blast
+Level: 20
+Quality: 20
+Support: False
+
+================================================================================
+  5a. All Skill Gems
+================================================================================
+
+Total skill gems: 181
+Unique gem names: 29
+
+Gems (grouped by name):
+
+  Added Cold Damage (1 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Assassin's Mark (1 instance(s)):
+    Instance 1:
+      Enabled: False
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Automation (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Ballista Totem (1 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Barrage Support (1 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Blood Rage (6 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Elemental Damage with Attacks (9 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 9:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Faster Attacks (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Flame Dash (1 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+
+  Frostblink (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Hydrosphere (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+
+  Increased Critical Damage (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Kinetic Blast (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Kinetic Bolt (1 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Lifetap (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+    Instance 8:
+      Enabled: True
+      Level: 19
+      Quality: 0%
+      Support: True
+
+  Mark On Hit (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+    Instance 8:
+      Enabled: True
+      Level: 18
+      Quality: 20%
+      Support: True
+
+  Momentum (5 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: True
+
+  More Duration (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Precision (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 11
+      Quality: 0%
+      Support: False
+
+  Returning Projectiles (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Sacred Wisps (9 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 9:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Shield Charge (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 10
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 15
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+
+  Sigil of Power (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+
+  Sniper's Mark (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+
+  Spellslinger (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 0%
+      Support: False
+
+  Steelskin (7 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 19
+      Quality: 20%
+      Support: False
+
+  Tornado (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 1
+      Quality: 0%
+      Support: False
+
+  Trinity (9 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 2:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 3:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 4:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 5:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 6:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 7:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 8:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+    Instance 9:
+      Enabled: True
+      Level: 20
+      Quality: 20%
+      Support: True
+
+  Wrath (8 instance(s)):
+    Instance 1:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 2:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 3:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 4:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 5:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 6:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 7:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+    Instance 8:
+      Enabled: True
+      Level: 21
+      Quality: 0%
+      Support: False
+
+================================================================================
+  6. Items
+================================================================================
+
+Number of items: 47
+
+  Item 1:
+    Name: Foul Lens
+    Base: Searching Eye Jewel
+    Rarity: Rare
+    Unique ID: b2a44169b0fc2c4b9bd2a25d940a9136c291bc608cdd0bb4e0f98f1f6be62e7c
+    Item Level: 84
+    Level Requirement: 51
+    Item Text:
+      Adds 2 to 39 Lightning Damage to Attacks
+      12 to 20 Added Fire Damage with Wand Attacks
+      1 to 24 Added Lightning Damage with Wand Attacks
+
+  Item 2:
+    Name: Ancient Barb
+    Base: Searching Eye Jewel
+    Rarity: Rare
+    Unique ID: 812fe8aeb1721039632ebc8247392137023bd8017be90da176b3ab4668316b49
+    Item Level: 84
+    Level Requirement: 65
+    Item Text:
+      +15 to Strength
+      10 to 19 Added Cold Damage with Wand Attacks
+      3 to 49 Added Lightning Damage with Wand Attacks
+
+  Item 3:
+    Name: Effervescent Divine Life Flask of Allaying
+    Base: Effervescent Divine Life Flask of Allaying
+    Rarity: Magic
+    Unique ID: 30c134dc8cb523b8075caee27ab67c3dcec1f186978122fe773f4f259dd7e856
+    Item Level: 83
+    Level Requirement: 60
+    Quality: 20%
+    Item Text:
+      40% reduced Amount Recovered
+      135% increased Recovery rate
+      50% of Recovery applied Instantly
+      Grants Immunity to Bleeding for 14 seconds if used while Bleeding
+      Grants Immunity to Corrupted Blood for 14 seconds if used while affected by Corrupted Blood
+
+  Item 4:
+    Name: Flagellant's Jade Flask of the Mockingbird
+    Base: Flagellant's Jade Flask of the Mockingbird
+    Rarity: Magic
+    Unique ID: 5586196551ed3facb5dcf8cfbefc3c87a97919dd4297d19412bc4b316e48f1a0
+    Item Level: 83
+    Level Requirement: 64
+    Crafted: Yes
+    Quality: 20%
+    Implicits: 1
+    Item Text:
+      Used when Charges reach full
+      Gain 3 Charges when you are Hit by an Enemy
+      47% reduced Effect of Curses on you during Effect
+
+  Item 5:
+    Name: Analyst's Quicksilver Flask of the Gazelle
+    Base: Analyst's Quicksilver Flask of the Gazelle
+    Rarity: Magic
+    Unique ID: e606492a9c1f8aef50ad0c3ac0d91a01744b1ac03084ac7dee0c41c7bd6840d2
+    Item Level: 84
+    Level Requirement: 28
+    Crafted: Yes
+    Quality: 20%
+    Implicits: 1
+    Item Text:
+      Used when Charges reach full
+      22% increased Duration
+      44% increased Evasion Rating during Effect
+
+  Item 6:
+    Name: Experimenter's Diamond Flask of Incision
+    Base: Experimenter's Diamond Flask of Incision
+    Rarity: Magic
+    Unique ID: bd03d486a485d11209e26d030fea4dc4fd6d5a0d95cef1cb5a8ff87e326abf0b
+    Item Level: 84
+    Level Requirement: 67
+    Crafted: Yes
+    Quality: 20%
+    Implicits: 1
+    Item Text:
+      Used when Charges reach full
+      37% increased Duration
+      51% increased Critical Strike Chance during Effect
+
+  Item 7:
+    Name: Clinician's Silver Flask of the Lynx
+    Base: Clinician's Silver Flask of the Lynx
+    Rarity: Magic
+    Unique ID: d199cc0742c1aff3d61483b23e2cb2f7992be164325b0858a89c259b20f6fee8
+    Item Level: 83
+    Level Requirement: 54
+    Crafted: Yes
+    Quality: 20%
+    Implicits: 1
+    Item Text:
+      Used when Charges reach full
+      33% increased Duration
+      10% increased Movement Speed during Effect
+
+  Item 8:
+    Name: Entropy Guardian
+    Base: Blizzard Crown
+    Rarity: Rare
+    Unique ID: 012bc674405c5c6955fd4146fd2e61bc71c518fb4c5bef25a42812fcab5f94a1
+    Item Level: 84
+    Level Requirement: 75
+    Quality: 20%
+    Sockets: G-R-G-R
+    Implicits: 2
+    Item Text:
+      Adds 84 to 127 Cold Damage
+      Your Hits treat Cold Resistance as 10% higher than actual value
+      +10% chance to Suppress Spell Damage
+      +13 to maximum Energy Shield
+      +98 to maximum Life
+      +58 to maximum Mana
+      9% increased Rarity of Items found
+      +15% to Chaos Resistance
+
+  Item 9:
+    Name: Blood Charm
+    Base: Amber Amulet
+    Rarity: Rare
+    Unique ID: 9a0d577770361f7b18e9619c246ee974437259437d0b54e984b3e19cc5ba9a08
+    Item Level: 84
+    Level Requirement: 47
+    Crafted: Yes
+    Implicits: 2
+    Item Text:
+      Allocates Wandslinger
+      +30 to Strength
+      18% increased Spell Damage
+      +31% to Global Critical Strike Multiplier
+      23% increased Evasion Rating
+      +91 to maximum Life
+      38% increased Mana Regeneration Rate
+      +15% to Fire and Cold Resistances
+
+  Item 10:
+    Name: Woe Skin
+    Base: Necrotic Armour
+    Rarity: Rare
+    Unique ID: a18f91dd9fac50fd1a950c016616e559bb137e4263d07ece71b73ecdd6076e6a
+    Item Level: 85
+    Level Requirement: 84
+    Crafted: Yes
+    Quality: 20%
+    Sockets: B-R-B-G-B-W
+    Implicits: 2
+    Item Text:
+      10% of Physical Damage from Hits taken as Lightning Damage
+      10% increased effect of Non-Curse Auras from your Skills
+      +15 to Evasion Rating
+      106% increased Evasion and Energy Shield
+      +12 to maximum Energy Shield
+      44% faster start of Energy Shield Recharge
+      +30% to Cold Resistance
+      12% increased Stun and Block Recovery
+      +23 to Strength and Intelligence
+
+  Item 11:
+    Name: Pandemonium Guard
+    Base: Titanium Spirit Shield
+    Rarity: Rare
+    Unique ID: 02a4042f36e1518e6a3b22807e70ef7d0fa723c1745ffefe889c7a658c653b1d
+    Item Level: 85
+    Level Requirement: 68
+    Crafted: Yes
+    Quality: 20%
+    Sockets: B-B-G
+    Item Text:
+      72% increased Spell Damage
+      +110 to maximum Life
+      +17% to all Elemental Resistances
+      +40% to Fire Resistance
+      +34% to Cold Resistance
+
+  Item 12:
+    Name: Prismweave
+    Base: Rustic Sash
+    Rarity: Unique
+    Unique ID: 13cd878e0a11d002e4f737c3cfd237ae5e18b1657da30b74e321b91a6b38ead4
+    Item Level: 80
+    Level Requirement: 25
+    Implicits: 1
+    Item Text:
+      19% increased Global Physical Damage
+      Adds 15 to 31 Fire Damage to Attacks
+      Adds 11 to 26 Cold Damage to Attacks
+      Adds 1 to 68 Lightning Damage to Attacks
+      +15% to all Elemental Resistances
+      30% increased Elemental Damage with Attack Skills during any Flask Effect
+
+  Item 13:
+    Name: Behemoth Nails
+    Base: Eelskin Gloves
+    Rarity: Rare
+    Unique ID: 2bd53b3d59e38b75c59420c3fed7bdfd1ab6bdc30c8cb9557d2584338a9bc166
+    Item Level: 84
+    Level Requirement: 38
+    Crafted: Yes
+    Quality: 20%
+    Sockets: G-G-R-G
+    Implicits: 1
+    Item Text:
+      Gain 1 Rage on Attack Hit
+      +11% chance to Suppress Spell Damage
+      Adds 6 to 15 Cold Damage to Attacks
+      Adds 1 to 33 Lightning Damage to Attacks
+      Regenerate 80.8 Life per second
+      Gain 32 Life per Enemy Killed
+      +70 to maximum Life
+
+  Item 14:
+    Name: Kraken Pace
+    Base: Ambush Boots
+    Rarity: Rare
+    Unique ID: bde3342fd759503472f8dff52654cda53198ad00e09c2a603c4bf0df9165ca36
+    Item Level: 85
+    Level Requirement: 47
+    Crafted: Yes
+    Quality: 20%
+    Sockets: B-R-B-G
+    Implicits: 1
+    Item Text:
+      4% increased Action Speed
+      +46% to Fire Resistance
+      +30% to Lightning Resistance
+      +22% to Chaos Resistance
+      30% increased Movement Speed
+      +66 to maximum Life
+
+  Item 15:
+    Name: Plague Hold
+    Base: Amethyst Ring
+    Rarity: Rare
+    Unique ID: 8eaed910f8673a937e8e023d8b434779b63f8a7d5378c343d2977e330c3285ac
+    Item Level: 85
+    Level Requirement: 65
+    Crafted: Yes
+    Implicits: 1
+    Item Text:
+      +23% to Chaos Resistance
+      Adds 7 to 74 Lightning Damage to Attacks
+      +103 to maximum Life
+      +44% to Fire Resistance
+      +44% to Cold Resistance
+      +34% to Lightning Resistance
+      Adds 11 to 16 Cold Damage
+      Adds 1 to 24 Lightning Damage
+
+  Item 16:
+    Name: Storm Spiral
+    Base: Amethyst Ring
+    Rarity: Rare
+    Unique ID: bc8cfbd254d38fbab92b760e2f3862a46ebfbea8e058272dee4d47938427f148
+    Item Level: 84
+    Level Requirement: 65
+    Crafted: Yes
+    Implicits: 1
+    Item Text:
+      +23% to Chaos Resistance
+      +47 to Strength
+      Adds 5 to 71 Lightning Damage to Attacks
+      +109 to maximum Life
+      +34% to Lightning Resistance
+      Gain 72 Life per Enemy Killed
+      Non-Channelling Skills have -7 to Total Mana Cost
+
+  Item 17:
+    Name: Hypnotic Edge
+    Base: Imbued Wand
+    Rarity: Rare
+    Unique ID: 07294f1e8e560fa30e6cc0bd907bb935db2a366132af7f00e5e44be9aab38d8a
+    Item Level: 84
+    Level Requirement: 59
+    Crafted: Yes
+    Quality: 0%
+    Sockets: G-B-B
+    Implicits: 1
+    Item Text:
+      35% increased Spell Damage
+      18% increased Attack Speed
+      Adds 15 to 299 Lightning Damage
+      Can have up to 3 Crafted Modifiers
+      +22 to Strength and Intelligence
+      64% increased Spell Damage
+      25% increased Critical Strike Chance
+
+  Item 18:
+    Name: New Item
+    Base: Titanium Spirit Shield
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 68
+    Quality: 20%
+    Sockets: B-B-B
+    Item Text:
+      81% increased Chance to Block
+      93% increased Spell Damage
+      10% increased Attack Speed
+
+  Item 19:
+    Name: The Fledgling
+    Base: Lacquered Helmet
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 51
+    Quality: 20%
+    Sockets: G-G-G-G
+    Item Text:
+      175% increased Armour and Evasion
+      40% increased Projectile Speed
+      40% increased Projectile Damage
+      Projectiles cannot collide with Enemies at Close Range
+      Far Shot
+
+  Item 20:
+    Name: New Item
+    Base: Necrotic Armour
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G-G-G
+    Implicits: 2
+    Item Text:
+      +21% to Critical Strike Multiplier for Attack Damage
+      10% of Physical Damage from Hits taken as Lightning Damage
+      +261 to Evasion Rating
+      97% increased Evasion and Energy Shield
+      +67 to maximum Energy Shield
+
+  Item 21:
+    Name: New Item
+    Base: Phantom Mitts
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G
+    Implicits: 2
+    Item Text:
+      Gain 1 Rage on Attack Hit
+      Projectiles Pierce an additional Target
+      +10% chance to Suppress Spell Damage
+      +40 to Evasion Rating
+      +19 to maximum Energy Shield
+      +110 to maximum Life
+      10% increased Attack Speed
+
+  Item 22:
+    Name: New Item
+    Base: Phantom Boots
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G
+    Implicits: 1
+    Item Text:
+      4% increased Action Speed
+      +10% chance to Suppress Spell Damage
+      85% increased Evasion and Energy Shield
+      +109 to maximum Life
+      19% increased Movement Speed
+      10% chance to gain Onslaught for 4 seconds on Kill
+
+  Item 23:
+    Name: New Item
+    Base: Agate Amulet
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 59
+    Crafted: Yes
+    Implicits: 2
+    Item Text:
+      Allocates Wandslinger
+      +20 to Strength and Intelligence
+      +46 to Strength
+      +33% to Global Critical Strike Multiplier
+      +109 to maximum Life
+
+  Item 24:
+    Name: New Item
+    Base: Amethyst Ring
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 60
+    Implicits: 1
+    Item Text:
+      +24% to Chaos Resistance
+      Adds 5 to 70 Lightning Damage to Attacks
+      +94 to maximum Life
+      Non-Channelling Skills have -7 to Total Mana Cost
+
+  Item 25:
+    Name: New Item
+    Base: Amethyst Ring
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 60
+    Implicits: 1
+    Item Text:
+      +20% to Chaos Resistance
+      Adds 6 to 71 Lightning Damage to Attacks
+      +94 to maximum Life
+      Adds 11 to 15 Cold Damage
+      Adds 1 to 23 Lightning Damage
+
+  Item 26:
+    Name: New Item
+    Base: Heavy Belt
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 64
+    Implicits: 1
+    Item Text:
+      +36 to Strength
+      +123 to maximum Life
+      40% increased Elemental Damage with Attack Skills
+
+  Item 27:
+    Name: Inspired Learning
+    Base: Crimson Jewel
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 0
+
+  Item 28:
+    Name: New Item
+    Base: Torturer's Mask
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G
+    Item Text:
+      86% increased Evasion and Energy Shield
+      +123 to maximum Life
+
+  Item 29:
+    Name: New Item
+    Base: Imbued Wand
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 65
+    Quality: 20%
+    Sockets: B-B-B
+    Implicits: 1
+    Item Text:
+      35% increased Spell Damage
+      Adds 18 to 324 Lightning Damage
+      18% increased Attack Speed
+      +22 to Strength and Intelligence
+      23% increased Critical Strike Chance
+
+  Item 30:
+    Name: New Item
+    Base: Supreme Leather
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 73
+    Quality: 20%
+    Sockets: G-G-G-G-G-G
+    Item Text:
+      +330 to Evasion Rating
+      97% increased Evasion Rating
+
+  Item 31:
+    Name: New Item
+    Base: Phantom Mitts
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G
+    Item Text:
+      +107 to maximum Life
+      10% increased Attack Speed
+
+  Item 32:
+    Name: New Item
+    Base: Phantom Boots
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G
+    Item Text:
+      +108 to maximum Life
+      19% increased Movement Speed
+      13% chance to gain Onslaught for 4 seconds on Kill
+
+  Item 33:
+    Name: New Item
+    Base: Imbued Wand
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 59
+    Quality: 20%
+    Sockets: B-B-B
+    Implicits: 1
+    Item Text:
+      35% increased Spell Damage
+      Adds 12 to 214 Lightning Damage
+      15% increased Attack Speed
+      27% increased Critical Strike Chance
+
+  Item 34:
+    Name: Eclipse Solaris
+    Base: Engraved Wand
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 40
+    Quality: 20%
+    Sockets: B-B-B
+    Implicits: 1
+    Item Text:
+      Adds 8 to 12 Fire Damage to Spells and Attacks
+      Adds 38 to 70 Fire Damage
+      26% increased Attack Speed
+      +33% to Global Critical Strike Multiplier
+      20% increased Light Radius
+      Nearby Enemies are Blinded
+      140% increased Critical Strike Chance against Blinded Enemies
+      Adds 2 to 5 Fire Damage to Attacks for every 1% Light Radius above base value
+      Adds 314 to 785 fire damage to attacks
+
+  Item 35:
+    Name: Wreath of Phrecia
+    Base: Iron Circlet
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 8
+    Quality: 20%
+    Sockets: B-B-B-B
+    Item Text:
+      Has no Attribute Requirements
+      Increases and Reductions to Light Radius also apply to Area of Effect at 50% of their value
+      Increases and Reductions to Light Radius also apply to Damage
+      20% increased Light Radius
+      Deal no Chaos Damage
+
+  Item 36:
+    Name: Lori's Lantern
+    Base: Prismatic Ring
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 30
+    Implicits: 2
+    Item Text:
+      +10% to all Elemental Resistances
+      +11% to all Elemental Resistances
+      +10% to all Elemental Resistances
+      7% increased Movement Speed when on Low Life
+      31% increased Light Radius
+      +23% Chaos Resistance when on Low Life
+      While on Low Life, Enemies are Unlucky when Damaging you
+
+  Item 37:
+    Name: New Item
+    Base: Cobalt Jewel
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 0
+    Item Text:
+      7% increased Attack Speed with Wands
+      +12% to Global Critical Strike Multiplier
+
+  Item 38:
+    Name: New Item
+    Base: Large Cluster Jewel
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 54
+    Crafted: Yes
+    Implicits: 3
+    Item Text:
+      Adds 8 Passive Skills
+      2 Added Passive Skills are Jewel Sockets
+      Added Small Passive Skills grant: 12% increased Lightning Damage
+      1 Added Passive Skill is Sadist
+      1 Added Passive Skill is Storm Drinker
+      1 Added Passive Skill is Widespread Destruction
+
+  Item 39:
+    Name: New Item
+    Base: Searching Eye Jewel
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 56
+    Item Text:
+      +12% to Global Critical Strike Multiplier
+      13 to 24 Added Cold Damage with Wand Attacks
+      3 to 42 Added Lightning Damage with Wand Attacks
+
+  Item 40:
+    Name: New Item
+    Base: Large Cluster Jewel
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 40
+    Crafted: Yes
+    Implicits: 3
+    Item Text:
+      Adds 8 Passive Skills
+      2 Added Passive Skills are Jewel Sockets
+      Added Small Passive Skills grant: Wand Attacks deal 12% increased Damage with Hits and Ailments
+      1 Added Passive Skill is Martial Prowess
+      1 Added Passive Skill is Opportunistic Fusilade
+      1 Added Passive Skill is Storm's Hand
+
+  Item 41:
+    Name: Thread of Hope
+    Base: Crimson Jewel
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 0
+    Item Text:
+      Only affects Passives in Massive Ring
+      Passives in Radius can be Allocated without being connected to your tree
+      -16% to all Elemental Resistances
+
+  Item 42:
+    Name: New Item
+    Base: Necrotic Armour
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 84
+    Quality: 20%
+    Sockets: G-G-G-G-G-G
+    Implicits: 2
+    Item Text:
+      +21% to Critical Strike Multiplier for Attack Damage
+      10% of Physical Damage from Hits taken as Fire Damage
+      +16% chance to Suppress Spell Damage
+      +268 to Evasion Rating
+      97% increased Evasion and Energy Shield
+      +68 to maximum Energy Shield
+
+  Item 43:
+    Name: Replica Heatshiver
+    Base: Leather Hood
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 20
+    Quality: 20%
+    Sockets: G-G-G-G
+    Item Text:
+      101% increased Evasion Rating
+      60% increased Mana Regeneration Rate
+      +25% to Cold Resistance
+      +31% to Lightning Resistance
+      Gain 1% of Lightning Damage as Extra Cold Damage per 2% Shock Effect on Enemy
+
+  Item 44:
+    Name: Horticultural Prismatic Tincture of Overpowering
+    Base: Horticultural Prismatic Tincture of Overpowering
+    Rarity: Magic
+    Item Level: 1
+    Level Requirement: 68
+    Quality: 20%
+    Implicits: 1
+    Item Text:
+      101% increased Elemental Damage with Melee Weapons
+      22% increased effect
+      Melee Weapon Damage Penetrates 19% Elemental Resistances
+
+  Item 45:
+    Name: New Item
+    Base: Agate Amulet
+    Rarity: Rare
+    Item Level: 1
+    Level Requirement: 60
+    Crafted: Yes
+    Implicits: 2
+    Item Text:
+      Allocates Prism Weave
+      +20 to Strength and Intelligence
+      +47 to Strength
+      Adds 17 to 32 Cold Damage to Attacks
+      Adds 7 to 72 Lightning Damage to Attacks
+      +37% to Global Critical Strike Multiplier
+
+  Item 46:
+    Name: Thunderfist
+    Base: Murder Mitts
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 67
+    Quality: 20%
+    Sockets: G-G-G-G
+    Item Text:
+      Socketed Gems are Supported by Level 30 Added Lightning Damage
+      10% increased Attack Speed
+      175% increased Evasion and Energy Shield
+      100% increased Effect of Lightning Ailments
+
+  Item 47:
+    Name: Yoke of Suffering
+    Base: Onyx Amulet
+    Rarity: Unique
+    Item Level: 1
+    Level Requirement: 70
+    Crafted: Yes
+    Implicits: 2
+    Item Text:
+      Allocates Prism Weave
+      +13 to all Attributes
+      +21% to Fire Resistance
+      +18% to Cold Resistance
+      +36% to Lightning Resistance
+      30% reduced Duration of Ailments on Enemies
+      10% chance to Shock
+      Enemies take 8% increased Damage for each type of Ailment you have inflicted on them
+      Your Elemental Damage can Shock
+
+================================================================================
+  7. Item Sets
+================================================================================
+
+Active Item Set:
+  Weapon 1: Item #17
+  Helmet: Item #19
+  Body Armour: Item #20
+  Gloves: Item #21
+  Boots: Item #22
+  Amulet: Item #23
+  Ring 1: Item #24
+  Ring 2: Item #25
+  Belt: Item #26
+
+Number of item sets: 8
+
+  Item Set 1:
+    Body Armour: Item #30
+    Helmet: Item #28
+    Gloves: Item #31
+    Boots: Item #32
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+  Item Set 2:
+    Body Armour: Item #30
+    Helmet: Item #28
+    Gloves: Item #21
+    Boots: Item #22
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+  Item Set 3:
+    Body Armour: Item #30
+    Helmet: Item #35
+    Gloves: Item #21
+    Boots: Item #22
+    Ring 1: Item #36
+    Ring 2: Item #36
+
+  Item Set 4:
+    Body Armour: Item #20
+    Helmet: Item #19
+    Gloves: Item #21
+    Boots: Item #22
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+  Item Set 5:
+    Body Armour: Item #20
+    Helmet: Item #19
+    Gloves: Item #46
+    Boots: Item #22
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+  Item Set 6:
+    Body Armour: Item #20
+    Helmet: Item #19
+    Gloves: Item #21
+    Boots: Item #22
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+  Item Set 7:
+    Body Armour: Item #42
+    Helmet: Item #19
+    Gloves: Item #21
+    Boots: Item #22
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+  Item Set 8:
+    Body Armour: Item #42
+    Helmet: Item #43
+    Gloves: Item #21
+    Boots: Item #22
+    Ring 1: Item #24
+    Ring 2: Item #25
+
+================================================================================
+  8. Skill Trees
+================================================================================
+
+Number of trees: 8
+
+  Tree 1:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICaTQ_jbls59sCjX3jvsSi0NCNv77uoJ_aSPsJ8NVirGXTYRBsjMs_ePn_k6OKTC3fmHFDGYqaYedU2-ekeAqbTZIfQREPefb9blFHz16CHiSdb_LB1RSwOdT315cGP3MQrewYKluI3rTFj_odQBqPrJhiWp2qVcaD260c6b06WAOHsJJS7MlE2175yH-p9trn6n7dvhRW-n8rMHzBxcfK-TNQMEcG0xs94q_r3viYUyP2034k_cLskoAFtXiuFUPOcP_esQFJUfocUdl_kdJEeM4McwAHJhvjvqYsiN7zLB1AhcKtHEYWvhS_VH-RQKHSRA==
+    Number of allocated nodes: 120
+    Number of jewel sockets: 3
+    Jewel sockets (Node ID -> Item ID):
+      Node 60735 -> Item #2 (Ancient Barb)
+      Node 61419 -> Item #2 (Ancient Barb)
+      Node 61834 -> Item #3 (Effervescent Divine Life Flask of Allaying)
+
+  Tree 2:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICfDQ_fXWaYYjebOfbAlHZpHgRDzfUjX1sCOO-j5zb542_9xO-7v1u2kj7CXn2FgD312EQbIx4-YIeyz_BxVXG_5P_3sLso4oVQypbTC14zpKAznAk_XFDr-tjQ-_r51TQ0OtjCptNkh9ByURl07DjUUfPXklR215v8sHVFLA51PGKP3MdQBCt7BgSMD3iDHOP-n8rGo-smPnInao6WOnarRxS7IPbA4ewkvUY_rq74_baf6nHyufqcw6-FOm9UDDtPzB8Vvr5M0lSRwbTG6CfYqze-JhTft3Tfn2wtMV31wW1eK6XBhmKOw2xAfDV-hzEon-R0kQj9o25AAemLIjeJhvjvvMsHUCFwq0cRha-FL9Uf5FAodJE
+    Number of allocated nodes: 139
+    Number of jewel sockets: 3
+    Jewel sockets (Node ID -> Item ID):
+      Node 60735 -> Item #40 (New Item)
+      Node 61419 -> Item #2 (Ancient Barb)
+      Node 61834 -> Item #2 (Ancient Barb)
+
+  Tree 3:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICfjQ_fXVR2Vb60kSNuWzn2wIRD_1uN9RirI19bAjjvo-c0NCNv_cTvu7PXtpI-wl59oIeZdNhEGyMwuw7Dcs_ePkDWf-TBbUqW6OKkoCXBgztJP3Tfh9BwcVxQ_66GYrJRO_r51TrY_fXCptNks5wmmHEorDjUUcWAB1AwdVv8tteFLA51PGKEK3sGElSu-NQMK0cDHOP-j3iGo8mOvnIUuz22una7T8SMDpYA4ewkum9Ed1VxrTFf6nHyufqcw6-FKyYfyswfPUYP3P5MyP2RwbTG6Cf8NXe-JhTft1jQ32wr-t313jOeK4VQ__esQFMLfoc2-d_kaR4iN5JUQAIQKHSRCYb477I4ANZ8ywdQIXCrRxGFr4Uv1R_kaYsiN4=
+    Number of allocated nodes: 143
+    Number of jewel sockets: 3
+    Jewel sockets (Node ID -> Item ID):
+      Node 60735 -> Item #38 (New Item)
+      Node 61419 -> Item #38 (New Item)
+      Node 61834 -> Item #38 (New Item)
+
+  Tree 4:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICflb6fXWI3pphpHiNuWzn2wIRD3j50NCgn419bAjjvsSi2-eNv_cTN9T9btpI-wnw1WKs99dhEGyMft3_3ss_wcUVQ_-TKltVxpKAznDrYyT9Y0OjikwtcUP-uq_ryUTv6-dUj5x59gqbTZIfQVHZSVGw41FHwdUj9vUYb_LbXhSwOdTxiq0c6doQrewYfyuVLj3ij_rpvTB8Bx75yJ2qg9uc6u0_DHM6WAOHsJISMPbaz14aj3-px8rn6nMOvhSsmFAwHUBJUrvj-TO-7kcG0xtl0wW13viYU5cG0359sBmKd9d4zniutMXC7DsNsQGCHvocFgB_kdJEP3M0PwAIpiyI3iYb476Fwq0cXYCc6kYWvhTzLB1Av1R_kUCh0kQ=
+    Number of allocated nodes: 143
+    Number of jewel sockets: 3
+    Jewel sockets (Node ID -> Item ID):
+      Node 60735 -> Item #2 (Ancient Barb)
+      Node 61419 -> Item #2 (Ancient Barb)
+      Node 61834 -> Item #2 (Ancient Barb)
+
+  Tree 5:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICflb6fXU0Pz9z0kSNuWzn2wJ_kRYAePmCHo19bAjjvsSi0NCNv_cTN9T9btpI-wnw1WKs99dhEGyMefY7Dcs_wcXC7P-TtMWjinjOd9d-3RmKfbDTfpcGcUP-uq_r62Pv6-dU3vgFtQqbTZIfQWXT2-ew41FHwdW-7j3ib_Ij9hSwOdTxirvjSVIQrewYHUCVLlAwj_qsmDB8Bx75yJ2qOljp2q0cEjCD2wOHsJL1GM9ex8oaj3-p9trn6nMOvhQMc38r7T-c6um9-TPbXkcG0xtJUaCfyUSYU4-cY0Mk_c5wkoAqW3iuFUNMLf_esQFVxvocUdkRD6R4iN6aYQAIQKHSRL9Uf5EmG-O-8ywdQIXCrRxGFr4UXYCc6qYsiN4=
+    Number of allocated nodes: 143
+    Number of jewel sockets: 3
+    Jewel sockets (Node ID -> Item ID):
+      Node 60735 -> Item #2 (Ancient Barb)
+      Node 61419 -> Item #2 (Ancient Barb)
+      Node 61834 -> Item #2 (Ancient Barb)
+
+  Tree 6:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICfzQ_jbls573mbAi-7s9e-wmCHvfXYRBsjMs_o4qMC-tj_rrv6wqbH0FRRyP2SVEQrR1AlS7p2j3isJISMH-p9trn6nMOfytHBslE034k_ZKAeM47DbEB-hwRD9JEUdl9dZph2wKNfcSi2-eNv_cTN9T9btpI8NVirGXTePn_k1XGTC1xQxmK51Q-z02SznCw47l8wdUUsDnU8YpJUrvjj_owfAce-citHI-cOlgDh6CfpHjssP_elwZv8sfKY0PC7L4U9RjpvT9zpcvQ0PkzVvrbXtMbrJgaj974mFMMc-wYfbBQMHfXBbV4rrTF7T8VQ8_dr-t-3X-RiN7BxRYAAAbzLB1AQKHSRIXCrRxGFr4Uv1R_kaYsiN4=
+    Number of allocated nodes: 140
+    Number of jewel sockets: 3
+    Jewel sockets (Node ID -> Item ID):
+      Node 60735 -> Item #28 (New Item)
+      Node 61419 -> Item #2 (Ancient Barb)
+      Node 61834 -> Item #28 (New Item)
+
+  Tree 7:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICejQ__EeNuWznVeBsCOO-vu7PXvsJgh5hEGyMyz_rY5u1hMUKmx9BUUcj9q0zSVEQrR1AlS7o1oPZ6drtQRIwWyb22ufqcw5_KzNyRwbJRGNDwO-xAfocGdekeFb6mmGNfcSi0NCNv_cTN9QRgdpIexTw1RYAogR4-f-Tf_vC7HFDr-uDCU2SznCw4xutGv7B1TnU8YrDOklSP3OP-lIpBx6c6q0cb_Ii6um9_W7SRH7dUdnHyv66FUO-FBqPE56wktN-7Bj5M7vj9Rhh4mKsf6ne-JhTGo19sO0_d9cFtTB8tMVYWsHFGYpl05cGf5Ggn9vnj5wGASABYAEiASoBYgFqCCYb477zLB1ALqLA712AnOqFwq0cpizSREYWvhS_VH-R
+    Number of allocated nodes: 145
+    Number of jewel sockets: 10
+    Jewel sockets (Node ID -> Item ID):
+      Node 6910 -> Item #40 (New Item)
+      Node 13170 -> Item #40 (New Item)
+      Node 21984 -> Item #39 (New Item)
+      Node 32763 -> Item #41 (Thread of Hope)
+      Node 33753 -> Item #40 (New Item)
+      Node 33989 -> Item #42 (New Item)
+      Node 60735 -> Item #40 (New Item)
+      Node 61419 -> Item #40 (New Item)
+      Node 61834 -> Item #40 (New Item)
+      Node 64583 -> Item #40 (New Item)
+
+  Tree 8:
+    URL: https://www.pathofexile.com/passive-skill-tree/AAAABgIBejQ__EeNuWznFyZV4GwI475elr7uoJ_7CYIebIzLP37dm7WExf66CpsfQVFHI_atM0lREK3sGJUu6NaD2ROeeoSwkhIwf6n22ufqcw5_KzNyRwbJRNN-wO_xQRnX0kRR2ZphjX2PnNDQjb_3EzfUEYHaSHsU8NUWAKIEwcX_k3_7wuxB0BmKgwmQXk2SznCw4xutGv7B1TnU8YrDOklSu-OP-lIpBx6c6q0cIuodQBqNYqzHyqR4WFq-FFb6lwb5xOnaY0P5M_UYWyZh4tjV62Pe-JhT7UF9sO0_d9cFtRqPtMU_c_1ub_Kv6zB8f5F4-dvnxKIGASABYAEiASoBYgFqCCYb474uosDvpizSRF2AnOqFwq0c8ywdQEYWvhS_VH-R
+    Number of allocated nodes: 145
+    Number of jewel sockets: 10
+    Jewel sockets (Node ID -> Item ID):
+      Node 6910 -> Item #40 (New Item)
+      Node 13170 -> Item #40 (New Item)
+      Node 21984 -> Item #39 (New Item)
+      Node 32763 -> Item #41 (Thread of Hope)
+      Node 33753 -> Item #40 (New Item)
+      Node 33989 -> Item #42 (New Item)
+      Node 60735 -> Item #40 (New Item)
+      Node 61419 -> Item #40 (New Item)
+      Node 61834 -> Item #40 (New Item)
+      Node 64583 -> Item #40 (New Item)
+
+================================================================================
+  9. Active Skill Tree
+================================================================================
+
+URL: https://www.pathofexile.com/passive-skill-tree/AAAABgICejQ__EeNuWznVeBsCOO-vu7PXvsJgh5hEGyMyz_rY5u1hMUKmx9BUUcj9q0zSVEQrR1AlS7o1oPZ6drtQRIwWyb22ufqcw5_KzNyRwbJRGNDwO-xAfocGdekeFb6mmGNfcSi0NCNv_cTN9QRgdpIexTw1RYAogR4-f-Tf_vC7HFDr-uDCU2SznCw4xutGv7B1TnU8YrDOklSP3OP-lIpBx6c6q0cb_Ii6um9_W7SRH7dUdnHyv66FUO-FBqPE56wktN-7Bj5M7vj9Rhh4mKsf6ne-JhTGo19sO0_d9cFtTB8tMVYWsHFGYpl05cGf5Ggn9vnj5wGASABYAEiASoBYgFqCCYb477zLB1ALqLA712AnOqFwq0cpizSREYWvhS_VH-R
+Number of allocated nodes: 145
+Number of jewel sockets: 10
+Jewel sockets (Node ID -> Item ID):
+  Node 6910 -> Item #40 (New Item)
+  Node 13170 -> Item #40 (New Item)
+  Node 21984 -> Item #39 (New Item)
+  Node 32763 -> Item #41 (Thread of Hope)
+  Node 33753 -> Item #40 (New Item)
+  Node 33989 -> Item #42 (New Item)
+  Node 60735 -> Item #40 (New Item)
+  Node 61419 -> Item #40 (New Item)
+  Node 61834 -> Item #40 (New Item)
+  Node 64583 -> Item #40 (New Item)
+
+================================================================================
+  10. Keystones
+================================================================================
+
+Active keystones: None
+
+Note: Checked 27 keystones, none are active.
+This could mean:
+  1. The build has no keystones allocated
+  2. Keystone IDs in constants may be outdated
+  3. Keystones might be stored differently in this PoB version
+
+
+================================================================================
+  Summary
+================================================================================
+
+Successfully parsed build for Ranger (Level 97)
+Extracted 49 skill groups
+Extracted 47 items
+Extracted 8 skill trees
+Allocated 145 passive nodes

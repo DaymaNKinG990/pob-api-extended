@@ -280,10 +280,12 @@ class TestPassiveTreeParser:
         from pobapi.calculator.jewel_parser import JewelParser, JewelType
 
         # Mock detect_jewel_type to return TIMELESS
-        mocker.patch.object(
+        mock_detect = mocker.patch.object(
             JewelParser, "detect_jewel_type", return_value=JewelType.TIMELESS
         )
-        mocker.patch.object(JewelParser, "parse_timeless_jewel", return_value=[])
+        mock_parse = mocker.patch.object(
+            JewelParser, "parse_timeless_jewel", return_value=[]
+        )
 
         # Test with lowercase "seed" in property name (covers line 127)
         mock_property = SimpleNamespace(name="seed", value="12345")
@@ -297,7 +299,8 @@ class TestPassiveTreeParser:
         # Should extract seed from properties (covers lines 121-137)
         assert isinstance(modifiers, list)
         # Note: JewelParser methods are static, so we verify they were called via mocks
-        assert mocker.call_count >= 1
+        assert mock_detect.call_count >= 1
+        assert mock_parse.call_count >= 1
 
     def test_parse_jewel_socket_timeless_seed_from_properties_mixed_case(
         self, mock_jewel, mocker
@@ -337,10 +340,12 @@ class TestPassiveTreeParser:
         from pobapi.calculator.jewel_parser import JewelParser, JewelType
 
         # Mock detect_jewel_type to return CONVERSION
-        mocker.patch.object(
+        mock_detect = mocker.patch.object(
             JewelParser, "detect_jewel_type", return_value=JewelType.CONVERSION
         )
-        mocker.patch.object(JewelParser, "parse_conversion_jewel", return_value=[])
+        mock_parse = mocker.patch.object(
+            JewelParser, "parse_conversion_jewel", return_value=[]
+        )
 
         jewel = mock_jewel(
             name="Thread of Hope",
@@ -351,7 +356,8 @@ class TestPassiveTreeParser:
         # Should parse conversion jewel (covers lines 140-143)
         assert isinstance(modifiers, list)
         # Note: JewelParser methods are static, so we verify they were called via mocks
-        assert mocker.call_count >= 1
+        assert mock_detect.call_count >= 1
+        assert mock_parse.call_count >= 1
 
     def test_parse_jewel_socket_conversion_jewel_impossible_escape(
         self, mock_jewel, mocker

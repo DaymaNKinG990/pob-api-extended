@@ -1,13 +1,13 @@
-# Path of Building API (pobapi)
+# Path of Building API Extended (pobapi-extended)
 
-[![Maintenance](https://img.shields.io/maintenance/yes/2021)](https://github.com/ppoelzl/PathOfBuildingAPI)
+[![Maintenance](https://img.shields.io/maintenance/yes/2024)](https://github.com/ppoelzl/PathOfBuildingAPI)
 [![Read the Docs](https://readthedocs.org/projects/pobapi/badge)](https://pobapi.readthedocs.io)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pobapi)](https://pypi.org/project/pobapi/)
-[![PyPI - Version](https://img.shields.io/pypi/v/pobapi)](https://pypi.org/project/pobapi/)
-[![PyPI - Status](https://img.shields.io/pypi/status/pobapi)](https://pypi.org/project/pobapi/)
-[![PyPI - Format](https://img.shields.io/pypi/format/pobapi)](https://pypi.org/project/pobapi/)
-[![License](https://img.shields.io/pypi/l/pobapi)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pobapi-extended)](https://pypi.org/project/pobapi-extended/)
+[![PyPI - Version](https://img.shields.io/pypi/v/pobapi-extended)](https://pypi.org/project/pobapi-extended/)
+[![PyPI - Status](https://img.shields.io/pypi/status/pobapi-extended)](https://pypi.org/project/pobapi-extended/)
+[![PyPI - Format](https://img.shields.io/pypi/format/pobapi-extended)](https://pypi.org/project/pobapi-extended/)
+[![License](https://img.shields.io/pypi/l/pobapi-extended)](https://opensource.org/licenses/MIT)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
 API for Path of Building's build sharing format for builds in Path of Exile.
 
@@ -41,23 +41,24 @@ Path Of Building API provides a comprehensive toolbox for processing [Path of Bu
 ## Installation
 
 ```bash
-pip install pobapi
+pip install pobapi-extended
 ```
 
 Or using uv:
 
 ```bash
-uv add pobapi
+uv add pobapi-extended
 ```
 
 ## Dependencies
 
-* Python 3.7+
-* [lxml](https://pypi.org/project/lxml/)
-* [requests](https://pypi.org/project/requests/)
-* [unstdlib](https://pypi.org/project/unstdlib/)
+* Python 3.12+
+* [lxml](https://pypi.org/project/lxml/) (>=4.6.2)
+* [requests](https://pypi.org/project/requests/) (>=2.25.1)
+* [lupa](https://pypi.org/project/lupa/) (>=2.6)
+* [six](https://pypi.org/project/six/) (>=1.17.0)
 
-> **Note:** The library previously used `dataslots`, but has been migrated to standard Python `dataclasses` (Python 3.7+).
+> **Note:** The library previously used `dataslots` and `unstdlib`, but has been migrated to standard Python `dataclasses` and custom decorators (Python 3.12+).
 
 ## Usage
 

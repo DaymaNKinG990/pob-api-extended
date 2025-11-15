@@ -3,8 +3,8 @@ requires = ["hatchling>=1.0.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pobapi"
-version = "0.6.0"
+name = "pobapi-extended"
+version = "1.0.0"
 description = "API for Path Of Building's build sharing format."
 readme = "README.md"
 license = {text = "MIT"}
@@ -12,7 +12,8 @@ authors = [
     {name = "Peter Pölzl", email = "33464174+ppoelzl@users.noreply.github.com"}
 ]
 maintainers = [
-    {name = "Peter Pölzl", email = "33464174+ppoelzl@users.noreply.github.com"}
+    {name = "Peter Pölzl", email = "33464174+ppoelzl@users.noreply.github.com"},
+    {name = "Ravil Shakerov", email = "xellaopromaster@yandex.ru"}
 ]
 keywords = ["pathofexile", "poe", "pathofbuilding", "pob"]
 classifiers = [

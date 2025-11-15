@@ -63,10 +63,14 @@ class DefenseCalculator:
         self.modifiers = modifier_system
 
     def calculate_life(self, context: dict[str, Any] | None = None) -> float:
-        """Calculate total life.
-
-        :param context: Current calculation context.
-        :return: Total life.
+        """
+        Compute total life after applying modifiers.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context providing base values and additional state used by modifiers (defaults to an empty dict).
+        
+        Returns:
+            float: Total life after modifiers have been applied.
         """
         if context is None:
             context = {}
@@ -78,10 +82,15 @@ class DefenseCalculator:
         return self.modifiers.calculate_stat("Life", base_life, context)
 
     def calculate_mana(self, context: dict[str, Any] | None = None) -> float:
-        """Calculate total mana.
-
-        :param context: Current calculation context.
-        :return: Total mana.
+        """
+        Compute total mana based on the provided base mana and active modifiers.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context. May include the key
+                `base_mana` (float) which defaults to 0.0 when absent.
+        
+        Returns:
+            total_mana (float): Mana value after applying modifiers.
         """
         if context is None:
             context = {}
@@ -90,10 +99,15 @@ class DefenseCalculator:
         return self.modifiers.calculate_stat("Mana", base_mana, context)
 
     def calculate_energy_shield(self, context: dict[str, Any] | None = None) -> float:
-        """Calculate total energy shield.
-
-        :param context: Current calculation context.
-        :return: Total energy shield.
+        """
+        Calculate total energy shield after applying modifiers.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context. If provided, the function will read
+                "base_energy_shield" from this mapping as the base value (defaults to 0.0).
+        
+        Returns:
+            Total energy shield value after modifiers have been applied.
         """
         if context is None:
             context = {}
@@ -102,10 +116,14 @@ class DefenseCalculator:
         return self.modifiers.calculate_stat("EnergyShield", base_es, context)
 
     def calculate_armour(self, context: dict[str, Any] | None = None) -> float:
-        """Calculate armour rating.
-
-        :param context: Current calculation context.
-        :return: Armour rating.
+        """
+        Compute total armour rating after applying configured modifiers.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context that may provide `base_armour` and other keys used by the modifier system.
+        
+        Returns:
+            float: Total armour rating.
         """
         if context is None:
             context = {}
@@ -140,10 +158,14 @@ class DefenseCalculator:
         return min(reduction, 0.9)
 
     def calculate_evasion(self, context: dict[str, Any] | None = None) -> float:
-        """Calculate evasion rating.
-
-        :param context: Current calculation context.
-        :return: Evasion rating.
+        """
+        Compute total evasion rating after applying configured modifiers.
+        
+        Parameters:
+            context (dict[str, Any] | None): Calculation context that may provide "base_evasion" and other modifier inputs. If omitted, a default empty context is used.
+        
+        Returns:
+            float: Total evasion rating after modifiers.
         """
         if context is None:
             context = {}
@@ -154,14 +176,18 @@ class DefenseCalculator:
     def calculate_evade_chance(
         self, enemy_accuracy: float, context: dict[str, Any] | None = None
     ) -> float:
-        """Calculate evade chance.
-
-        Path of Exile uses the formula:
-        EvadeChance = 1 - (EnemyAccuracy / (EnemyAccuracy + Evasion / 5))
-
-        :param enemy_accuracy: Enemy accuracy rating.
-        :param context: Current calculation context.
-        :return: Evade chance (0.0 to 1.0).
+        """
+        Calculate the chance to evade an incoming hit against an enemy accuracy rating.
+        
+        Uses the Path of Exile formula: EvadeChance = 1 - (EnemyAccuracy / (EnemyAccuracy + Evasion / 5)).
+        If enemy_accuracy is 0, returns 1.0. The result is capped at 0.95.
+        
+        Parameters:
+            enemy_accuracy (float): Enemy accuracy rating used in the formula.
+            context (dict[str, Any] | None): Optional calculation context.
+        
+        Returns:
+            float: Evade chance as a value between 0.0 and 1.0, capped at 0.95.
         """
         if context is None:
             context = {}
@@ -180,12 +206,17 @@ class DefenseCalculator:
     def calculate_maximum_hit_taken(
         self, damage_type: str, context: dict[str, Any] | None = None
     ) -> float:
-        """Calculate maximum hit taken before death.
-
-        :param damage_type: Type of damage
-            ("Physical", "Fire", "Cold", "Lightning", "Chaos").
-        :param context: Current calculation context.
-        :return: Maximum hit taken.
+        """
+        Compute the maximum single hit that will deplete the character's life and energy shield for the given damage type.
+        
+        The returned value represents the largest incoming hit which, after applying defenses for the specified damage type, reduces the sum of Life and Energy Shield to zero. For "Physical", the calculation accounts for armour-based damage reduction; for "Fire", "Cold", "Lightning", and "Chaos", the calculation accounts for the corresponding resistance (capped at 75% before use). If an unknown damage type is provided, the raw life + energy shield pool is returned.
+        
+        Parameters:
+            damage_type (str): One of "Physical", "Fire", "Cold", "Lightning", or "Chaos".
+            context (dict[str, Any] | None): Optional calculation context forwarded to modifier lookups.
+        
+        Returns:
+            float: Maximum single-hit damage that will reduce life + energy shield to zero.
         """
         if context is None:
             context = {}
@@ -274,12 +305,16 @@ class DefenseCalculator:
     def calculate_effective_health_pool(
         self, context: dict[str, Any] | None = None
     ) -> float:
-        """Calculate Effective Health Pool (EHP).
-
-        EHP considers all defensive layers: life, ES, resistances, mitigation.
-
-        :param context: Current calculation context.
-        :return: Effective health pool.
+        """
+        Compute the effective health pool (EHP) by combining life, energy shield, and average elemental resistances.
+        
+        Calculates base pool as life + energy shield, then averages Fire/Cold/Lightning/Chaos resistances (each capped at 75% before averaging) and scales the base pool by 1 / (1 - average_resistance). If the averaged resistance is greater than or equal to 100%, a reasonable cap (base_pool * 10) is returned.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context with temporary overrides for modifiers.
+        
+        Returns:
+            float: The effective health pool.
         """
         if context is None:
             context = {}
@@ -340,10 +375,14 @@ class DefenseCalculator:
         return base_regen + percent_regen_value
 
     def calculate_mana_regen(self, context: dict[str, Any] | None = None) -> float:
-        """Calculate mana regeneration per second.
-
-        :param context: Current calculation context.
-        :return: Mana regeneration per second.
+        """
+        Compute mana regenerated per second by summing flat `ManaRegen` and percentage-based `ManaRegenPercent` applied to total mana.
+        
+        Parameters:
+            context (dict[str, Any] | None): Calculation context used for modifier lookups; defaults to an empty dict.
+        
+        Returns:
+            Mana regeneration per second.
         """
         if context is None:
             context = {}
@@ -361,10 +400,11 @@ class DefenseCalculator:
     def calculate_energy_shield_regen(
         self, context: dict[str, Any] | None = None
     ) -> float:
-        """Calculate energy shield regeneration per second.
-
-        :param context: Current calculation context.
-        :return: Energy shield regeneration per second.
+        """
+        Compute energy shield regeneration per second as the sum of flat regeneration and percent-based regeneration of current energy shield.
+        
+        Returns:
+            Energy shield regeneration per second.
         """
         if context is None:
             context = {}
@@ -384,10 +424,17 @@ class DefenseCalculator:
     def calculate_leech_rates(
         self, context: dict[str, Any] | None = None
     ) -> dict[str, float]:
-        """Calculate leech rates for life, mana, and energy shield.
-
-        :param context: Current calculation context.
-        :return: Dictionary with leech rates.
+        """
+        Compute per-second leech rates for life, mana, and energy shield, applying per-second caps.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context used when resolving modifiers.
+        
+        Returns:
+            dict[str, float]: Mapping with keys:
+                - "life_leech_rate": life leech amount per second (capped at the life leech cap).
+                - "mana_leech_rate": mana leech amount per second (capped at the mana leech cap).
+                - "energy_shield_leech_rate": energy shield leech amount per second (capped at the ES leech cap).
         """
         if context is None:
             context = {}
@@ -443,10 +490,14 @@ class DefenseCalculator:
     def calculate_all_defenses(
         self, context: dict[str, Any] | None = None
     ) -> DefenseStats:
-        """Calculate all defensive stats.
-
-        :param context: Current calculation context.
-        :return: DefenseStats object with all calculated values.
+        """
+        Aggregate all defensive statistics into a DefenseStats instance.
+        
+        Parameters:
+            context (dict[str, Any] | None): Optional calculation context used when querying modifiers; defaults to an empty dict.
+        
+        Returns:
+            DefenseStats: Populated with life, mana, energy_shield, armour, evasion, block_chance, spell_block_chance, spell_suppression_chance, fire_resistance, cold_resistance, lightning_resistance, and chaos_resistance.
         """
         if context is None:
             context = {}

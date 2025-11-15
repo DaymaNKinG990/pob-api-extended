@@ -30,19 +30,24 @@ class BuildModifier:
     """
 
     def __init__(self, api: PathOfBuildingAPI):
-        """Initialize build modifier.
-
-        :param api: PathOfBuildingAPI instance to modify.
+        """
+        Create a BuildModifier bound to a PathOfBuildingAPI instance for making build changes.
+        
+        Parameters:
+            api (PathOfBuildingAPI): The API instance whose build state will be modified by this BuildModifier.
         """
         self._api = api
 
     def add_node(self, node_id: int, tree_index: int = 0) -> None:
-        """Add a passive tree node.
-
-        :param node_id: Node ID to add
-            (e.g., PassiveNodeID.ELEMENTAL_EQUILIBRIUM or 39085).
-        :param tree_index: Index of tree (default: 0).
-        :raises: ValidationError if tree_index is invalid.
+        """
+        Add a passive node to the specified passive skill tree.
+        
+        Parameters:
+            node_id (int): Passive node identifier. Accepts an integer or a PassiveNodeID enum member (which is an int).
+            tree_index (int): Index of the target tree in the API's `trees` list (default 0).
+        
+        Raises:
+            ValidationError: If `tree_index` is less than 0 or greater than or equal to the number of available trees.
         """
         # node_id can be int or PassiveNodeID.<CONSTANT> (which is also int)
         actual_node_id = int(node_id)
@@ -59,10 +64,14 @@ class BuildModifier:
                 delattr(self._api, "_active_skill_tree")
 
     def remove_node(self, node_id: int, tree_index: int = 0) -> None:
-        """Remove a passive tree node.
-
-        :param node_id: Node ID to remove.
-        :param tree_index: Index of tree (default: 0).
+        """
+        Remove a passive node from a specified passive skill tree.
+        
+        If the provided tree_index is within range and the node is present in that tree, the node is removed, the API is marked mutable, and the cached active skill tree (if any) is cleared.
+        
+        Parameters:
+            node_id (int): Identifier of the passive node to remove.
+            tree_index (int): Zero-based index of the passive tree to modify (default 0).
         """
         if 0 <= tree_index < len(self._api.trees):
             tree = self._api.trees[tree_index]
@@ -79,13 +88,19 @@ class BuildModifier:
         slot: ItemSlot | str,
         item_set_index: int = 0,
     ) -> int:
-        """Equip an item in a slot.
-
-        :param item: Item to equip.
-        :param slot: Slot name (e.g., "Body Armour", "Helmet").
-        :param item_set_index: Index of item set (default: 0).
-        :return: Index of added item.
-        :raises: ValidationError if slot is invalid.
+        """
+        Equip an item into a specified item set slot.
+        
+        Parameters:
+            item (models.Item): Item to add to the build's pending items.
+            slot (ItemSlot | str): Slot name (e.g., "Body Armour", "Helmet") or an ItemSlot enum.
+            item_set_index (int): Index of the item set to modify (defaults to 0).
+        
+        Returns:
+            item_index (int): 0-based index assigned to the newly added item.
+        
+        Raises:
+            ValidationError: If the provided slot name is not recognized.
         """
         # Add item to pending items list
         if not hasattr(self._api, "_pending_items"):
@@ -196,10 +211,14 @@ class BuildModifier:
         gem: models.Gem | models.GrantedAbility,
         group_label: str = "Main",
     ) -> None:
-        """Add a skill gem to a skill group.
-
-        :param gem: Gem or GrantedAbility to add.
-        :param group_label: Label of skill group to add to.
+        """
+        Add a skill gem to the named skill group.
+        
+        If a skill group with the given label does not exist, creates a new enabled group with that label and adds it. Appends the provided gem or granted ability to the group's abilities, marks the API as modified, and invalidates cached skill-group data so the change is reflected.
+        
+        Parameters:
+            gem (models.Gem | models.GrantedAbility): The gem or granted ability to add to the group.
+            group_label (str): Label of the skill group to add to (defaults to "Main").
         """
         # Find or create skill group
         skill_group = None

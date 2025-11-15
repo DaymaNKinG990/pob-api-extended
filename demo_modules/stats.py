@@ -6,9 +6,14 @@ from pobapi import PathOfBuildingAPI
 
 
 def print_stats(build: PathOfBuildingAPI) -> None:
-    """Print all character stats grouped by category.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Print a PathOfBuildingAPI character's stats organized by category.
+    
+    Prints only stats with non-None values, grouping them under predefined category headers.
+    Any stats not matched to a category are listed under "Other Stats".
+    
+    Parameters:
+        build (PathOfBuildingAPI): The build whose `stats` will be displayed.
     """
     print("=" * 80)
     print("  2. Character Stats")
@@ -171,7 +176,11 @@ def print_stats(build: PathOfBuildingAPI) -> None:
 
 
 def main():
-    """Main function."""
+    """
+    Construct a PathOfBuildingAPI instance from the bundled demo import code and print its categorized stats.
+    
+    This function loads the demo import code, builds a PathOfBuildingAPI object from it, and invokes print_stats to display the character's stats.
+    """
     import sys
     from pathlib import Path
 

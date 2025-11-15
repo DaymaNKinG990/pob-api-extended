@@ -4,9 +4,13 @@ from pobapi import PathOfBuildingAPI
 
 
 def print_skill_groups(build: PathOfBuildingAPI) -> None:
-    """Print skill groups information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Display the active skill group and all skill groups with their abilities.
+    
+    Prints details for the active skill group (enabled, label, main active skill index, ability count) and then lists every skill group with the same information. For each ability, prints name, enabled state, level, and, when present, quality (percentage) and support status.
+    
+    Parameters:
+        build (PathOfBuildingAPI): Build instance to inspect.
     """
     print("=" * 80)
     print("  4. Skill Groups")
@@ -82,9 +86,13 @@ def print_active_skill(build: PathOfBuildingAPI) -> None:
 
 
 def print_skill_gems(build: PathOfBuildingAPI) -> None:
-    """Print all skill gems information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Display a grouped listing of all skill gems in the given build.
+    
+    Prints the total number of skill gems, the number of unique gem names, and for each gem name prints each instance with its enabled state, level, quality (percentage), and whether it is a support gem.
+    
+    Parameters:
+        build (PathOfBuildingAPI): Build object containing skill gem data.
     """
     print("=" * 80)
     print("  5a. All Skill Gems")
@@ -114,7 +122,11 @@ def print_skill_gems(build: PathOfBuildingAPI) -> None:
 
 
 def main():
-    """Main function."""
+    """
+    Program entry point that constructs a PathOfBuildingAPI build from demo import code and prints its skill groups.
+    
+    Creates a build using the demo import utilities and calls print_skill_groups to display skill-group and ability information.
+    """
     import sys
     from pathlib import Path
 

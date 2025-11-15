@@ -47,17 +47,19 @@ class CalculationEngine:
         mirage_calculator: MirageCalculator | None = None,
         pantheon_tools: PantheonTools | None = None,
     ):
-        """Initialize calculation engine with optional dependency injection.
-
-        :param modifier_system: Modifier system instance. Created if None.
-        :param damage_calculator: Damage calculator instance. Created if None.
-        :param defense_calculator: Defense calculator instance. Created if None.
-        :param resource_calculator: Resource calculator instance. Created if None.
-        :param skill_stats_calculator: Skill stats calculator instance. Created if None.
-        :param minion_calculator: Minion calculator instance. Created if None.
-        :param party_calculator: Party calculator instance. Created if None.
-        :param mirage_calculator: Mirage calculator instance. Created if None.
-        :param pantheon_tools: Pantheon tools instance. Created if None.
+        """
+        Create a CalculationEngine and wire its dependent calculators to a shared modifier system.
+        
+        Parameters:
+            modifier_system (ModifierSystem | None): Shared modifier system to use; a new instance is created when None.
+            damage_calculator (DamageCalculator | None): Optional damage calculator to use; created and injected with the shared modifier system when None.
+            defense_calculator (DefenseCalculator | None): Optional defense calculator to use; created and injected with the shared modifier system when None.
+            resource_calculator (ResourceCalculator | None): Optional resource calculator to use; created and injected with the shared modifier system when None.
+            skill_stats_calculator (SkillStatsCalculator | None): Optional skill-stats calculator to use; created and injected with the shared modifier system when None.
+            minion_calculator (MinionCalculator | None): Optional minion calculator to use; created and injected with the shared modifier system when None.
+            party_calculator (PartyCalculator | None): Optional party calculator to use; created and injected with the shared modifier system when None.
+            mirage_calculator (MirageCalculator | None): Optional mirage calculator to use; created with references to the shared modifier system and the damage calculator when None.
+            pantheon_tools (PantheonTools | None): Optional pantheon tools instance to use; created and injected with the shared modifier system when None.
         """
         # Initialize modifier system first (needed by other calculators)
         self.modifiers = modifier_system or ModifierSystem()
@@ -124,9 +126,13 @@ class CalculationEngine:
         self._load_party_modifiers(build_data)
 
     def _load_passive_tree_modifiers(self, build_data: Any) -> None:
-        """Load modifiers from passive skill tree.
-
-        :param build_data: Build data containing passive tree.
+        """
+        Load and add passive tree–related modifiers into the engine's modifier system.
+        
+        Parses the active passive tree, any additional trees, jewels socketed into those trees, and listed keystones from the provided build data and adds the resulting modifiers to self.modifiers. Missing build fields or invalid socket/item references are skipped silently.
+         
+        Parameters:
+            build_data: Object containing passive tree(s), sockets, items, and keystones (as present in a BuildData-like structure).
         """
         try:
             # Get active tree
@@ -204,9 +210,11 @@ class CalculationEngine:
             pass
 
     def _load_skill_modifiers(self, build_data: Any) -> None:
-        """Load modifiers from skills and support gems.
-
-        :param build_data: Build data containing skills.
+        """
+        Add modifiers parsed from enabled skill groups in build_data to the engine's modifier system.
+        
+        Parameters:
+            build_data (Any): Object expected to have a `skill_groups` iterable; enabled groups will be parsed for modifiers.
         """
         try:
             # Get skill groups
@@ -235,14 +243,13 @@ class CalculationEngine:
             pass
 
     def _load_party_modifiers(self, build_data: Any) -> None:
-        """Load modifiers from party members.
-
-        In Path of Building, party play allows sharing of:
-        - Auras (with reduced effectiveness, default 50%)
-        - Buffs (full effectiveness)
-        - Support gem effects (from support builds)
-
-        :param build_data: Build data containing party information.
+        """
+        Load and apply modifiers contributed by party members to the engine's modifier system.
+        
+        Parses party member definitions from build_data.config.party_members or build_data.party_members (accepting either PartyMember objects or dicts), determines the active skill name when available, computes party aura effectiveness, and adds the resulting modifiers (from auras, buffs, and support-gem effects) to the shared modifiers system.
+        
+        Parameters:
+            build_data (Any): Build data containing optional party configuration and active skill information.
         """
         try:
             # Check if party play is enabled
@@ -331,14 +338,17 @@ class CalculationEngine:
         context: dict[str, Any] | None = None,
         build_data: "BuildData | Any | None" = None,
     ) -> stats.Stats:
-        """Calculate all character statistics.
-
-        This method replicates Path of Building's stat calculation,
-        producing the same Stats object that would be extracted from XML.
-
-        :param context: Calculation context (enemy level, conditions, etc.).
-        :param build_data: Optional build data for skill-specific calculations.
-        :return: Stats object with all calculated values.
+        """
+        Compute the complete set of character statistics for the current modifier/context and optional build data.
+        
+        This replicates the engine's full stat calculation flow (defenses, resources, regen, leech, effective health, attributes, attack/cast/crit/hit stats, damage and DOTs for the active skill, minion-related stats, and various derived values). When provided, build_data is used for skill-specific calculations and enemy configuration.
+        
+        Parameters:
+            context (dict[str, Any] | None): Calculation context values (enemy level, conditions, temporary overrides, etc.). Missing keys will be derived from modifiers or build_data where applicable.
+            build_data ("BuildData | Any | None"): Optional build representation used to compute skill-specific stats (active skill, skill groups, config enemy values, and potential minion detection).
+        
+        Returns:
+            stats.Stats: A Stats object populated with computed values (life, mana, energy shield, defenses, resistances, attributes, speed/crit/hit stats, DPS/DOT/average hit, regen/leech, EHP, unreserved resources, minion limits, and other derived fields).  
         """
         if context is None:
             context = {}

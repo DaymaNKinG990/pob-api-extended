@@ -4,9 +4,13 @@ from pobapi import PathOfBuildingAPI
 
 
 def print_keystones(build: PathOfBuildingAPI) -> None:
-    """Print keystones information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Print a formatted list of active keystones for the given PathOfBuildingAPI build.
+    
+    Prints each active keystone as "Display Name (field_name)". If no keystones are active, prints a diagnostic note including the number of keystones checked and possible reasons for none being active.
+    
+    Parameters:
+        build (PathOfBuildingAPI): PoB build object from which keystone information will be read.
     """
     print("=" * 80)
     print("  10. Keystones")
@@ -48,7 +52,11 @@ def print_keystones(build: PathOfBuildingAPI) -> None:
 
 
 def main():
-    """Main function."""
+    """
+    Demonstration entry point that constructs a PathOfBuildingAPI build from bundled demo code and prints its keystones.
+    
+    This sets up the import path for local utilities, uses the demo import_code to create a build via pobapi.from_import_code, and invokes print_keystones on the resulting build.
+    """
     import sys
     from pathlib import Path
 

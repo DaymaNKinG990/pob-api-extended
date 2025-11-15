@@ -17,13 +17,23 @@ logger = logging.getLogger(__name__)
 async def _fetch_xml_from_url_async(
     url: str, http_client: AsyncHTTPClient | None = None, timeout: float = 6.0
 ) -> bytes:
-    """Get a Path Of Building import code from URL asynchronously.
-
-    :param url: pastebin.com URL.
-    :param http_client: Optional async HTTP client. If None, raises error.
-    :param timeout: Request timeout.
-    :return: Decompressed XML build document.
-    :raises: InvalidURLError, NetworkError
+    """
+    Retrieve and decode a Path Of Building import code from a Pastebin URL.
+    
+    Validates that `url` is a pastebin.com URL and requires a provided async HTTP client to perform the request.
+    
+    Parameters:
+        url (str): Pastebin URL containing the import code.
+        timeout (float): Request timeout in seconds (default 6.0).
+    
+    Returns:
+        bytes: Decompressed XML build document.
+    
+    Raises:
+        InvalidURLError: If `url` is not a pastebin.com URL.
+        ValueError: If no async HTTP client is provided.
+        InvalidImportCodeError: If the fetched import code cannot be decoded or decompressed.
+        NetworkError: For other failures while performing the HTTP request.
     """
     if not url.startswith("https://pastebin.com/"):
         raise InvalidURLError(f"{url} is not a valid pastebin.com URL.")
@@ -42,11 +52,17 @@ async def _fetch_xml_from_url_async(
 
 
 async def _fetch_xml_from_import_code_async(import_code: str) -> bytes:
-    """Decodes and unzips a Path Of Building import code asynchronously.
-
-    :param import_code: Import code string.
-    :return: Decompressed XML build document.
-    :raises: InvalidImportCodeError
+    """
+    Decode a Path Of Building import code and return the decompressed XML document.
+    
+    Parameters:
+        import_code (str): URL-safe base64-encoded string containing zlib-compressed Path Of Building XML.
+    
+    Returns:
+        bytes: Decompressed XML build document.
+    
+    Raises:
+        InvalidImportCodeError: If `import_code` is not a non-empty string, or if decoding or decompression fails.
     """
     if not import_code or not isinstance(import_code, str):
         raise InvalidImportCodeError("Import code must be a non-empty string")

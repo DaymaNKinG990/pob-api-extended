@@ -20,10 +20,16 @@ class ConfigModifierParser:
 
     @staticmethod
     def parse_config(config: Any) -> list[Modifier]:
-        """Parse configuration and extract modifiers.
-
-        :param config: Config object from build.
-        :return: List of Modifier objects from configuration.
+        """
+        Build a list of Modifier objects described by the provided build configuration.
+        
+        The parser inspects known flags and numeric fields on `config` and converts enabled buffs, charges, auras, curses, and conditional flags into corresponding Modifier instances; missing attributes are ignored.
+        
+        Parameters:
+            config (Any): Configuration object containing build flags and optional numeric fields (e.g., max_power_charges) used to derive modifiers.
+        
+        Returns:
+            list[Modifier]: Modifier instances derived from `config`; an empty list if no applicable flags are present.
         """
         modifiers: list[Modifier] = []
 

@@ -4,9 +4,14 @@ from pobapi import PathOfBuildingAPI
 
 
 def print_trees(build: PathOfBuildingAPI) -> None:
-    """Print all skill trees information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Print a human-readable summary of all skill trees from the given PathOfBuildingAPI instance.
+    
+    For each tree this prints the tree index, tree URL, number of allocated nodes, and number of jewel sockets.
+    If a tree has jewel sockets, prints "Node ID -> Item ID" mappings and attempts to resolve each socket's item name from build.items; uses "Unknown" when the item cannot be resolved.
+    
+    Parameters:
+        build (PathOfBuildingAPI): Source build data containing trees, items, and sockets.
     """
     print("=" * 80)
     print("  8. Skill Trees")
@@ -30,10 +35,14 @@ def print_trees(build: PathOfBuildingAPI) -> None:
 
 
 def print_active_tree(build: PathOfBuildingAPI):
-    """Print active skill tree information.
-
-    :param build: PathOfBuildingAPI instance.
-    :return: Active tree instance or None if not available.
+    """
+    Display the active skill tree and its jewel-socket mappings.
+    
+    Parameters:
+        build (PathOfBuildingAPI): PathOfBuildingAPI instance whose active skill tree will be displayed.
+    
+    Returns:
+        active_tree: The active skill tree instance if available, `None` otherwise.
     """
     print("=" * 80)
     print("  9. Active Skill Tree")
@@ -60,7 +69,9 @@ def print_active_tree(build: PathOfBuildingAPI):
 
 
 def main():
-    """Main function."""
+    """
+    Construct a PathOfBuildingAPI build from the bundled demo import code and print its skill trees to standard output.
+    """
     import sys
     from pathlib import Path
 

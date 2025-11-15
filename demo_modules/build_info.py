@@ -4,9 +4,12 @@ from pobapi import PathOfBuildingAPI
 
 
 def print_build_info(build: PathOfBuildingAPI) -> None:
-    """Print basic build information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Display basic information from a PathOfBuildingAPI build.
+    
+    Parameters:
+        build (PathOfBuildingAPI): Build whose `class_name`, `ascendancy_name`, `level`, `bandit`, `second_weapon_set`,
+            and optional `notes` will be printed. If `notes` is present, each line will be printed on its own indented line.
     """
     print("=" * 80)
     print("  1. Basic Build Information")
@@ -25,7 +28,11 @@ def print_build_info(build: PathOfBuildingAPI) -> None:
 
 
 def main():
-    """Main function."""
+    """
+    Prepare the environment, construct a PathOfBuildingAPI build from bundled demo code, and print its basic information.
+    
+    This adds the repository parent directory to sys.path to enable importing the demo helper, decodes the demo build with `from_import_code(import_code())`, and calls `print_build_info` to display the build's details.
+    """
     import sys
     from pathlib import Path
 

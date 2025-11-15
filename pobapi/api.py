@@ -47,11 +47,16 @@ class PathOfBuildingAPI:
         xml: bytes | Element,
         parser: BuildParser | None = None,
     ):
-        """Initialize PathOfBuildingAPI.
-
-        :param xml: XML content as bytes or Element.
-        :param parser: Optional parser implementation.
-        :raises: ParsingError, ValidationError
+        """
+        Create a PathOfBuildingAPI instance from raw XML bytes or an existing Element and initialize its parsing and mutation state.
+        
+        Parameters:
+            xml (bytes | Element): XML content for the build. If bytes, the input is validated and parsed into an Element; if already an Element, it is used directly.
+            parser (BuildParser | None): Optional parser implementation to use for extracting build info; defaults to the library's default parser when omitted.
+        
+        Raises:
+            ParsingError: If XML bytes fail to parse into an Element.
+            ValidationError: If `xml` is neither bytes nor Element, or if the parsed/received XML does not conform to expected build structure.
         """
         if isinstance(xml, bytes):
             InputValidator.validate_xml_bytes(xml)
@@ -75,17 +80,26 @@ class PathOfBuildingAPI:
 
     @property
     def _build_info_cache(self) -> dict:
-        """Cache for build info to avoid repeated parsing."""
+        """
+        Lazily parse and cache the build's parsed metadata from the XML.
+        
+        Parses build information on first access using the configured parser and stores the result for subsequent calls.
+        
+        Returns:
+            dict: A dictionary of parsed build information derived from the build XML.
+        """
         if self._build_info is None:
             self._build_info = self._parser.parse_build_info(self.xml)
         return self._build_info
 
     @memoized_property
     def class_name(self) -> str:
-        """Get a character's class.
-
-        :return: Character class.
-        :rtype: :class:`str`"""
+        """
+        Get the character's class name.
+        
+        Returns:
+            str: The character class name, or an empty string if the class is not specified.
+        """
         result = self._build_info_cache["class_name"]
         return result if result is not None else ""
 
@@ -99,46 +113,60 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def level(self) -> int:
-        """Get a character's level.
-
-        :return: Character level.
-        :rtype: :class:`int`"""
+        """
+        Retrieve the character's level.
+        
+        Returns:
+            int: Character level. Returns 1 if the build does not specify a level.
+        """
         level_str = self._build_info_cache["level"]
         return int(level_str) if level_str else 1
 
     @memoized_property
     def bandit(self) -> str | None:
-        """Get a character's bandit choice.
-
-        :return: Character bandit choice.
-        :rtype: :data:`~typing.Optional`\\[:class:`str`]"""
+        """
+        Return the character's selected bandit choice.
+        
+        Returns:
+            str if a bandit was selected, `None` otherwise.
+        """
         return self._build_info_cache["bandit"]  # type: ignore[no-any-return]
 
     @memoized_property
     def active_skill_group(self) -> models.SkillGroup:
-        """Get a character's main skill setup.
-
-        :return: Main skill setup.
-        :rtype: :class:`~pobapi.models.SkillGroup`"""
+        """
+        Return the build's main skill group.
+        
+        Determines the active skill group from the build metadata; if the build's main socket group is unspecified, the first skill group is returned.
+        
+        Returns:
+            models.SkillGroup: The main skill group for the character.
+        """
         main_socket_group = self._build_info_cache["main_socket_group"]
         index = int(main_socket_group) - 1 if main_socket_group else 0
         return self.skill_groups[index]  # type: ignore[no-any-return]
 
     @memoized_property
     def stats(self) -> stats.Stats:
-        """Namespace for character stats.
-
-        :return: Character stats.
-        :rtype: :class:`~pobapi.stats.Stats`"""
+        """
+        Get aggregated character stats for the current build.
+        
+        Returns:
+            stats.Stats: Character stats computed from the build XML.
+        """
         return StatsBuilder.build(self.xml)
 
     @memoized_property
     @listify
     def skill_groups(self) -> list[models.SkillGroup]:  # type: ignore[misc]
-        """Get a character's skill setups.
-
-        :return: Skill setups.
-        :rtype: :class:`~typing.List`\\[:class:`~pobapi.models.SkillGroup`]"""
+        """
+        Retrieve the character's skill groups (skill setups).
+        
+        Supports both Path of Building 2.0+ (Skills -> SkillSet -> Skill) and the legacy Skills -> Skill structure. Pending skill groups added via API modifications are yielded before groups parsed from XML.
+        
+        Returns:
+            list[models.SkillGroup]: Ordered list of skill groups; each group includes enabled flag, label, active skill index (or `None`), and ability entries.
+        """
         # First yield pending skill groups (from add_skill calls)
         if hasattr(self, "_pending_skill_groups"):
             yield from self._pending_skill_groups
@@ -179,11 +207,12 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def active_skill(self) -> models.Gem | models.GrantedAbility | None:
-        """Get a character's main skill.
-
-        :return: Main skill.
-        :rtype: :data:`~typing.Union`\\[:class:`~pobapi.models.Gem`,
-            :class:`~pobapi.models.GrantedAbility`]"""
+        """
+        Determine the currently active skill for the build's active skill group.
+        
+        Returns:
+            `models.Gem` or `models.GrantedAbility` representing the active skill, or `None` if the active skill group has no active index.
+        """
         if self.active_skill_group.active is None:
             return None
         index = self.active_skill_group.active - 1
@@ -210,12 +239,14 @@ class PathOfBuildingAPI:
     @memoized_property
     @listify
     def skill_gems(self) -> list[models.Gem]:  # type: ignore[misc]  # Added for convenience
-        """Get a list of all skill gems on a character.
-
-        .. note: Excludes abilities granted by items.
-
-        :return: Skill gems.
-        :rtype: :class:`~typing.List`\\[:class:`~pobapi.models.Gem`]"""
+        """
+        List all skill gems present on the character.
+        
+        Excludes abilities that are granted by items.
+        
+        Returns:
+            list_of_gems (list[models.Gem]): Skill gem objects for the character.
+        """
         skills_element = self.xml.find("Skills")
         if skills_element is None:
             return []
@@ -240,20 +271,24 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def active_skill_tree(self) -> models.Tree:
-        """Get a character's current skill tree.
-
-        :return: Skill tree.
-        :rtype: :class:`~pobapi.models.Tree`"""
+        """
+        Determines the character's currently active passive skill tree.
+        
+        Returns:
+            models.Tree: The active skill tree selected by the build's `activeSpec`.
+        """
         index = int(self.xml.find("Tree").get("activeSpec")) - 1
         return self.trees[index]  # type: ignore[no-any-return]
 
     @memoized_property
     @listify
     def trees(self) -> list[models.Tree]:  # type: ignore[misc]
-        """Get a list of all skill trees of a character.
-
-        :return: Skill trees.
-        :rtype: :class:`~typing.List`\\[:class:`~pobapi.models.Tree`]"""
+        """
+        Return the character's passive skill trees parsed from the build XML.
+        
+        Returns:
+            list[models.Tree]: A list where each Tree contains the tree URL (empty string if not present), the list of node IDs for that spec, and a mapping of nodeId to itemId for sockets.
+        """
         for spec in self.xml.find("Tree").findall("Spec"):
             url_elem = spec.find("URL")
             url = (
@@ -288,12 +323,12 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def keystones(self) -> models.Keystones:
-        """Namespace for a character's keystones.
-
-        Iterate over the keystones property to only get active keystones.
-
-        :return: Keystones.
-        :rtype: :class:`~pobapi.models.Keystones`"""
+        """
+        Represent which keystone passive nodes are active for the character.
+        
+        Returns:
+            models.Keystones: Dataclass with keystone fields set to `True` when the corresponding node ID is present in the active passive tree's nodes, `False` otherwise.
+        """
         # Get all field names from Keystones dataclass
         from dataclasses import fields
 
@@ -307,12 +342,14 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def notes(self) -> str:
-        """Get notes of a build's author.
-
-        Notes are automatically cleaned from Path of Building formatting codes.
-
-        :return: Build notes without formatting codes.
-        :rtype: :class:`str`"""
+        """
+        Return the build author's notes with Path of Building formatting removed.
+        
+        Notes are cleaned of PoB-specific formatting codes and returned as a plain string; when no notes are present, an empty string is returned.
+        
+        Returns:
+            str: The cleaned notes.
+        """
         notes_element = self.xml.find("Notes")
         if notes_element is None or notes_element.text is None:
             return ""
@@ -320,20 +357,25 @@ class PathOfBuildingAPI:
         return clean_pob_formatting(raw_notes)
 
     def add_node(self, node_id: int, tree_index: int = 0) -> None:
-        """Add a passive tree node.
-
-        :param node_id: Node ID to add
-            (e.g., PassiveNodeID.ELEMENTAL_EQUILIBRIUM or 39085).
-        :param tree_index: Index of tree (default: 0).
-        :raises: ValidationError if tree_index is invalid.
+        """
+        Add a passive skill tree node to the specified tree.
+        
+        Parameters:
+            node_id (int): Passive node ID to add (e.g., PassiveNodeID.ELEMENTAL_EQUILIBRIUM or 39085).
+            tree_index (int): Index of the tree to modify (default 0).
+        
+        Raises:
+            ValidationError: If `tree_index` is invalid.
         """
         self._modifier.add_node(node_id, tree_index)
 
     def remove_node(self, node_id: int, tree_index: int = 0) -> None:
-        """Remove a passive tree node.
-
-        :param node_id: Node ID to remove.
-        :param tree_index: Index of tree (default: 0).
+        """
+        Remove a node from the build's passive skill tree.
+        
+        Parameters:
+            node_id (int): ID of the passive node to remove.
+            tree_index (int): Zero-based index of the tree spec to modify (default: 0).
         """
         self._modifier.remove_node(node_id, tree_index)
 
@@ -343,13 +385,19 @@ class PathOfBuildingAPI:
         slot: ItemSlot | str,
         item_set_index: int = 0,
     ) -> int:
-        """Equip an item in a slot.
-
-        :param item: Item to equip.
-        :param slot: Slot name (e.g., "Body Armour", "Helmet").
-        :param item_set_index: Index of item set (default: 0).
-        :return: Index of added item.
-        :raises: ValidationError if slot is invalid.
+        """
+        Equip an item into the specified slot of an item set.
+        
+        Parameters:
+            item: The item to place into the slot.
+            slot: Slot name or ItemSlot value identifying where to equip the item (e.g., "Body Armour", "Helmet").
+            item_set_index: Zero-based index of the item set to modify (defaults to 0).
+        
+        Returns:
+            The index of the added item.
+        
+        Raises:
+            ValidationError: If the given slot or item_set_index is invalid.
         """
         return self._modifier.equip_item(item, slot, item_set_index)
 
@@ -358,17 +406,23 @@ class PathOfBuildingAPI:
         gem: models.Gem | models.GrantedAbility,
         group_label: str = "Main",
     ) -> None:
-        """Add a skill gem to a skill group.
-
-        :param gem: Gem or GrantedAbility to add.
-        :param group_label: Label of skill group to add to.
+        """
+        Add a skill (gem or granted ability) to the named skill group.
+        
+        Parameters:
+        	gem (models.Gem | models.GrantedAbility): The gem or granted ability to append to the group.
+        	group_label (str): Label of the target skill group; defaults to "Main".
         """
         self._modifier.add_skill(gem, group_label)
 
     def to_xml(self) -> bytes:
-        """Export build to XML format.
-
-        :return: XML bytes representing the build.
+        """
+        Serialize the current API state to a Path of Building XML document.
+        
+        Includes any pending in-memory modifications tracked by the API.
+        
+        Returns:
+            bytes: XML document for the build, including pending modifications.
         """
         from lxml.etree import tostring
 
@@ -381,9 +435,11 @@ class PathOfBuildingAPI:
         return xml_bytes
 
     def to_import_code(self) -> str:
-        """Export build to import code format.
-
-        :return: Import code string.
+        """
+        Return the current build encoded as a Path of Building import code.
+        
+        Returns:
+            import_code (str): The build represented as a Path of Building import code string.
         """
         from pobapi.serializers import ImportCodeGenerator
 
@@ -391,19 +447,25 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def second_weapon_set(self) -> bool:
-        """Get whether a character primarily uses their second weapon set.
-
-        :return: Truth value.
-        :rtype: :class:`bool`"""
+        """
+        Determine whether the build uses the second weapon set.
+        
+        Checks the Items element's `useSecondWeaponSet` attribute.
+        
+        Returns:
+            True if the Items `useSecondWeaponSet` attribute is equal to "true", False otherwise.
+        """
         return self.xml.find("Items").get("useSecondWeaponSet") == "true"  # type: ignore[no-any-return]
 
     @memoized_property
     @listify
     def items(self) -> list[models.Item]:  # type: ignore[misc]
-        """Get a list of all items of a Path Of Building build.
-
-        :return: Items.
-        :rtype: :class:`~typing.List`\\[:class:`~pobapi.models.Item`]"""
+        """
+        Iterates all items present in the build, including any pending items added by modifications.
+        
+        Returns:
+        	An iterable of Item models representing the build's items; pending items (from modifications) are yielded before items parsed from the XML.
+        """
         # First yield pending items (from equip_item calls)
         if hasattr(self, "_pending_items"):
             yield from self._pending_items
@@ -459,10 +521,20 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def active_item_set(self) -> models.Set:
-        """Get the item set a character is currently wearing.
-
-        :return: Item set.
-        :rtype: :class:`~pobapi.models.Set`"""
+        """
+        Return the item set currently equipped by the character.
+        
+        If the build contains an Items element, the item set is selected from the document's
+        item sets using the `activeItemSet` attribute (1-based). If `activeItemSet` is
+        missing or out of range, the first item set is used. If the build contains no
+        item sets, an empty item set with all slots set to None is returned. If there is
+        no Items element at all, the first item set is returned when present; otherwise an
+        empty item set is returned.
+        
+        Returns:
+            models.Set: The active item set, or an empty set with all slots `None` when no
+            item sets exist.
+        """
         items_elem = self.xml.find("Items")
         if items_elem is None:
             # If no Items element, return first item set or create empty one
@@ -536,12 +608,14 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def item_sets(self) -> list[models.Set]:
-        """Get a list of all item sets of a character.
-
-        .. note:: Slot IDs are 0-indexed.
-
-        :return: Item sets.
-        :rtype: :class:`~typing.List`\\[:class:`~pobapi.models.Set`]"""
+        """
+        Return the character's item sets in order.
+        
+        Applies any pending modifications from equip_item calls; if pending changes reference indices beyond the existing sets, intermediate slots are filled with empty sets. Slot IDs are 0-indexed.
+        
+        Returns:
+            list_of_sets (list[pobapi.models.Set]): Ordered list of item sets for the character.
+        """
 
         item_sets_list = ItemSetBuilder.build_all(self.xml)
 
@@ -588,21 +662,26 @@ class PathOfBuildingAPI:
 
     @memoized_property
     def config(self) -> config.Config:
-        """Namespace for Path Of Building config tab's options and values.
-
-        :return: Path Of Building config.
-        :rtype: :class:`~pobapi.config.Config`"""
+        """
+        Expose Path Of Building config tab options and their current values.
+        
+        Returns:
+            config.Config: Configuration options and their current values for this build.
+        """
         return ConfigBuilder.build(self.xml, self.level)
 
     @classmethod
     @listify
     def _abilities(cls, skill) -> list[models.Gem | models.GrantedAbility]:  # type: ignore[misc]
-        """Get a list of abilities, whether they are granted by gems or by items.
-
-        :return: Abilities.
-        :rtype: :class:`~typing.List`\\
-            [:data:`~typing.Union`\\[:class:`~pobapi.models.Gem`,
-            :class:`~pobapi.models.GrantedAbility`]]"""
+        """
+        Produce ability objects for each ability element in the given skill element.
+        
+        Parameters:
+        	skill (xml.etree.ElementTree.Element | Iterable[xml.etree.ElementTree.Element]): An element or iterable containing ability child elements to parse; each ability may represent a gem or a granted ability.
+        
+        Returns:
+        	list[models.Gem | models.GrantedAbility]: A list of parsed ability objects: `models.Gem` for gem-based abilities and `models.GrantedAbility` for non-gem abilities.
+        """
         for ability in skill:
             gem_id = ability.get("gemId")
             name = ability.get("nameSpec")
@@ -627,35 +706,51 @@ class PathOfBuildingAPI:
 
 
 def from_url(url: str, timeout: float = 6.0) -> PathOfBuildingAPI:
-    """Instantiate build class from a pastebin.com link generated with Path Of Building.
-
-    :raises: :class:`~pobapi.exceptions.InvalidURLError`,
-        :class:`~pobapi.exceptions.NetworkError`,
-        :class:`~pobapi.exceptions.ParsingError`
-
-    :param url: pastebin.com link generated with Path Of Building.
-    :param timeout: Timeout for the request."""
+    """
+    Create a PathOfBuildingAPI instance from a pastebin.com URL produced by Path of Building.
+    
+    Parameters:
+        url (str): pastebin.com URL containing a Path of Building export.
+        timeout (float): Request timeout in seconds.
+    
+    Returns:
+        PathOfBuildingAPI: The parsed build API constructed from the fetched XML.
+    
+    Raises:
+        pobapi.exceptions.InvalidURLError: If the URL is not a valid Path of Building pastebin link.
+        pobapi.exceptions.NetworkError: If the network request fails or times out.
+        pobapi.exceptions.ParsingError: If the fetched content cannot be parsed as a Path of Building build.
+    """
     InputValidator.validate_url(url)
     xml_bytes = _fetch_xml_from_url(url, timeout)
     return PathOfBuildingAPI(xml_bytes)
 
 
 def from_import_code(import_code: str) -> PathOfBuildingAPI:
-    """Instantiate build class from an import code generated with Path Of Building.
-
-    :raises: :class:`~pobapi.exceptions.InvalidImportCodeError`,
-        :class:`~pobapi.exceptions.ParsingError`
-
-    :param import_code: import code generated with Path Of Building."""
+    """
+    Create a PathOfBuildingAPI instance from a Path of Building import code.
+    
+    Parameters:
+        import_code (str): The Path of Building import code string.
+    
+    Returns:
+        PathOfBuildingAPI: An API representing the parsed build.
+    
+    Raises:
+        :class:`~pobapi.exceptions.InvalidImportCodeError`: If the import code is invalid.
+        :class:`~pobapi.exceptions.ParsingError`: If the generated XML cannot be parsed.
+    """
     InputValidator.validate_import_code(import_code)
     xml_bytes = _fetch_xml_from_import_code(import_code)
     return PathOfBuildingAPI(xml_bytes)
 
 
 def create_build() -> BuildBuilder:
-    """Create a new empty build using BuildBuilder.
-
-    :return: BuildBuilder instance for building a new build.
+    """
+    Create a new, empty BuildBuilder for composing a Path of Building build.
+    
+    Returns:
+        BuildBuilder: a new BuildBuilder instance ready for constructing a build.
     """
     from pobapi.build_builder import BuildBuilder
 

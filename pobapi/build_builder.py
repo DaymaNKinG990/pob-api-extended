@@ -23,7 +23,24 @@ class BuildBuilder:
     """
 
     def __init__(self):
-        """Initialize empty build builder."""
+        """
+        Create a BuildBuilder with a default, empty build state.
+        
+        Initializes builder fields to sensible defaults used for constructing a Path of Building build, including:
+        - class_name: "Scion"
+        - ascendancy_name: None
+        - level: 1
+        - bandit: None
+        - main_socket_group: None
+        - items: empty list
+        - item_sets: empty list
+        - trees: empty list
+        - active_spec: 1
+        - skill_groups: empty list
+        - config: None
+        - notes: empty string
+        - second_weapon_set: False
+        """
         self.class_name: str = "Scion"
         self.ascendancy_name: str | None = None
         self.level: int = 1
@@ -44,12 +61,15 @@ class BuildBuilder:
         class_name: CharacterClass | str,
         ascendancy_name: Ascendancy | str | None = None,
     ) -> "BuildBuilder":
-        """Set character class and ascendancy.
-
-        :param class_name: Character class (e.g., CharacterClass.WITCH or "Witch").
-        :param ascendancy_name: Optional ascendancy class
-            (e.g., Ascendancy.NECROMANCER).
-        :return: Self for method chaining.
+        """
+        Set the character class and optional ascendancy for the builder.
+        
+        Parameters:
+            class_name (CharacterClass | str): Character class as a CharacterClass enum or its name (e.g., "Witch").
+            ascendancy_name (Ascendancy | str | None): Optional ascendancy as an Ascendancy enum, its name, or None.
+        
+        Returns:
+            BuildBuilder: The builder instance (self) to allow method chaining.
         """
         if isinstance(class_name, CharacterClass):
             self.class_name = class_name.value
@@ -65,11 +85,17 @@ class BuildBuilder:
         return self
 
     def set_level(self, level: int) -> "BuildBuilder":
-        """Set character level.
-
-        :param level: Character level (1-100).
-        :return: Self for method chaining.
-        :raises: ValidationError if level is invalid.
+        """
+        Set the character's level within the allowed range.
+        
+        Parameters:
+            level (int): Character level; must be between 1 and 100 inclusive.
+        
+        Returns:
+            BuildBuilder: Self for method chaining.
+        
+        Raises:
+            ValidationError: If `level` is less than 1 or greater than 100.
         """
         if not 1 <= level <= 100:
             raise ValidationError(f"Level must be between 1 and 100, got {level}")
@@ -77,10 +103,17 @@ class BuildBuilder:
         return self
 
     def set_bandit(self, bandit: BanditChoice | str | None) -> "BuildBuilder":
-        """Set bandit choice.
-
-        :param bandit: Bandit choice (e.g., BanditChoice.ALIRA or "Alira").
-        :return: Self for method chaining.
+        """
+        Set the chosen bandit for the build.
+        
+        Parameters:
+            bandit (BanditChoice | str | None): Bandit selection as a BanditChoice enum, one of the strings "Alira", "Oak", "Kraityn", or None to unset.
+        
+        Returns:
+            BuildBuilder: Self for method chaining.
+        
+        Raises:
+            ValidationError: If `bandit` is a string other than "Alira", "Oak", "Kraityn", or None.
         """
         if isinstance(bandit, BanditChoice):
             self.bandit = bandit.value
@@ -150,13 +183,19 @@ class BuildBuilder:
         slot: ItemSlot | str,
         item_set_index: int = 0,
     ) -> "BuildBuilder":
-        """Equip item in a slot.
-
-        :param item_index: Index of item in items list (0-based).
-        :param slot: Slot name (e.g., "Body Armour", "Helmet", "Ring1").
-        :param item_set_index: Index of item set (default: 0).
-        :return: Self for method chaining.
-        :raises: ValidationError if item_index or item_set_index is invalid.
+        """
+        Equip an item into a specific slot of an item set.
+        
+        Parameters:
+            item_index (int): 0-based index of the item in the builder's items list.
+            slot (ItemSlot | str): Slot name (for example, "Body Armour", "Helmet", "Ring1").
+            item_set_index (int): 0-based index of the target item set; new item sets will be created if this index is beyond the current count.
+        
+        Returns:
+            BuildBuilder: Self for method chaining.
+        
+        Raises:
+            ValidationError: If `item_index` is out of range or `slot` is not a recognized slot name.
         """
         if item_index < 0 or item_index >= len(self.items):
             raise ValidationError(f"Invalid item index: {item_index}")
@@ -202,23 +241,32 @@ class BuildBuilder:
         return self
 
     def create_tree(self, url: str = "") -> models.Tree:
-        """Create a new passive skill tree.
-
-        :param url: Optional tree URL from pathofexile.com.
-        :return: New Tree instance.
+        """
+        Create a passive skill tree and append it to the builder's trees.
+        
+        Parameters:
+            url (str): Optional Path of Exile passive skill tree share URL to associate with the tree.
+        
+        Returns:
+            The newly created Tree instance.
         """
         tree = models.Tree(url=url, nodes=[], sockets={})
         self.trees.append(tree)
         return tree
 
     def allocate_node(self, node_id: int, tree_index: int = 0) -> "BuildBuilder":
-        """Allocate a passive tree node.
-
-        :param node_id: Node ID to allocate
-            (e.g., PassiveNodeID.ELEMENTAL_EQUILIBRIUM or 39085).
-        :param tree_index: Index of tree (default: 0).
-        :return: Self for method chaining.
-        :raises: ValidationError if tree_index is invalid.
+        """
+        Allocate the given passive skill tree node into the specified tree.
+        
+        Parameters:
+            node_id: Node ID to allocate (for example `PassiveNodeID.ELEMENTAL_EQUILIBRIUM` or `39085`).
+            tree_index: Index of the target tree. If no trees exist and `tree_index` is 0, a new tree is created; if `tree_index` is out of range and trees already exist, a ValidationError is raised.
+        
+        Returns:
+            Self for method chaining.
+        
+        Raises:
+            ValidationError: If `tree_index` is invalid when trees already exist.
         """
         # node_id can be int or PassiveNodeID.<CONSTANT> (which is also int)
         actual_node_id = int(node_id)
@@ -236,11 +284,13 @@ class BuildBuilder:
         return self
 
     def remove_node(self, node_id: int, tree_index: int = 0) -> "BuildBuilder":
-        """Remove a passive tree node.
-
-        :param node_id: Node ID to remove.
-        :param tree_index: Index of tree (default: 0).
-        :return: Self for method chaining.
+        """
+        Remove a node from the specified passive skill tree.
+        
+        If the tree index is out of range or the node is not present, no changes are made.
+        
+        Returns:
+            BuildBuilder: The builder instance for method chaining.
         """
         if 0 <= tree_index < len(self.trees):
             tree = self.trees[tree_index]
@@ -251,12 +301,19 @@ class BuildBuilder:
     def socket_jewel(
         self, socket_id: int, item_index: int, tree_index: int = 0
     ) -> "BuildBuilder":
-        """Socket a jewel in a passive tree socket.
-
-        :param socket_id: Socket node ID.
-        :param item_index: Index of jewel item.
-        :param tree_index: Index of tree (default: 0).
-        :return: Self for method chaining.
+        """
+        Place a jewel item into a specified socket on a passive skill tree.
+        
+        Parameters:
+            socket_id (int): Identifier of the socket node in the tree.
+            item_index (int): Index of the jewel in this builder's items list.
+            tree_index (int): Index of the target tree in this builder's trees list (default 0).
+        
+        Returns:
+            self: The builder instance for chaining.
+        
+        Raises:
+            ValidationError: If `item_index` is out of range, or `tree_index` is invalid (unless a new tree is created when none exist).
         """
         if item_index < 0 or item_index >= len(self.items):
             raise ValidationError(f"Invalid item index: {item_index}")
@@ -276,12 +333,18 @@ class BuildBuilder:
         enabled: bool = True,
         active: int | None = None,
     ) -> models.SkillGroup:
-        """Add a skill group.
-
-        :param label: Skill group label.
-        :param enabled: Whether the group is enabled.
-        :param active: Index of active skill in group.
-        :return: New SkillGroup instance.
+        """
+        Create and append a new skill group with the given label and enabled state.
+        
+        If this is the first skill group added and the builder's main socket group is unset, sets main_socket_group to 1.
+        
+        Parameters:
+            label (str): Label for the skill group.
+            enabled (bool): Whether the group is enabled.
+            active (int | None): Index of the active ability in the group, or None.
+        
+        Returns:
+            models.SkillGroup: The newly created skill group.
         """
         skill_group = models.SkillGroup(
             enabled=enabled, label=label, active=active, abilities=[]
@@ -319,28 +382,37 @@ class BuildBuilder:
         return self
 
     def set_config(self, config: Any) -> "BuildBuilder":
-        """Set build configuration.
-
-        :param config: Config object.
-        :return: Self for method chaining.
+        """
+        Set the build's configuration object.
+        
+        Parameters:
+            config (Any): Configuration object applied to the build.
+        
+        Returns:
+            BuildBuilder: The same builder instance for method chaining.
         """
         self.config = config
         return self
 
     def set_notes(self, notes: str) -> "BuildBuilder":
-        """Set build notes.
-
-        :param notes: Notes text.
-        :return: Self for method chaining.
+        """
+        Set the build's notes text.
+        
+        Returns:
+            The same BuildBuilder instance for method chaining.
         """
         self.notes = notes
         return self
 
     def set_active_spec(self, spec_index: int) -> "BuildBuilder":
-        """Set active tree specification.
-
-        :param spec_index: Index of active spec (1-based).
-        :return: Self for method chaining.
+        """
+        Set the active specification index for the build.
+        
+        Parameters:
+            spec_index (int): 1-based index of the active specification; must be >= 1.
+        
+        Returns:
+            BuildBuilder: The builder instance (`self`) for method chaining.
         """
         if spec_index < 1:
             raise ValidationError(f"Spec index must be >= 1, got {spec_index}")
@@ -348,9 +420,13 @@ class BuildBuilder:
         return self
 
     def build(self) -> PathOfBuildingAPI:
-        """Build PathOfBuildingAPI instance.
-
-        :return: PathOfBuildingAPI instance with created build.
+        """
+        Serialize the builder into a PathOfBuildingAPI model.
+        
+        Serializes the current BuildBuilder state to Path of Building XML and returns a PathOfBuildingAPI constructed from that XML.
+        
+        Returns:
+            PathOfBuildingAPI: Instance representing the constructed build.
         """
         from pobapi.serializers import BuildXMLSerializer
 

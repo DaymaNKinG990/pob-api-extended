@@ -4,9 +4,11 @@ from pobapi import PathOfBuildingAPI
 
 
 def print_items(build: PathOfBuildingAPI) -> None:
-    """Print items information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Display item details from the given PathOfBuildingAPI build to standard output.
+    
+    Parameters:
+        build (PathOfBuildingAPI): Build whose items will be listed; each item's name, base, rarity, optional unique id, item level, level requirement, shaper/elder/crafted flags, quality, sockets, implicit count, and non-empty item text lines are printed.
     """
     print("=" * 80)
     print("  6. Items")
@@ -44,9 +46,13 @@ def print_items(build: PathOfBuildingAPI) -> None:
 
 
 def print_item_sets(build: PathOfBuildingAPI) -> None:
-    """Print item sets information.
-
-    :param build: PathOfBuildingAPI instance.
+    """
+    Display the active item set and all configured item sets from the provided build.
+    
+    Prints a header, attempts to print the active item set (including weapon swaps and abyssal sockets) and then lists each item set's equipped item indices. If the active set cannot be read, an error message is printed.
+    
+    Parameters:
+        build (PathOfBuildingAPI): Build object containing `active_item_set` and `item_sets` used for output.
     """
     print("=" * 80)
     print("  7. Item Sets")
@@ -191,7 +197,11 @@ def print_item_sets(build: PathOfBuildingAPI) -> None:
 
 
 def main():
-    """Main function."""
+    """
+    Construct a PathOfBuildingAPI build from the bundled demo import code and print the build's items.
+    
+    This prepares the demo environment, creates a build using the demo import code, and invokes print_items(build) to display item information.
+    """
     import sys
     from pathlib import Path
 

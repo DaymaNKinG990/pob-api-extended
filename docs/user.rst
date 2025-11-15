@@ -28,4 +28,15 @@ Getting Started
   :func:`pobapi.api.from_import_code`.
 | Access PoB build information through attributes of the object.
 
+Alternative: Use :class:`pobapi.factory.BuildFactory` for more control,
+including async support.
+
 Full documentation available :ref:`here <api:API>`.
+
+New Features
+-------------
+
+* **Async Support**: Use :class:`pobapi.factory.BuildFactory` with async HTTP clients
+* **Caching**: Automatic caching of import code decoding and skill tree parsing
+* **Custom Exceptions**: Better error handling with specific exception types
+* **Validation**: Automatic validation of model data

@@ -1,0 +1,461 @@
+================================================================================
+PathOfBuildingAPI Structure Inspection
+================================================================================
+
+Loading build from import code...
+Build loaded successfully!
+
+================================================================================
+Full API Structure:
+================================================================================
+
+PathOfBuildingAPI: PathOfBuildingAPI
+  _abilities(): <method: (skill) -> List[Union[pobapi.models.Gem, pobapi.models.GrantedAbility]]>
+  _parser: DefaultBuildParser
+    parse_build_info(): <method: (xml_element: lxml.etree.Element) -> Dict>
+    parse_items(): <method: (xml_element: lxml.etree.Element) -> List>
+    parse_skills(): <method: (xml_element: lxml.etree.Element) -> List>
+    parse_trees(): <method: (xml_element: lxml.etree.Element) -> List>
+    _abc_impl: _abc_data
+  active_item_set: Set
+    amulet: int = 22
+    belt: int = 25
+    belt_as1: NoneType = None
+    belt_as2: NoneType = None
+    body_armour: int = 19
+    body_armour_as1: NoneType = None
+    body_armour_as2: NoneType = None
+    boots: int = 21
+    boots_as1: NoneType = None
+    boots_as2: NoneType = None
+    flask1: int = 2
+    flask2: int = 4
+    flask3: int = 5
+    flask4: int = 6
+    flask5: int = 3
+    gloves: int = 20
+    gloves_as1: NoneType = None
+    gloves_as2: NoneType = None
+    helmet: int = 18
+    helmet_as1: NoneType = None
+    helmet_as2: NoneType = None
+    ring1: int = 23
+    ring2: int = 24
+    weapon1: int = 16
+    weapon1_as1: NoneType = None
+    weapon1_as2: NoneType = None
+    weapon1_swap: NoneType = None
+    weapon1_swap_as1: NoneType = None
+    weapon1_swap_as2: NoneType = None
+    weapon2: int = 17
+    weapon2_as1: NoneType = None
+    weapon2_as2: NoneType = None
+    weapon2_swap: NoneType = None
+    weapon2_swap_as1: NoneType = None
+    weapon2_swap_as2: NoneType = None
+  active_skill: Gem
+    _abc_impl: _abc_data
+    enabled: bool = True
+    level: int = 20
+    name: str = 'Kinetic Blast'
+    quality: int = 20
+    support: bool = False
+  active_skill_group: SkillGroup
+    abilities: list = list(length=5)
+    active: int = 1
+    enabled: bool = True
+    label: str = ''
+  active_skill_tree: Tree
+    nodes: list = list(length=145)
+    sockets: dict = dict(keys=10)
+    url: str = 'https://www.pathofexile.com/passive-skill-tree/AAAABgICejQ__EeNuWznVeBsCOO-vu7PXvsJgh5hEGyMyz_rY5u1...
+  config: Config
+    adrenaline: bool = False
+    aspect_of_the_avian_avians_flight: bool = False
+    aspect_of_the_avian_avians_might: bool = False
+    aspect_of_the_cat_cats_agility: bool = False
+    aspect_of_the_cat_cats_stealth: bool = False
+    aspect_of_the_spider_web_stacks: NoneType = None
+    attacked_recently: bool = False
+    banner_planted: bool = False
+    banner_stages: NoneType = None
+    bastion_of_hope: bool = False
+    been_crit_recently: bool = False
+    been_hit_recently: bool = False
+    been_savage_hit_recently: bool = False
+    bleeding: bool = False
+    blocked_attack_recently: bool = False
+    blocked_hit_from_unique_enemy_in_past_ten_seconds: bool = False
+    blocked_recently: bool = False
+    blocked_spell_recently: bool = False
+    brand_attached: bool = False
+    burning: bool = False
+    cast_spell_recently: bool = False
+    character_level: NoneType = None
+    chilled: bool = False
+    consumed_corpses_recently: bool = False
+    crit_recently: bool = False
+    curse_assassins_mark: NoneType = None
+    curse_conductivity: NoneType = None
+    curse_despair: NoneType = None
+    curse_elemental_weakness: NoneType = None
+    curse_enfeeble: NoneType = None
+    curse_flammability: NoneType = None
+    curse_frostbite: NoneType = None
+    curse_poachers_mark: NoneType = None
+    curse_projectile_weakness: NoneType = None
+    curse_punishment: NoneType = None
+    curse_temporal_chains: NoneType = None
+    curse_vulnerability: NoneType = None
+    curse_warlords_mark: NoneType = None
+    dark_pact_skeleton_life: NoneType = None
+    deathmark: bool = False
+    detonate_dead_corpse_life: int = 16161
+    divinity: bool = False
+    elemental_conflux: bool = False
+    elemental_equilibrium: bool = False
+    elemental_equilibrium_ignore_hit_damage: bool = False
+    enemy_avoid_poison_blind_bleed: NoneType = None
+    enemy_avoid_status_ailment: NoneType = None
+    enemy_bleeding: bool = False
+    enemy_blinded: bool = False
+    enemy_boss: bool = False
+    enemy_burning: bool = False
+    enemy_chaos_resist: NoneType = None
+    enemy_chilled: bool = False
+    enemy_cold_resist: NoneType = None
+    enemy_covered_in_ash: bool = False
+    enemy_cursed: bool = False
+    enemy_fire_resist: NoneType = None
+    enemy_frozen: bool = False
+    enemy_hexproof: bool = False
+    enemy_hindered: bool = False
+    enemy_hit_by_cold_damage: bool = False
+    enemy_hit_by_fire_damage: bool = False
+    enemy_hit_by_lightning_damage: bool = False
+    enemy_ignited: bool = False
+    enemy_in_close_range: bool = False
+    enemy_increased_accuracy: NoneType = None
+    enemy_intimidated: bool = False
+    enemy_level: int = 84
+    enemy_lightning_resist: NoneType = None
+    enemy_maimed: bool = False
+    enemy_moving: bool = False
+    enemy_number_of_freeze_shock_ignite: NoneType = None
+    enemy_number_of_poison_stacks: NoneType = None
+    enemy_on_full_life: bool = False
+    enemy_on_low_life: bool = False
+    enemy_physical_damage_reduction: NoneType = None
+    enemy_physical_hit_damage: float = 1233.0
+    enemy_physical_reduction: NoneType = None
+    enemy_poisoned: bool = False
+    enemy_rare_or_unique: bool = False
+    enemy_resistances: NoneType = None
+    enemy_shocked: bool = False
+    enemy_takes_reduced_extra_crit_damage: NoneType = None
+    enemy_taunted: bool = False
+    enemy_unnerved: bool = False
+    energy_shield_recharge_started_recently: bool = False
+    feeding_frenzy: bool = False
+    focus: bool = False
+    fortify: bool = False
+    frozen: bool = False
+    frozen_enemy_recently: bool = False
+    has_energy_shield: bool = False
+    has_totem: bool = False
+    her_embrace: bool = False
+    herald_of_agony_stacks: NoneType = None
+    hit_by_cold_damage_recently: bool = False
+    hit_by_fire_damage_recently: bool = False
+    hit_by_lightning_damage_recently: bool = False
+    hit_recently: bool = False
+    ice_nova_cast_on_frostbolt: bool = False
+    ignite_mode: NoneType = None
+    ignited: bool = False
+    ignited_enemy_recently: bool = False
+    in_bloodstorm: bool = False
+    in_sandstorm: bool = False
+    infusion: bool = False
+    innervate_innervation: bool = False
+    intensify_stacks: NoneType = None
+    is_moving: bool = False
+    is_stationary: bool = False
+    killed_affected_by_dot: bool = False
+    killed_recently: bool = False
+    leeching: bool = False
+    leeching_energy_shield: bool = False
+    leeching_life: bool = False
+    leeching_mana: bool = False
+    less_aoe: NoneType = None
+    less_armour_block: NoneType = None
+    less_curse_effect: NoneType = None
+    less_recovery: NoneType = None
+    lucky_crits: bool = False
+    max_blitz_charges: NoneType = None
+    max_challenger_charges: NoneType = None
+    max_endurance_charges: NoneType = None
+    max_frenzy_charges: NoneType = None
+    max_inspiration_charges: NoneType = None
+    max_power_charges: NoneType = None
+    max_siphoning_charges: NoneType = None
+    meat_shield_enemy_nearby: bool = False
+    minions_killed_recently: bool = False
+    minions_on_full_life: bool = False
+    minions_use_endurance_charges: bool = False
+    minions_use_frenzy_charges: bool = False
+    minions_use_power_charges: bool = False
+    minus_max_resists: NoneType = None
+    no_leech: bool = False
+    no_regen: bool = False
+    non_crit_recently: bool = False
+    number_of_corpses_consumed_recently: NoneType = None
+    number_of_enemies_killed_recently: NoneType = None
+    number_of_mines_detonated_recently: NoneType = None
+    number_of_minions_killed_recently: NoneType = None
+    number_of_nearby_allies: NoneType = None
+    number_of_nearby_corpses: NoneType = None
+    number_of_nearby_enemies: NoneType = None
+    number_of_poison_stacks: NoneType = None
+    number_of_poisons_applied_recently: NoneType = None
+    number_of_shocked_enemies_killed_recently: NoneType = None
+    number_of_times_skill_has_chained: NoneType = None
+    number_of_totems_killed_recently: NoneType = None
+    number_of_traps_triggered_recently: NoneType = None
+    on_burning_ground: bool = False
+    on_chilled_ground: bool = False
+    on_consecrated_ground: bool = False
+    on_full_energy_shield: bool = False
+    on_full_life: bool = False
+    on_low_life: bool = False
+    on_shocked_ground: bool = False
+    only_one_nearby_enemy: bool = False
+    onslaught: bool = False
+    override_crab_barriers: NoneType = None
+    pendulum_of_destruction: bool = False
+    phasing: bool = False
+    point_blank: bool = False
+    poisoned: bool = False
+    projectile_distance: NoneType = None
+    rage: bool = False
+    raise_spectres_blade_vortex_blade_count: NoneType = None
+    raise_spectres_enable_curses: bool = False
+    raise_spectres_enable_summoned_ursa_rallying_cry: bool = False
+    raise_spectres_kaom_fire_beam_totem_stage: NoneType = None
+    raise_spectres_spectre_level: NoneType = None
+    raise_spiders_spider_count: NoneType = None
+    reduced_flask_charges: NoneType = None
+    resistance_penalty: int = -60
+    shattered_enemy_recently: bool = False
+    shocked: bool = False
+    shocked_enemy_recently: bool = False
+    siphoning_trap_affected_enemies: NoneType = None
+    skill_crit_recently: bool = False
+    stance: NoneType = None
+    summon_holy_relic_enable_holy_relic_buff: bool = False
+    summon_lightning_golem_enable_wrath: bool = False
+    tailwind: bool = False
+    taunted_enemy_recently: bool = False
+    totems_killed_recently: bool = False
+    unholy_might: bool = False
+    use_blitz_charges: bool = False
+    use_challenger_charges: bool = False
+    use_endurance_charges: bool = False
+    use_frenzy_charges: bool = False
+    use_inspiration_charges: bool = False
+    use_power_charges: bool = False
+    use_siphoning_charges: bool = False
+    used_cold_skill_recently: bool = False
+    used_fire_skill_recently: bool = False
+    used_minion_skill_recently: bool = False
+    used_movement_skill_recently: bool = False
+    used_skill_recently: bool = False
+    used_vaal_skill_recently: bool = False
+    used_warcry_in_past_8_seconds: bool = False
+    used_warcry_recently: bool = False
+    using_flask: bool = False
+    vortex_cast_on_frostbolt: bool = False
+    wave_of_conviction_exposure_type: NoneType = None
+    winter_orb_stages: NoneType = None
+  keystones: Keystones
+    acrobatics: bool = False
+    ancestral_bond: bool = False
+    arrow_dancing: bool = False
+    avatar_of_fire: bool = False
+    blood_magic: bool = False
+    chaos_inoculation: bool = False
+    conduit: bool = False
+    crimson_dance: bool = False
+    eldritch_battery: bool = False
+    elemental_equilibrium: bool = False
+    ghost_reaver: bool = False
+    iron_grip: bool = False
+    iron_reflexes: bool = False
+    mind_over_matter: bool = False
+    minion_instability: bool = False
+    mortal_conviction: bool = False
+    necromantic_aegis: bool = False
+    pain_attunement: bool = False
+    perfect_agony: bool = False
+    phase_acrobatics: bool = False
+    point_blank: bool = False
+    resolute_technique: bool = False
+    runebinder: bool = False
+    unwavering_stance: bool = False
+    vaal_pact: bool = False
+    wicked_ward: bool = False
+    zealots_oath: bool = False
+  stats: Stats
+    active_minion_limit: NoneType = None
+    active_totem_limit: NoneType = None
+    area_of_effect_radius: NoneType = None
+    armour: float = 512.0
+    armour_increased: float = 0.0
+    attack_dodge_chance: float = 0.0
+    attack_speed: NoneType = None
+    average_damage: float = 927262.56223774
+    average_damage_with_ignite: NoneType = None
+    average_damage_with_poison: NoneType = None
+    average_hit: NoneType = None
+    bleed_dps: float = 411.10400151797
+    block_chance: NoneType = None
+    cast_speed: float = 7.250796
+    chaos_resistance: float = -17.0
+    chaos_resistance_over_cap: float = 0.0
+    cold_resistance: float = 75.0
+    cold_resistance_over_cap: float = 73.0
+    crit_chance: float = 96.8
+    crit_multiplier: float = 5.05
+    decay_dps: NoneType = None
+    dexterity: float = 258.0
+    dexterity_required: float = 173.0
+    effective_movement_speed_modifier: float = 2.4
+    endurance_charges: float = 0.0
+    endurance_charges_maximum: float = 3.0
+    energy_shield: float = 1413.0
+    energy_shield_increased: float = 40.0
+    energy_shield_leech_gain_per_hit: NoneType = None
+    energy_shield_leech_rate_per_hit: float = 192.52687374
+    energy_shield_regen: NoneType = None
+    evasion: float = 11946.0
+    evasion_increased: float = 23.0
+    fire_resistance: float = 75.0
+    fire_resistance_over_cap: float = 73.0
+    frenzy_charges: float = 3.0
+    frenzy_charges_maximum: float = 3.0
+    hit_chance: float = 100.0
+    ignite_damage: NoneType = None
+    ignite_dps: NoneType = None
+    intelligence: float = 152.0
+    intelligence_required: float = 188.0
+    life: float = 3580.0
+    life_increased: float = 100.0
+    life_leech_gain_per_hit: NoneType = None
+    life_leech_rate_per_hit: float = 874.7924324
+    life_regen: NoneType = None
+    life_unreserved: float = 3580.0
+    life_unreserved_percent: float = 100.0
+    lightning_resistance: float = 75.0
+    lightning_resistance_over_cap: float = 92.0
+    mana: float = 747.0
+    mana_cost: float = 37.0
+    mana_increased: float = 8.0
+    mana_leech_gain_per_hit: NoneType = None
+    mana_leech_rate_per_hit: float = 190.98331506
+    mana_regen: NoneType = None
+    mana_unreserved: float = 115.0
+    mana_unreserved_percent: float = 15.394912985274
+    melee_evade_chance: float = 64.0
+    mine_laying_speed: NoneType = None
+    net_life_regen: float = -128.12
+    net_mana_regen: float = 13.1
+    physical_damage_reduction: float = 9.0
+    poison_damage: float = 152.5672575
+    poison_dps: float = 108.9766125
+    power_charges: float = 4.0
+    power_charges_maximum: float = 4.0
+    pre_effective_crit_chance: float = 96.8
+    projectile_evade_chance: float = 64.0
+    skill_cooldown: NoneType = None
+    spell_block_chance: NoneType = None
+    spell_dodge_chance: float = 0.0
+    strength: float = 117.0
+    strength_required: float = 148.0
+    total_degen: NoneType = None
+    total_dot: float = 0.0
+    total_dps: float = 6723391.6772232
+    total_dps_with_ignite: float = 6723391.6772232
+    total_dps_with_poison: float = 6723446.9889262
+    totem_placement_speed: NoneType = None
+    trap_cooldown: NoneType = None
+    trap_throwing_speed: NoneType = None
+  xml: _Element
+    _init(): <method: ()>
+    addnext(): <method: (element)>
+    addprevious(): <method: (element)>
+    append(): <method: (element)>
+    clear(): <method: (keep_tail=False)>
+    cssselect(): <method: (expr, *, translator='xml')>
+    extend(): <method: (elements)>
+    find(): <method: (path, namespaces=None)>
+    findall(): <method: (path, namespaces=None)>
+    findtext(): <method: (path, default=None, namespaces=None)>
+    get(): <method: (key, default=None)>
+    getchildren(): <method: ()>
+    getiterator(): <method: (tag=None, *tags)>
+    getnext(): <method: ()>
+    getparent(): <method: ()>
+    getprevious(): <method: ()>
+    getroottree(): <method: ()>
+    index(): <method: (child: '_Element', start: 'int' = None, stop: 'int' = None)>
+    insert(): <method: (index: 'int', element)>
+    items(): <method: ()>
+    iter(): <method: (tag=None, *tags)>
+    iterancestors(): <method: (tag=None, *tags)>
+    iterchildren(): <method: (tag=None, *tags, reversed=False)>
+    iterdescendants(): <method: (tag=None, *tags)>
+    iterfind(): <method: (path, namespaces=None)>
+    itersiblings(): <method: (tag=None, *tags, preceding=False)>
+    itertext(): <method: (tag=None, *tags, with_tail=True)>
+    keys(): <method: ()>
+    makeelement(): <method: (_tag, attrib=None, nsmap=None, **_extra)>
+    remove(): <method: (element)>
+    replace(): <method: (old_element, new_element)>
+    set(): <method: (key, value)>
+    values(): <method: ()>
+    xpath(): <method: (_path, *, namespaces=None, extensions=None, smart_strings=True, **_variables)>
+    attrib: _Attrib
+      clear(): <method: ()>
+      get(): <method: (key, default=None)>
+      has_key(): <method: (key)>
+      items(): <method: ()>
+      iteritems(): <method: ()>
+      iterkeys(): <method: ()>
+      itervalues(): <method: ()>
+      keys(): <method: ()>
+      pop(): <method: (key, *default)>
+      update(): <method: (sequence_or_dict)>
+      values(): <method: ()>
+    base: NoneType = None
+    nsmap: dict = dict(keys=0)
+    prefix: NoneType = None
+    sourceline: int = 2
+    tag: str = 'PathOfBuilding'
+    tail: NoneType = None
+    text: str = '\n\t'
+  _build_info: NoneType = None
+  _build_info_cache: dict = dict(keys=5)
+  ascendancy_name: str = 'Deadeye'
+  bandit: str = 'None'
+  class_name: str = 'Ranger'
+  item_sets: list = list(length=8)
+  items: list = list(length=47)
+  level: int = 97
+  notes: str = 'Leveling guide: https://pobb.in/48gQClJF_Nyi\n\nWarden is only for single target damage (T17 or ube...
+  second_weapon_set: bool = False
+  skill_gems: list = list(length=181)
+  skill_groups: list = list(length=49)
+  trees: list = list(length=8)
+
+================================================================================
+Inspection complete
+================================================================================

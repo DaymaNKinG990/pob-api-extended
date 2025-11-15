@@ -25,3 +25,31 @@ Contributing Code
 * Make sure to format your code with `black <https://github.com/ambv/black>`_
   before submitting.
 * Add yourself to AUTHORS.txt!
+
+Setup Development Environment
+------------------------------
+
+Install dev dependencies using `uv <https://github.com/astral-sh/uv>`_ (recommended):
+
+.. code-block:: console
+
+    uv sync
+
+Or using pip:
+
+.. code-block:: console
+
+    pip install -e ".[dev]"
+
+Run tests:
+
+.. code-block:: console
+
+    pytest
+
+Format code:
+
+.. code-block:: console
+
+    black pobapi tests
+    isort pobapi tests

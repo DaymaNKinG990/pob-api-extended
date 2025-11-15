@@ -1,12 +1,10 @@
-from typing import Dict, List
-
 """Constants taken from the game and PathOfBuilding."""
 
 #: Skill tree node data is offset 7 bytes from the start.
 TREE_OFFSET: int = 7
 
 #: Skill tree IDs of keystones.
-KEYSTONE_IDS: Dict[str, int] = {
+KEYSTONE_IDS: dict[str, int] = {
     "acrobatics": 54307,
     "ancestral_bond": 41970,
     "arrow_dancing": 54922,
@@ -39,7 +37,7 @@ KEYSTONE_IDS: Dict[str, int] = {
 
 # fmt: off
 #: Taken from DefaultMonsterStats.dat
-MONSTER_DAMAGE_TABLE: List[int] = [5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+MONSTER_DAMAGE_TABLE: list[int] = [5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
                                    18, 20, 21, 23, 24, 26, 28, 30, 32, 34, 36, 39, 41,
                                    44, 47, 50, 53, 56, 59, 63, 67, 71, 75, 80, 84, 89,
                                    94, 100, 106, 112, 118, 125, 131, 139, 147, 155, 163,
@@ -49,7 +47,7 @@ MONSTER_DAMAGE_TABLE: List[int] = [5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
                                    783, 822, 862, 905, 949, 996, 1045, 1096, 1149, 1205,
                                    1264, 1325, 1390, 1457, 1527, 1601, 1678, 1758]
 #: Taken from DefaultMonsterStats.dat
-MONSTER_LIFE_TABLE: List[int] = [15, 18, 21, 25, 29, 33, 38, 43, 49, 55, 61, 68, 76, 85,
+MONSTER_LIFE_TABLE: list[int] = [15, 18, 21, 25, 29, 33, 38, 43, 49, 55, 61, 68, 76, 85,
                                  94, 104, 114, 126, 138, 152, 166, 182, 199, 217, 236,
                                  257, 280, 304, 331, 359, 389, 422, 456, 494, 534, 577,
                                  624, 673, 726, 783, 844, 910, 980, 1055, 1135, 1221,
@@ -61,14 +59,14 @@ MONSTER_LIFE_TABLE: List[int] = [15, 18, 21, 25, 29, 33, 38, 43, 49, 55, 61, 68,
                                  23770, 25338, 27007, 28784, 30673, 32684, 34823, 37098,
                                  39519, 42093, 44831]
 #: Vaal Skills with irregular names
-VAAL_SKILL_MAP: Dict[str, str] = {
+VAAL_SKILL_MAP: dict[str, str] = {
     "Vaal Breach": "Portal",
     "Vaal Impurity of Fire": "Purity of Fire",
     "Vaal Impurity of Ice": "Purity of Ice",
     "Vaal Impurity of Lightning": "Purity of Lightning",
 }
 #: Mapping between internal skill IDs and their display names
-SKILL_MAP: Dict[str, str] = {
+SKILL_MAP: dict[str, str] = {
     "Melee": "Default Attack",
     "MeleeUseContactPoint": "Default Attack",
     "GemDetonateMines": "Detonate Mines",
@@ -128,7 +126,7 @@ SKILL_MAP: Dict[str, str] = {
     "VoidGaze": "Void Gaze",
 }
 #: Mapping between PathOfBuilding's export format and this API.
-CONFIG_MAP: Dict[str, str] = {
+CONFIG_MAP: dict[str, str] = {
     "resistancePenalty": "resistance_penalty",
     "enemyLevel": "enemy_level",
     "enemyPhysicalHit": "enemy_physical_hit_damage",
@@ -340,7 +338,7 @@ CONFIG_MAP: Dict[str, str] = {
 }
 # fmt: on
 #: Mapping between PathOfBuilding's export format and this API.
-STATS_MAP: Dict[str, str] = {
+STATS_MAP: dict[str, str] = {
     "AverageHit": "average_hit",
     "AverageDamage": "average_damage",
     "Speed": "cast_speed",
@@ -367,7 +365,9 @@ STATS_MAP: Dict[str, str] = {
     "DecayDPS": "decay_dps",
     "Cooldown": "skill_cooldown",
     "AreaOfEffectRadius": "area_of_effect_radius",
+    "AreaOfEffectRadiusMetres": "area_of_effect_radius",
     "ManaCost": "mana_cost",
+    "ManaPerSecondCost": "mana_cost_per_second",
     "Str": "strength",
     "ReqStr": "strength_required",
     "Dex": "dexterity",
@@ -379,6 +379,7 @@ STATS_MAP: Dict[str, str] = {
     "LifeUnreserved": "life_unreserved",
     "LifeUnreservedPercent": "life_unreserved_percent",
     "LifeRegen": "life_regen",
+    "LifeRegenRecovery": "life_regen",
     "LifeLeechGainRate": "life_leech_rate_per_hit",
     "LifeLeechGainPerHit": "life_leech_gain_per_hit",
     "Mana": "mana",
@@ -386,9 +387,12 @@ STATS_MAP: Dict[str, str] = {
     "ManaUnreserved": "mana_unreserved",
     "ManaUnreservedPercent": "mana_unreserved_percent",
     "ManaRegen": "mana_regen",
+    "ManaRegenRecovery": "mana_regen",
     "ManaLeechGainRate": "mana_leech_rate_per_hit",
     "ManaLeechGainPerHit": "mana_leech_gain_per_hit",
     "TotalDegen": "total_degen",
+    "TotalBuildDegen": "total_degen",
+    "TotalDotDPS": "total_dot",
     "NetRegen": "net_regen",
     "NetLifeRegen": "net_life_regen",
     "NetManaRegen": "net_mana_regen",
@@ -406,7 +410,10 @@ STATS_MAP: Dict[str, str] = {
     "PhysicalDamageReduction": "physical_damage_reduction",
     "EffectiveMovementSpeedMod": "effective_movement_speed_modifier",
     "BlockChance": "block_chance",
+    "EffectiveBlockChance": "block_chance",
     "SpellBlockChance": "spell_block_chance",
+    "EffectiveSpellBlockChance": "spell_block_chance",
+    "EffectiveSpellSuppressionChance": "spell_suppression_chance",
     "AttackDodgeChance": "attack_dodge_chance",
     "SpellDodgeChance": "spell_dodge_chance",
     "FireResist": "fire_resistance",
@@ -425,9 +432,16 @@ STATS_MAP: Dict[str, str] = {
     "EnduranceChargesMax": "endurance_charges_maximum",
     "ActiveTotemLimit": "active_totem_limit",
     "ActiveMinionLimit": "active_minion_limit",
+    "Rage": "rage",
+    "PhysicalMaximumHitTaken": "physical_maximum_hit_taken",
+    "FireMaximumHitTaken": "fire_maximum_hit_taken",
+    "ColdMaximumHitTaken": "cold_maximum_hit_taken",
+    "LightningMaximumHitTaken": "lightning_maximum_hit_taken",
+    "ChaosMaximumHitTaken": "chaos_maximum_hit_taken",
+    "TotalEHP": "total_effective_health_pool",
 }
 #: Mapping between PathOfBuilding's export format and this API.
-SET_MAP: Dict[str, str] = {
+SET_MAP: dict[str, str] = {
     "Gloves": "gloves",
     "Weapon 1": "weapon1",
     "Flask 1": "flask1",

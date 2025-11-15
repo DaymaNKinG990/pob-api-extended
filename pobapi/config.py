@@ -1,14 +1,10 @@
 from dataclasses import InitVar, dataclass
-from typing import Union
-
-from dataslots import with_slots
 
 from pobapi.constants import MONSTER_DAMAGE_TABLE, MONSTER_LIFE_TABLE
 
 __all__ = ["Config"]
 
 
-@with_slots
 @dataclass
 class Config:
     """Config(*args)
@@ -281,11 +277,53 @@ class Config:
         Overridden character/enemy level used to estimate
         hit and evasion chances, enemy life and damage."""
 
-    # General Build Configuration
+    # ========================================================================
+    # BUILD CONFIGURATION
+    # ========================================================================
     resistance_penalty: int = -60
-    enemy_level: int = None
-    enemy_physical_hit_damage: float = None
-    detonate_dead_corpse_life: int = None
+    ignite_mode: str | None = None
+    detonate_dead_corpse_life: int | None = None
+
+    # ========================================================================
+    # ENEMY CONFIGURATION
+    # ========================================================================
+    enemy_level: int | None = None
+    enemy_physical_hit_damage: float | None = None
+    enemy_physical_damage_reduction: int | None = None
+    enemy_fire_resist: int | None = None
+    enemy_cold_resist: int | None = None
+    enemy_lightning_resist: int | None = None
+    enemy_chaos_resist: int | None = None
+    enemy_boss: bool | str = False
+    enemy_rare_or_unique: bool = False
+    enemy_in_close_range: bool = False
+    enemy_moving: bool = False
+    enemy_on_full_life: bool = False
+    enemy_on_low_life: bool = False
+    enemy_cursed: bool = False
+    enemy_bleeding: bool = False
+    enemy_poisoned: bool = False
+    enemy_number_of_poison_stacks: int | None = None
+    enemy_maimed: bool = False
+    enemy_hindered: bool = False
+    enemy_blinded: bool = False
+    enemy_taunted: bool = False
+    enemy_burning: bool = False
+    enemy_ignited: bool = False
+    enemy_chilled: bool = False
+    enemy_frozen: bool = False
+    enemy_shocked: bool = False
+    enemy_number_of_freeze_shock_ignite: int | None = None
+    enemy_intimidated: bool = False
+    enemy_unnerved: bool = False
+    enemy_covered_in_ash: bool = False
+    enemy_hit_by_fire_damage: bool = False
+    enemy_hit_by_cold_damage: bool = False
+    enemy_hit_by_lightning_damage: bool = False
+
+    # ========================================================================
+    # PLAYER CONDITION CONFIGURATION
+    # ========================================================================
     is_stationary: bool = False
     is_moving: bool = False
     on_full_life: bool = False
@@ -293,87 +331,112 @@ class Config:
     on_full_energy_shield: bool = False
     has_energy_shield: bool = False
     minions_on_full_life: bool = False
-    ignite_mode: str = None
-    # Skill Configuration
+    number_of_nearby_allies: int | None = None
+    number_of_nearby_enemies: int | None = None
+    number_of_nearby_corpses: int | None = None
+    only_one_nearby_enemy: bool = False
+    on_consecrated_ground: bool = False
+    on_burning_ground: bool = False
+    on_chilled_ground: bool = False
+    on_shocked_ground: bool = False
+    burning: bool = False
+    ignited: bool = False
+    chilled: bool = False
+    frozen: bool = False
+    shocked: bool = False
+    bleeding: bool = False
+    poisoned: bool = False
+    number_of_poison_stacks: int | None = None
+
+    # ========================================================================
+    # SKILL CONFIGURATION
+    # ========================================================================
     aspect_of_the_avian_avians_might: bool = False
     aspect_of_the_avian_avians_flight: bool = False
     aspect_of_the_cat_cats_stealth: bool = False
     aspect_of_the_cat_cats_agility: bool = False
-    override_crab_barriers: int = None
-    aspect_of_the_spider_web_stacks: int = None
+    override_crab_barriers: int | None = None
+    aspect_of_the_spider_web_stacks: int | None = None
     banner_planted: bool = False
-    banner_stages: int = None
+    banner_stages: int | None = None
     in_bloodstorm: bool = False
     in_sandstorm: bool = False
     brand_attached: bool = False
-    dark_pact_skeleton_life: int = None
+    dark_pact_skeleton_life: int | None = None
     deathmark: bool = False
     feeding_frenzy: bool = False
-    herald_of_agony_stacks: int = None
+    herald_of_agony_stacks: int | None = None
     ice_nova_cast_on_frostbolt: bool = False
     infusion: bool = False
     innervate_innervation: bool = False
-    intensify_stacks: int = None
+    intensify_stacks: int | None = None
     meat_shield_enemy_nearby: bool = False
-    raise_spectres_spectre_level: int = None
+    raise_spectres_spectre_level: int | None = None
     raise_spectres_enable_curses: bool = False
-    raise_spectres_blade_vortex_blade_count: int = None
-    raise_spectres_kaom_fire_beam_totem_stage: int = None
+    raise_spectres_blade_vortex_blade_count: int | None = None
+    raise_spectres_kaom_fire_beam_totem_stage: int | None = None
     raise_spectres_enable_summoned_ursa_rallying_cry: bool = False
-    raise_spiders_spider_count: int = None
-    siphoning_trap_affected_enemies: int = None
-    stance: str = None
+    raise_spiders_spider_count: int | None = None
+    siphoning_trap_affected_enemies: int | None = None
+    stance: str | None = None
     summon_holy_relic_enable_holy_relic_buff: bool = False
     summon_lightning_golem_enable_wrath: bool = False
     vortex_cast_on_frostbolt: bool = False
-    wave_of_conviction_exposure_type: str = None
-    winter_orb_stages: int = None
-    # Map Configuration
-    enemy_physical_reduction: int = None
+    wave_of_conviction_exposure_type: str | None = None
+    winter_orb_stages: int | None = None
+
+    # ========================================================================
+    # MAP MODIFIER CONFIGURATION
+    # ========================================================================
+    enemy_physical_reduction: int | None = None
     enemy_hexproof: bool = False
-    less_curse_effect: int = None
-    enemy_avoid_poison_blind_bleed: int = None
-    enemy_resistances: str = None
+    less_curse_effect: int | None = None
+    enemy_avoid_poison_blind_bleed: int | None = None
+    enemy_resistances: str | None = None
     elemental_equilibrium: bool = False
     no_leech: bool = False
-    reduced_flask_charges: int = None
-    minus_max_resists: int = None
-    less_aoe: int = None
-    enemy_avoid_status_ailment: int = None
-    enemy_increased_accuracy: int = None
-    less_armour_block: str = None
+    reduced_flask_charges: int | None = None
+    minus_max_resists: int | None = None
+    less_aoe: int | None = None
+    enemy_avoid_status_ailment: int | None = None
+    enemy_increased_accuracy: int | None = None
+    less_armour_block: str | None = None
     point_blank: bool = False
-    less_recovery: int = None
+    less_recovery: int | None = None
     no_regen: bool = False
-    enemy_takes_reduced_extra_crit_damage: int = None
-    curse_assassins_mark: int = None
-    curse_conductivity: int = None
-    curse_despair: int = None
-    curse_elemental_weakness: int = None
-    curse_enfeeble: int = None
-    curse_flammability: int = None
-    curse_frostbite: int = None
-    curse_poachers_mark: int = None
-    curse_projectile_weakness: int = None
-    curse_punishment: int = None
-    curse_temporal_chains: int = None
-    curse_vulnerability: int = None
-    curse_warlords_mark: int = None
-    # Combat Configuration
+    enemy_takes_reduced_extra_crit_damage: int | None = None
+    curse_assassins_mark: int | None = None
+    curse_conductivity: int | None = None
+    curse_despair: int | None = None
+    curse_elemental_weakness: int | None = None
+    curse_enfeeble: int | None = None
+    curse_flammability: int | None = None
+    curse_frostbite: int | None = None
+    curse_poachers_mark: int | None = None
+    curse_projectile_weakness: int | None = None
+    curse_punishment: int | None = None
+    curse_temporal_chains: int | None = None
+    curse_vulnerability: int | None = None
+    curse_warlords_mark: int | None = None
+
+    # ========================================================================
+    # COMBAT CONFIGURATION
+    # ========================================================================
+    # Charges
     use_power_charges: bool = False
-    max_power_charges: int = None
+    max_power_charges: int | None = None
     use_frenzy_charges: bool = False
-    max_frenzy_charges: int = None
+    max_frenzy_charges: int | None = None
     use_endurance_charges: bool = False
-    max_endurance_charges: int = None
+    max_endurance_charges: int | None = None
     use_siphoning_charges: bool = False
-    max_siphoning_charges: int = None
+    max_siphoning_charges: int | None = None
     use_challenger_charges: bool = False
-    max_challenger_charges: int = None
+    max_challenger_charges: int | None = None
     use_blitz_charges: bool = False
-    max_blitz_charges: int = None
+    max_blitz_charges: int | None = None
     use_inspiration_charges: bool = False
-    max_inspiration_charges: int = None
+    max_inspiration_charges: int | None = None
     minions_use_power_charges: bool = False
     minions_use_frenzy_charges: bool = False
     minions_use_endurance_charges: bool = False
@@ -392,39 +455,23 @@ class Config:
     leeching_mana: bool = False
     using_flask: bool = False
     has_totem: bool = False
-    number_of_nearby_allies: int = None
-    number_of_nearby_enemies: int = None
-    number_of_nearby_corpses: int = None
-    on_consecrated_ground: bool = False
-    on_burning_ground: bool = False
-    on_chilled_ground: bool = False
-    on_shocked_ground: bool = False
-    burning: bool = False
-    ignited: bool = False
-    chilled: bool = False
-    frozen: bool = False
-    shocked: bool = False
-    bleeding: bool = False
-    poisoned: bool = False
-    number_of_poison_stacks: int = None
-    only_one_nearby_enemy: bool = False
     hit_recently: bool = False
     crit_recently: bool = False
     skill_crit_recently: bool = False
     non_crit_recently: bool = False
     killed_recently: bool = False
-    number_of_enemies_killed_recently: int = None
+    number_of_enemies_killed_recently: int | None = None
     totems_killed_recently: bool = False
-    number_of_totems_killed_recently: int = None
+    number_of_totems_killed_recently: int | None = None
     minions_killed_recently: bool = False
-    number_of_minions_killed_recently: int = None
+    number_of_minions_killed_recently: int | None = None
     killed_affected_by_dot: bool = False
-    number_of_shocked_enemies_killed_recently: int = None
+    number_of_shocked_enemies_killed_recently: int | None = None
     frozen_enemy_recently: bool = False
     shattered_enemy_recently: bool = False
     ignited_enemy_recently: bool = False
     shocked_enemy_recently: bool = False
-    number_of_poisons_applied_recently: int = None
+    number_of_poisons_applied_recently: int | None = None
     been_hit_recently: bool = False
     been_crit_recently: bool = False
     been_savage_hit_recently: bool = False
@@ -435,8 +482,8 @@ class Config:
     blocked_attack_recently: bool = False
     blocked_spell_recently: bool = False
     energy_shield_recharge_started_recently: bool = False
-    pendulum_of_destruction: str = False
-    elemental_conflux: str = False
+    pendulum_of_destruction: str | bool = False
+    elemental_conflux: str | bool = False
     bastion_of_hope: bool = False
     her_embrace: bool = False
     used_skill_recently: bool = False
@@ -449,48 +496,24 @@ class Config:
     used_vaal_skill_recently: bool = False
     used_warcry_recently: bool = False
     used_warcry_in_past_8_seconds: bool = False
-    number_of_mines_detonated_recently: int = None
-    number_of_traps_triggered_recently: int = None
+    number_of_mines_detonated_recently: int | None = None
+    number_of_traps_triggered_recently: int | None = None
     consumed_corpses_recently: bool = False
-    number_of_corpses_consumed_recently: int = None
+    number_of_corpses_consumed_recently: int | None = None
     taunted_enemy_recently: bool = False
     blocked_hit_from_unique_enemy_in_past_ten_seconds: bool = False
-    # DPS Configuration
+
+    # ========================================================================
+    # DPS CONFIGURATION
+    # ========================================================================
     lucky_crits: bool = False
-    number_of_times_skill_has_chained: int = None
-    projectile_distance: int = None
-    enemy_in_close_range: bool = False
-    enemy_moving: bool = False
-    enemy_on_full_life: bool = False
-    enemy_on_low_life: bool = False
-    enemy_cursed: bool = False
-    enemy_bleeding: bool = False
-    enemy_poisoned: bool = False
-    enemy_number_of_poison_stacks: int = None
-    enemy_maimed: bool = False
-    enemy_hindered: bool = False
-    enemy_blinded: bool = False
-    enemy_taunted: bool = False
-    enemy_burning: bool = False
-    enemy_ignited: bool = False
-    enemy_chilled: bool = False
-    enemy_frozen: bool = False
-    enemy_shocked: bool = False
-    enemy_number_of_freeze_shock_ignite: int = None
-    enemy_intimidated: bool = False
-    enemy_unnerved: bool = False
-    enemy_covered_in_ash: bool = False
-    enemy_rare_or_unique: bool = False
-    enemy_boss: Union[bool, str] = False
-    enemy_physical_damage_reduction: int = None
-    enemy_fire_resist: int = None
-    enemy_cold_resist: int = None
-    enemy_lightning_resist: int = None
-    enemy_chaos_resist: int = None
-    enemy_hit_by_fire_damage: bool = False
-    enemy_hit_by_cold_damage: bool = False
-    enemy_hit_by_lightning_damage: bool = False
+    number_of_times_skill_has_chained: int | None = None
+    projectile_distance: int | None = None
     elemental_equilibrium_ignore_hit_damage: bool = False
+
+    # ========================================================================
+    # INTERNAL FIELDS
+    # ========================================================================
     # The fields in the post init method are the only values in Path of Building's
     # configuration tab that are calculated, but can also be overridden so we
     # potentially have to initialise them at a later point in time.
@@ -498,10 +521,30 @@ class Config:
 
     # TODO: Raise Spectre level calc on 3.0.0+
     def __post_init__(self, character_level: int):
+        from pobapi.model_validators import (
+            ModelValidator,
+            validate_character_level,
+            validate_resistance_penalty,
+        )
+
+        # Validate character level
+        if character_level is not None:
+            validate_character_level(character_level, "character_level")
+
+        # Validate resistance penalty
+        validate_resistance_penalty(self.resistance_penalty, "resistance_penalty")
+
+        # Set defaults and calculate derived values
         if character_level is None:
             character_level = 84
         if self.enemy_level is None:
             self.enemy_level = min(character_level, 84)
+        else:
+            # Validate enemy level
+            ModelValidator.validate_range(
+                self.enemy_level, min_value=1, max_value=100, field_name="enemy_level"
+            )
+
         if self.enemy_physical_hit_damage is None:
             self.enemy_physical_hit_damage = (
                 MONSTER_DAMAGE_TABLE[self.enemy_level - 1] * 1.5

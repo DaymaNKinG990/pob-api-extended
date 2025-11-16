@@ -9,9 +9,9 @@ BASE_URL = "https://www.pathofexile.com/passive-skill-tree/"
 
 @pytest.fixture(scope="module")
 def build():
-    import os
+    from pathlib import Path
 
-    test_file = os.path.join(os.path.dirname(__file__), "..", "data", "test_code.txt")
+    test_file = Path(__file__).parent.parent.parent / "data" / "test_code.txt"
     with open(test_file) as f:
         code = f.read()
     return api.from_import_code(code)
@@ -351,11 +351,11 @@ def test_keystones_property():
     """Test keystones property."""
     # Use the existing build fixture which has a proper skill tree
     # This test just verifies keystones property works
-    import os
+    from pathlib import Path
 
     from pobapi import api
 
-    test_file = os.path.join(os.path.dirname(__file__), "..", "data", "test_code.txt")
+    test_file = Path(__file__).parent.parent.parent / "data" / "test_code.txt"
     with open(test_file) as f:
         code = f.read()
     build = api.from_import_code(code)

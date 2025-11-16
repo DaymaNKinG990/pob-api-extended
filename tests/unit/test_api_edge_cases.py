@@ -95,13 +95,11 @@ class TestKeystonesIterator:
 
     def test_keystones_iterator(self):
         """Test iterating over active keystones."""
-        import os
+        from pathlib import Path
 
         from pobapi import api
 
-        test_file = os.path.join(
-            os.path.dirname(__file__), "..", "data", "test_code.txt"
-        )
+        test_file = Path(__file__).parent.parent.parent / "data" / "test_code.txt"
         with open(test_file) as f:
             code = f.read()
         build = api.from_import_code(code)

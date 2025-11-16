@@ -135,7 +135,7 @@ class TestBuildFactory:
         import base64
         import zlib
 
-        from tests.test_async_util import MockAsyncHTTPClient
+        from tests.unit.test_async_util import MockAsyncHTTPClient
 
         xml_str = """<?xml version="1.0"?>
         <PathOfBuilding>

@@ -1,18 +1,20 @@
 """Integration tests for new components working together."""
 
 import pytest
-from lxml.etree import fromstring
 
-from pobapi.builders import ConfigBuilder, ItemSetBuilder, StatsBuilder
-from pobapi.exceptions import ParsingError, ValidationError
-from pobapi.factory import BuildFactory
-from pobapi.parsers import (
+pytestmark = pytest.mark.integration
+from lxml.etree import fromstring  # noqa: E402
+
+from pobapi.builders import ConfigBuilder, ItemSetBuilder, StatsBuilder  # noqa: E402
+from pobapi.exceptions import ParsingError, ValidationError  # noqa: E402
+from pobapi.factory import BuildFactory  # noqa: E402
+from pobapi.parsers import (  # noqa: E402
     BuildInfoParser,
     DefaultBuildParser,
     ItemsParser,
     SkillsParser,
 )
-from pobapi.validators import InputValidator, XMLValidator
+from pobapi.validators import InputValidator, XMLValidator  # noqa: E402
 
 
 class TestValidatorParserIntegration:

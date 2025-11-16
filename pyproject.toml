@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pobapi-extended"
-version = "1.0.0"
+version = "1.1.0"
 description = "API for Path Of Building's build sharing format."
 readme = "README.md"
 license = {text = "MIT"}
@@ -117,7 +117,7 @@ line_length = 88
 known_first_party = ["pobapi"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests/unit", "tests/integrations"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -125,6 +125,10 @@ addopts = [
     "-v",
     "--strict-markers",
     "--tb=short",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
 ]
 
 [tool.coverage.run]

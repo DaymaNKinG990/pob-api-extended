@@ -1,8 +1,5 @@
 """Shared fixtures and utilities for tests."""
 
-
-import os
-
 import pytest
 from lxml.etree import fromstring
 
@@ -10,9 +7,11 @@ from lxml.etree import fromstring
 @pytest.fixture(scope="module")
 def build():
     """Create a PathOfBuildingAPI instance from test data file."""
+    from pathlib import Path
+
     from pobapi import api
 
-    test_file = os.path.join(os.path.dirname(__file__), "..", "data", "test_code.txt")
+    test_file = Path(__file__).parent.parent / "data" / "test_code.txt"
     with open(test_file) as f:
         code = f.read()
     return api.from_import_code(code)
@@ -119,7 +118,7 @@ def minimal_xml():
 @pytest.fixture
 def mock_async_http_client():
     """Create a mock async HTTP client for testing."""
-    from tests.test_async_util import MockAsyncHTTPClient
+    from tests.unit.test_async_util import MockAsyncHTTPClient
 
     return MockAsyncHTTPClient
 
@@ -127,7 +126,7 @@ def mock_async_http_client():
 @pytest.fixture
 def mock_http_client():
     """Create a mock HTTP client for testing."""
-    from tests.test_factory import MockHTTPClient
+    from tests.unit.test_factory import MockHTTPClient
 
     return MockHTTPClient
 

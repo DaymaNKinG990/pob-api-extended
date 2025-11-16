@@ -145,7 +145,7 @@ class CalculationEngine:
 
     def _load_passive_tree_modifiers(self, build_data: Any) -> None:
         """
-        Load and add passive tree–related modifiers into the engine's
+        Load and add passive tree-related modifiers into the engine's
         modifier system.
 
         Parses the active passive tree, any additional trees, jewels

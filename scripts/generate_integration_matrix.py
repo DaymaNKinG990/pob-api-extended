@@ -187,6 +187,8 @@ def extract_imports_from_file(file_path: Path) -> set[str]:
 def find_components_in_imports(imports: set[str]) -> set[str]:
     """Find which components are used based on imports."""
     components: set[str] = set()
+    # Build flattened set of all component names for direct matching
+    all_comps = {c for comps in COMPONENT_MAP.values() for c in comps}
 
     for imp in imports:
         # Check direct module match
@@ -201,11 +203,10 @@ def find_components_in_imports(imports: set[str]) -> set[str]:
                     if comp in imp or imp.endswith(comp):
                         components.add(comp)
 
-        # Check for direct component name
-        for module, comps in COMPONENT_MAP.items():
-            for comp in comps:
-                if comp in imp:
-                    components.add(comp)
+        # Check for direct component name in import
+        for comp in all_comps:
+            if comp in imp:
+                components.add(comp)
 
     return components
 

@@ -82,7 +82,8 @@ def strip_strings_and_comments(content: str) -> str:
     """Remove string literals and comments from Python source code.
 
     Uses tokenize to parse the code and filter out strings and comments,
-    returning only the code tokens.
+    returning only the code tokens with spaces between them to preserve
+    word boundaries for regex matching.
     """
     try:
         tokens = tokenize.generate_tokens(StringIO(content).readline)
@@ -92,7 +93,7 @@ def strip_strings_and_comments(content: str) -> str:
             # Skip STRING and COMMENT tokens
             if token.type not in (tokenize.STRING, tokenize.COMMENT):
                 filtered_tokens.append(token.string)
-        return "".join(filtered_tokens)
+        return " ".join(filtered_tokens)
     except Exception:
         # Fallback to original content if tokenization fails
         return content

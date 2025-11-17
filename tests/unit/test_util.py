@@ -36,9 +36,11 @@ class TestFetchXMLFromURL:
     def test_network_errors(self, mocker, exception_class, error_match):
         """Test various network error handling."""
         # Clear cache to ensure fresh client creation
-        import pobapi.util
+        import importlib
 
-        pobapi.util._default_http_client = None
+        util_module = importlib.import_module("pobapi.util")
+
+        util_module._default_http_client = None
 
         mock_get = mocker.patch("requests.get")
         # Create exception instance properly
@@ -56,9 +58,11 @@ class TestFetchXMLFromURL:
     def test_http_error(self, mocker):
         """Test HTTP error handling."""
         # Clear cache to ensure fresh client creation
-        import pobapi.util
+        import importlib
 
-        pobapi.util._default_http_client = None
+        util_module = importlib.import_module("pobapi.util")
+
+        util_module._default_http_client = None
 
         mock_get = mocker.patch("requests.get")
         mock_response = mocker.Mock()

@@ -73,6 +73,12 @@ class TestTreesParserAPIIntegration:
             parsed_active_tree = trees[active_spec_index]
             assert parsed_active_tree["nodes"] == active_tree.nodes
             assert parsed_active_tree["sockets"] == active_tree.sockets
+        else:
+            pytest.fail(
+                f"Invalid active_spec_index: active_spec_attr={active_spec_attr}, "
+                f"computed active_spec_index={active_spec_index}, "
+                f"len(trees)={len(trees)}"
+            )
 
 
 class TestTreesParserDefaultBuildParserIntegration:

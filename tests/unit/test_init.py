@@ -8,8 +8,9 @@ def test_import_without_optional_dependencies() -> None:
     """Test that __init__ handles missing optional dependencies gracefully."""
     import builtins
 
-    # Save original modules
-    original_modules = sys.modules.copy()
+    # Save original state for the modules we are going to manipulate
+    modules_to_remove = ["pobapi.crafting", "pobapi.trade", "pobapi"]
+    original_modules = {name: sys.modules.get(name) for name in modules_to_remove}
     original_pobapi_all = None
     if "pobapi" in sys.modules:
         pobapi_module = sys.modules["pobapi"]
@@ -21,8 +22,7 @@ def test_import_without_optional_dependencies() -> None:
 
     try:
         # Remove optional modules from sys.modules to simulate their absence
-        modules_to_remove = ["pobapi.crafting", "pobapi.trade"]
-        for module_name in modules_to_remove:
+        for module_name in ["pobapi.crafting", "pobapi.trade"]:
             if module_name in sys.modules:
                 del sys.modules[module_name]
 
@@ -31,7 +31,8 @@ def test_import_without_optional_dependencies() -> None:
 
         def mock_import(name, *args, **kwargs):
             if name in ["pobapi.crafting", "pobapi.trade"]:
-                raise ImportError(f"No module named '{name}'")
+                error_msg = f"No module named '{name}'"
+                raise ImportError(error_msg)
             return original_import(name, *args, **kwargs)
 
         with patch("builtins.__import__", side_effect=mock_import):
@@ -40,7 +41,7 @@ def test_import_without_optional_dependencies() -> None:
                 del sys.modules["pobapi"]
 
             # Import pobapi to trigger ImportError handling
-            import pobapi  # noqa: F401
+            import pobapi
 
             # Verify that pobapi module loaded successfully
             assert pobapi is not None
@@ -57,16 +58,12 @@ def test_import_without_optional_dependencies() -> None:
             assert not hasattr(pobapi, "ItemCraftingAPI")
             assert not hasattr(pobapi, "TradeAPI")
     finally:
-        # Restore original modules safely: remove only injected modules,
-        # restore original ones
-        current_modules = list(sys.modules.keys())
-        for module_name in current_modules:
-            if module_name not in original_modules:
-                # Delete modules that were injected by the test
-                del sys.modules[module_name]
+        # Restore only the modules we deliberately manipulated
+        for module_name, original in original_modules.items():
+            if original is None:
+                sys.modules.pop(module_name, None)
             else:
-                # Restore original module state
-                sys.modules[module_name] = original_modules[module_name]
+                sys.modules[module_name] = original
 
         # Restore pobapi's __all__ if it was modified
         if "pobapi" in sys.modules and original_pobapi_all is not None:

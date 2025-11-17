@@ -4,11 +4,12 @@
 This script analyzes integration tests and generates:
 1. Markdown report with coverage matrix
 2. JSON report for programmatic access
-3. HTML visualization (optional)
 """
 
 import json
 import re
+import tokenize
+from io import StringIO
 from pathlib import Path
 from typing import Any
 
@@ -77,6 +78,26 @@ REAL_INTEGRATIONS = [
 ]
 
 
+def strip_strings_and_comments(content: str) -> str:
+    """Remove string literals and comments from Python source code.
+
+    Uses tokenize to parse the code and filter out strings and comments,
+    returning only the code tokens.
+    """
+    try:
+        tokens = tokenize.generate_tokens(StringIO(content).readline)
+        filtered_tokens = []
+        for token in tokens:
+            # Keep only NAME, NUMBER, OP, NEWLINE, INDENT, DEDENT, NL tokens
+            # Skip STRING and COMMENT tokens
+            if token.type not in (tokenize.STRING, tokenize.COMMENT):
+                filtered_tokens.append(token.string)
+        return "".join(filtered_tokens)
+    except Exception:
+        # Fallback to original content if tokenization fails
+        return content
+
+
 def extract_test_info(file_path: Path) -> dict[str, Any]:
     """Extract test information from a test file."""
     components_mentioned: set[str] = set()
@@ -101,10 +122,15 @@ def extract_test_info(file_path: Path) -> dict[str, Any]:
         methods = re.findall(method_pattern, content)
         info["test_methods"] = len(methods)
 
-        # Find component mentions (simplified)
-        for group_name, components in COMPONENT_GROUPS.items():
+        # Preprocess content to remove strings and comments
+        processed_content = strip_strings_and_comments(content)
+
+        # Find component mentions using word-boundary regex
+        for _, components in COMPONENT_GROUPS.items():
             for comp in components:
-                if comp in content:
+                # Escape component name and use word boundaries
+                pattern = r"\b" + re.escape(comp) + r"\b"
+                if re.search(pattern, processed_content):
                     components_mentioned.add(comp)
 
     except Exception as e:

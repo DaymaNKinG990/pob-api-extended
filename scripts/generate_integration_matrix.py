@@ -250,16 +250,14 @@ def generate_matrix_markdown() -> str:
     lines.append("")
     lines.append("## Component Integration Matrix")
     lines.append("")
-    lines.append("| Component A | Component B | Coverage | Test File |")
-    lines.append("|------------|-------------|----------|-----------|")
+    lines.append("| Component A | Component B | Coverage |")
+    lines.append("|------------|-------------|----------|")
 
     # Sort integrations
     sorted_integrations = sorted(KNOWN_INTEGRATIONS)
 
     for comp1, comp2 in sorted_integrations:
-        # Find test file (simplified - would need actual analysis)
-        test_file = "test_*.py"  # Placeholder
-        lines.append(f"| {comp1} | {comp2} | ✅ | {test_file} |")
+        lines.append(f"| {comp1} | {comp2} | ✅ |")
 
     lines.append("")
     lines.append("## Coverage Statistics")

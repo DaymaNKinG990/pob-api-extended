@@ -356,7 +356,7 @@ if __name__ == "__main__":
     # Generate JSON
     json_report = generate_json_report()
     json_file = (
-        Path(__file__).parent.parent / "tests" / "integrations" / "coverage_report.json"
+        Path(__file__).parent.parent / "tests" / "integrations" / "coverage_matrix.json"
     )
     json_file.write_text(json.dumps(json_report, indent=2), encoding="utf-8")
     print(f"Generated: {json_file}")

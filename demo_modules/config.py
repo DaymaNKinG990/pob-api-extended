@@ -7,10 +7,15 @@ from pobapi import PathOfBuildingAPI
 
 def print_config(build: PathOfBuildingAPI) -> None:
     """
-    Show the build's configuration grouped by category and print any non-default or enabled settings.
-    
-    Displays the character level and prints configuration fields from build.config organized into predefined categories. Only fields with meaningful values are shown: boolean fields when True, non-None fields that differ from their defaults, and the `resistance_penalty` field is always included even if it equals its default.
-    
+    Show the build's configuration grouped by category and print any
+    non-default or enabled settings.
+
+    Displays the character level and prints configuration fields from
+    build.config organized into predefined categories. Only fields with
+    meaningful values are shown: boolean fields when True, non-None fields
+    that differ from their defaults, and the `resistance_penalty` field is
+    always included even if it equals its default.
+
     Parameters:
         build (PathOfBuildingAPI): Build instance whose configuration will be displayed.
     """
@@ -186,9 +191,12 @@ def print_config(build: PathOfBuildingAPI) -> None:
 
 def main():
     """
-    Build a demo PathOfBuildingAPI instance from embedded code and print its configuration.
-    
-    This function prepends the module's parent directory to sys.path to allow local imports, constructs a build using demo import code, and calls print_config to display the build's configuration.
+    Build a demo PathOfBuildingAPI instance from embedded code and print
+    its configuration.
+
+    This function prepends the module's parent directory to sys.path to
+    allow local imports, constructs a build using demo import code, and
+    calls print_config to display the build's configuration.
     """
     import sys
     from pathlib import Path

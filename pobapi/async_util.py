@@ -19,20 +19,22 @@ async def _fetch_xml_from_url_async(
 ) -> bytes:
     """
     Retrieve and decode a Path Of Building import code from a Pastebin URL.
-    
-    Validates that `url` is a pastebin.com URL and requires a provided async HTTP client to perform the request.
-    
+
+    Validates that `url` is a pastebin.com URL and requires a provided
+    async HTTP client to perform the request.
+
     Parameters:
         url (str): Pastebin URL containing the import code.
         timeout (float): Request timeout in seconds (default 6.0).
-    
+
     Returns:
         bytes: Decompressed XML build document.
-    
+
     Raises:
         InvalidURLError: If `url` is not a pastebin.com URL.
         ValueError: If no async HTTP client is provided.
-        InvalidImportCodeError: If the fetched import code cannot be decoded or decompressed.
+        InvalidImportCodeError: If the fetched import code cannot be
+            decoded or decompressed.
         NetworkError: For other failures while performing the HTTP request.
     """
     if not url.startswith("https://pastebin.com/"):
@@ -54,15 +56,17 @@ async def _fetch_xml_from_url_async(
 async def _fetch_xml_from_import_code_async(import_code: str) -> bytes:
     """
     Decode a Path Of Building import code and return the decompressed XML document.
-    
+
     Parameters:
-        import_code (str): URL-safe base64-encoded string containing zlib-compressed Path Of Building XML.
-    
+        import_code (str): URL-safe base64-encoded string containing
+            zlib-compressed Path Of Building XML.
+
     Returns:
         bytes: Decompressed XML build document.
-    
+
     Raises:
-        InvalidImportCodeError: If `import_code` is not a non-empty string, or if decoding or decompression fails.
+        InvalidImportCodeError: If `import_code` is not a non-empty
+            string, or if decoding or decompression fails.
     """
     if not import_code or not isinstance(import_code, str):
         raise InvalidImportCodeError("Import code must be a non-empty string")

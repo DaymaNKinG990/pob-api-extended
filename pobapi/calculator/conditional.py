@@ -18,14 +18,26 @@ class ConditionEvaluator:
     @staticmethod
     def evaluate_condition(condition: str, context: dict[str, Any]) -> bool:
         """
-        Determine whether a named gameplay condition is satisfied using the provided context.
-        
-        Evaluates life, mana, and energy-shield thresholds (full = >=99%, low = <=35%) when current and max values are present; otherwise falls back to boolean flags in the context. Handles enemy status flags (e.g., "enemy_is_shocked") and the "projectile_distance" condition using context keys "projectile_distance" (default "medium") and "required_distance" (default "close"): required "close" matches "close" or "medium", "far" matches only "far", otherwise requires exact match. For any other condition name, returns the boolean value of the corresponding context entry.
-        
+        Determine whether a named gameplay condition is satisfied using
+        the provided context.
+
+        Evaluates life, mana, and energy-shield thresholds (full = >=99%,
+        low = <=35%) when current and max values are present; otherwise
+        falls back to boolean flags in the context. Handles enemy status
+        flags (e.g., "enemy_is_shocked") and the "projectile_distance"
+        condition using context keys "projectile_distance" (default
+        "medium") and "required_distance" (default "close"): required
+        "close" matches "close" or "medium", "far" matches only "far",
+        otherwise requires exact match. For any other condition name,
+        returns the boolean value of the corresponding context entry.
+
         Parameters:
-            condition (str): Name of the condition to evaluate (e.g., "on_full_life", "enemy_is_frozen", "projectile_distance").
-            context (dict[str, Any]): Runtime context containing current and maximum resource values and boolean flags used to evaluate conditions.
-        
+            condition (str): Name of the condition to evaluate (e.g.,
+                "on_full_life", "enemy_is_frozen", "projectile_distance").
+            context (dict[str, Any]): Runtime context containing current
+                and maximum resource values and boolean flags used to
+                evaluate conditions.
+
         Returns:
             bool: `True` if the specified condition is met, `False` otherwise.
         """
@@ -106,18 +118,21 @@ class ConditionEvaluator:
         conditions: dict[str, Any], context: dict[str, Any]
     ) -> bool:
         """
-        Determine whether every condition in the provided mapping is satisfied by the given context.
-        
+        Determine whether every condition in the provided mapping is
+        satisfied by the given context.
+
         Parameters:
-            conditions (dict[str, Any]): Mapping of condition names to required values. If a condition evaluates to False, the function returns False unless the corresponding required value is exactly True.
-            context (dict[str, Any]): Evaluation context containing current state (e.g., life, mana, energy shield, enemy flags, distance).
-        
+            conditions (dict[str, Any]): Mapping of condition names to
+                required values. All conditions must evaluate to True for
+                the function to return True.
+            context (dict[str, Any]): Evaluation context containing
+                current state (e.g., life, mana, energy shield, enemy
+                flags, distance).
+
         Returns:
-            bool: `True` if all conditions are considered satisfied according to the rules above, `False` otherwise.
+            bool: `True` if all conditions are satisfied, `False` otherwise.
         """
         for condition, required_value in conditions.items():
             if not ConditionEvaluator.evaluate_condition(condition, context):
-                # If condition has a required value, check it
-                if required_value is not True:
-                    return False
+                return False
         return True

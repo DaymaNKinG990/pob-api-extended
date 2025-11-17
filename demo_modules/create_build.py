@@ -14,11 +14,15 @@ from pobapi.types import (
 def create_simple_build() -> PathOfBuildingAPI:
     """
     Create a minimal programmatic Path of Building example build.
-    
-    Constructs a level 90 Witch with the Necromancer ascendancy including a small passive tree allocation, three skill gems (Arc, Minion Damage support, Raise Zombie), and a simple rare Leather Belt equipped in the belt slot. Intended for demonstration of build creation APIs.
-    
+
+    Constructs a level 90 Witch with the Necromancer ascendancy including
+    a small passive tree allocation, three skill gems (Arc, Minion Damage
+    support, Raise Zombie), and a simple rare Leather Belt equipped in the
+    belt slot. Intended for demonstration of build creation APIs.
+
     Returns:
-        PathOfBuildingAPI: The built Path of Building object containing the created build.
+        PathOfBuildingAPI: The built Path of Building object containing
+            the created build.
     """
     # Create build builder
     builder = create_build()

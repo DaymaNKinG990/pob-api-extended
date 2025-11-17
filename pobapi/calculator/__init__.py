@@ -6,7 +6,7 @@ Path of Building's Lua-based calculations in Python.
 
 from pobapi.calculator.conditional import ConditionEvaluator
 from pobapi.calculator.config_modifier_parser import ConfigModifierParser
-from pobapi.calculator.damage import DamageCalculator
+from pobapi.calculator.damage import DamageCalculator, DamageType
 from pobapi.calculator.defense import DefenseCalculator
 from pobapi.calculator.engine import CalculationEngine
 from pobapi.calculator.game_data import (
@@ -40,6 +40,7 @@ __all__ = [
     "CalculationEngine",
     "ModifierSystem",
     "DamageCalculator",
+    "DamageType",
     "DefenseCalculator",
     "ResourceCalculator",
     "SkillStatsCalculator",

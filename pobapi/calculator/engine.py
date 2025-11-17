@@ -48,18 +48,36 @@ class CalculationEngine:
         pantheon_tools: PantheonTools | None = None,
     ):
         """
-        Create a CalculationEngine and wire its dependent calculators to a shared modifier system.
-        
+        Create a CalculationEngine and wire its dependent calculators
+        to a shared modifier system.
+
         Parameters:
-            modifier_system (ModifierSystem | None): Shared modifier system to use; a new instance is created when None.
-            damage_calculator (DamageCalculator | None): Optional damage calculator to use; created and injected with the shared modifier system when None.
-            defense_calculator (DefenseCalculator | None): Optional defense calculator to use; created and injected with the shared modifier system when None.
-            resource_calculator (ResourceCalculator | None): Optional resource calculator to use; created and injected with the shared modifier system when None.
-            skill_stats_calculator (SkillStatsCalculator | None): Optional skill-stats calculator to use; created and injected with the shared modifier system when None.
-            minion_calculator (MinionCalculator | None): Optional minion calculator to use; created and injected with the shared modifier system when None.
-            party_calculator (PartyCalculator | None): Optional party calculator to use; created and injected with the shared modifier system when None.
-            mirage_calculator (MirageCalculator | None): Optional mirage calculator to use; created with references to the shared modifier system and the damage calculator when None.
-            pantheon_tools (PantheonTools | None): Optional pantheon tools instance to use; created and injected with the shared modifier system when None.
+            modifier_system (ModifierSystem | None): Shared modifier system
+                to use; a new instance is created when None.
+            damage_calculator (DamageCalculator | None): Optional damage
+                calculator to use; created and injected with the shared
+                modifier system when None.
+            defense_calculator (DefenseCalculator | None): Optional defense
+                calculator to use; created and injected with the shared
+                modifier system when None.
+            resource_calculator (ResourceCalculator | None): Optional
+                resource calculator to use; created and injected with the
+                shared modifier system when None.
+            skill_stats_calculator (SkillStatsCalculator | None): Optional
+                skill-stats calculator to use; created and injected with
+                the shared modifier system when None.
+            minion_calculator (MinionCalculator | None): Optional minion
+                calculator to use; created and injected with the shared
+                modifier system when None.
+            party_calculator (PartyCalculator | None): Optional party
+                calculator to use; created and injected with the shared
+                modifier system when None.
+            mirage_calculator (MirageCalculator | None): Optional mirage
+                calculator to use; created with references to the shared
+                modifier system and the damage calculator when None.
+            pantheon_tools (PantheonTools | None): Optional pantheon tools
+                instance to use; created and injected with the shared
+                modifier system when None.
         """
         # Initialize modifier system first (needed by other calculators)
         self.modifiers = modifier_system or ModifierSystem()
@@ -127,12 +145,18 @@ class CalculationEngine:
 
     def _load_passive_tree_modifiers(self, build_data: Any) -> None:
         """
-        Load and add passive tree–related modifiers into the engine's modifier system.
-        
-        Parses the active passive tree, any additional trees, jewels socketed into those trees, and listed keystones from the provided build data and adds the resulting modifiers to self.modifiers. Missing build fields or invalid socket/item references are skipped silently.
-         
+        Load and add passive tree-related modifiers into the engine's
+        modifier system.
+
+        Parses the active passive tree, any additional trees, jewels
+        socketed into those trees, and listed keystones from the provided
+        build data and adds the resulting modifiers to self.modifiers.
+        Missing build fields or invalid socket/item references are skipped
+        silently.
+
         Parameters:
-            build_data: Object containing passive tree(s), sockets, items, and keystones (as present in a BuildData-like structure).
+            build_data: Object containing passive tree(s), sockets, items,
+                and keystones (as present in a BuildData-like structure).
         """
         try:
             # Get active tree
@@ -211,10 +235,12 @@ class CalculationEngine:
 
     def _load_skill_modifiers(self, build_data: Any) -> None:
         """
-        Add modifiers parsed from enabled skill groups in build_data to the engine's modifier system.
-        
+        Add modifiers parsed from enabled skill groups in build_data to
+        the engine's modifier system.
+
         Parameters:
-            build_data (Any): Object expected to have a `skill_groups` iterable; enabled groups will be parsed for modifiers.
+            build_data (Any): Object expected to have a `skill_groups`
+                iterable; enabled groups will be parsed for modifiers.
         """
         try:
             # Get skill groups
@@ -244,12 +270,19 @@ class CalculationEngine:
 
     def _load_party_modifiers(self, build_data: Any) -> None:
         """
-        Load and apply modifiers contributed by party members to the engine's modifier system.
-        
-        Parses party member definitions from build_data.config.party_members or build_data.party_members (accepting either PartyMember objects or dicts), determines the active skill name when available, computes party aura effectiveness, and adds the resulting modifiers (from auras, buffs, and support-gem effects) to the shared modifiers system.
-        
+        Load and apply modifiers contributed by party members to the
+        engine's modifier system.
+
+        Parses party member definitions from build_data.config.party_members
+        or build_data.party_members (accepting either PartyMember objects
+        or dicts), determines the active skill name when available,
+        computes party aura effectiveness, and adds the resulting
+        modifiers (from auras, buffs, and support-gem effects) to the
+        shared modifiers system.
+
         Parameters:
-            build_data (Any): Build data containing optional party configuration and active skill information.
+            build_data (Any): Build data containing optional party
+                configuration and active skill information.
         """
         try:
             # Check if party play is enabled
@@ -339,19 +372,46 @@ class CalculationEngine:
         build_data: "BuildData | Any | None" = None,
     ) -> stats.Stats:
         """
-        Compute the complete set of character statistics for the current modifier/context and optional build data.
-        
-        This replicates the engine's full stat calculation flow (defenses, resources, regen, leech, effective health, attributes, attack/cast/crit/hit stats, damage and DOTs for the active skill, minion-related stats, and various derived values). When provided, build_data is used for skill-specific calculations and enemy configuration.
-        
+        Compute the complete set of character statistics for the current
+        modifier/context and optional build data.
+
+        This replicates the engine's full stat calculation flow (defenses,
+        resources, regen, leech, effective health, attributes,
+        attack/cast/crit/hit stats, damage and DOTs for the active skill,
+        minion-related stats, and various derived values). When provided,
+        build_data is used for skill-specific calculations and enemy
+        configuration.
+
         Parameters:
-            context (dict[str, Any] | None): Calculation context values (enemy level, conditions, temporary overrides, etc.). Missing keys will be derived from modifiers or build_data where applicable.
-            build_data ("BuildData | Any | None"): Optional build representation used to compute skill-specific stats (active skill, skill groups, config enemy values, and potential minion detection).
-        
+            context (dict[str, Any] | None): Calculation context values
+                (enemy level, conditions, temporary overrides, etc.).
+                Missing keys will be derived from modifiers or build_data
+                where applicable.
+            build_data ("BuildData | Any | None"): Optional build
+                representation used to compute skill-specific stats
+                (active skill, skill groups, config enemy values, and
+                potential minion detection).
+
         Returns:
-            stats.Stats: A Stats object populated with computed values (life, mana, energy shield, defenses, resistances, attributes, speed/crit/hit stats, DPS/DOT/average hit, regen/leech, EHP, unreserved resources, minion limits, and other derived fields).  
+            stats.Stats: A Stats object populated with computed values
+                (life, mana, energy shield, defenses, resistances,
+                attributes, speed/crit/hit stats, DPS/DOT/average hit,
+                regen/leech, EHP, unreserved resources, minion limits, and
+                other derived fields).
         """
         if context is None:
             context = {}
+
+        # Calculate attributes early so "per attribute" mods apply everywhere
+        # This must be done before any other calculations that might use
+        # per-attribute modifiers
+        strength = self.modifiers.calculate_stat("Strength", 0.0, context)
+        dexterity = self.modifiers.calculate_stat("Dexterity", 0.0, context)
+        intelligence = self.modifiers.calculate_stat("Intelligence", 0.0, context)
+
+        context["strength"] = strength
+        context["dexterity"] = dexterity
+        context["intelligence"] = intelligence
 
         # Calculate defensive stats
         defense_stats = self.defense_calc.calculate_all_defenses(context)
@@ -365,15 +425,23 @@ class CalculationEngine:
         leech_rates = self.defense_calc.calculate_leech_rates(context)
 
         # Calculate maximum hit taken
+        from pobapi.types import DamageType
+
         physical_max_hit = self.defense_calc.calculate_maximum_hit_taken(
-            "Physical", context
+            DamageType.PHYSICAL, context
         )
-        fire_max_hit = self.defense_calc.calculate_maximum_hit_taken("Fire", context)
-        cold_max_hit = self.defense_calc.calculate_maximum_hit_taken("Cold", context)
+        fire_max_hit = self.defense_calc.calculate_maximum_hit_taken(
+            DamageType.FIRE, context
+        )
+        cold_max_hit = self.defense_calc.calculate_maximum_hit_taken(
+            DamageType.COLD, context
+        )
         lightning_max_hit = self.defense_calc.calculate_maximum_hit_taken(
-            "Lightning", context
+            DamageType.LIGHTNING, context
         )
-        chaos_max_hit = self.defense_calc.calculate_maximum_hit_taken("Chaos", context)
+        chaos_max_hit = self.defense_calc.calculate_maximum_hit_taken(
+            DamageType.CHAOS, context
+        )
 
         # Calculate EHP
         total_ehp = self.defense_calc.calculate_effective_health_pool(context)
@@ -439,16 +507,7 @@ class CalculationEngine:
             except (AttributeError, IndexError):
                 pass
 
-        # Calculate attributes (need to do this early for "per attribute" modifiers)
-        # Add attributes to context for "per attribute" calculations
-        strength = self.modifiers.calculate_stat("Strength", 0.0, context)
-        dexterity = self.modifiers.calculate_stat("Dexterity", 0.0, context)
-        intelligence = self.modifiers.calculate_stat("Intelligence", 0.0, context)
-
-        # Update context with calculated attributes for "per attribute" modifiers
-        context["strength"] = strength
-        context["dexterity"] = dexterity
-        context["intelligence"] = intelligence
+        # strength/dexterity/intelligence already computed and added to context above
 
         # Calculate speed stats
         attack_speed = self.modifiers.calculate_stat("AttackSpeed", 1.0, context)

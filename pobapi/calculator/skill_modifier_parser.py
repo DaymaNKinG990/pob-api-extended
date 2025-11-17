@@ -112,12 +112,6 @@ class SkillModifierParser:
                 "moreMeleeDamage": 39.0 + (gem_level - 1) * 1.5,
                 "ruthlessChance": 30.0,
             },
-            "Test Increased Support": {
-                "increasedTestStat": 50.0,
-            },
-            "Test Reduced Support": {
-                "reducedTestStat": 30.0,
-            },
             "Multistrike Support": {
                 "moreAttackSpeed": 44.0 + (gem_level - 1) * 1.5,
                 "lessDamage": -36.0 - (gem_level - 1) * 1.0,
@@ -223,7 +217,7 @@ class SkillModifierParser:
                             else ModifierType.LESS
                         )
                     elif "increased" in stat.lower() or "reduced" in stat.lower():
-                        mod_type = (
+                        mod_type = (  # pragma: no cover
                             ModifierType.INCREASED
                             if "increased" in stat.lower()
                             else ModifierType.REDUCED

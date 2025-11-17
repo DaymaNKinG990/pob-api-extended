@@ -26,6 +26,10 @@ Welcome to the pob-api-extended documentation. This directory contains comprehen
 - **[Gems Implementation Status](GEMS_IMPLEMENTATION_STATUS.md)** - Status of skill gem implementation
 - **[Unique Items](UNIQUE_ITEMS_COMPLETE.md)** - Unique items implementation details
 
+### Testing
+- **[Integration Test Coverage](INTEGRATION_TEST_COVERAGE.md)** - Comprehensive overview of integration test coverage
+- **[Integration Coverage Analysis](INTEGRATION_COVERAGE_ANALYSIS.md)** - Research on integration coverage vs code coverage
+
 ### Planning Documents
 - **[Implementation Time Estimate](IMPLEMENTATION_TIME_ESTIMATE.md)** - Time estimates for various features
 - **[Nodes Implementation Plan](NODES_IMPLEMENTATION_PLAN.md)** - Plan for passive tree nodes implementation
@@ -51,4 +55,3 @@ When adding new documentation:
 2. Follow the existing structure
 3. Update this README if adding new major sections
 4. Place historical/archival documents in `history/`
-

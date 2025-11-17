@@ -7,7 +7,7 @@ from typing import Any, TypeVar
 T = TypeVar("T")
 
 
-def memoized_property(func: Callable[[Any], T]) -> property:
+def memoized_property(func: Callable[[Any], T]) -> property:  # noqa: UP047
     """Memoized property decorator.
 
     Caches the result of the property method after first access.

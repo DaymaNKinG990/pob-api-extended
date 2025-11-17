@@ -84,7 +84,7 @@ class TestParserSerializerIntegration:
             text="+50 to maximum Life",
         )
 
-        build._modifier.equip_item(test_item, "Belt")
+        build.equip_item(test_item, "Belt")
 
         # Serialize
         xml = build.to_xml()
@@ -140,7 +140,7 @@ class TestBuildBuilderSerializerIntegration:
             text="+20 to Strength",
         )
 
-        build._modifier.equip_item(test_item, "Ring1")
+        build.equip_item(test_item, "Ring1")
 
         # Serialize
         xml = build.to_xml()

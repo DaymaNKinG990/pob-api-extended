@@ -294,24 +294,30 @@ def test_from_url_function(mocker):
     # Clear cache to ensure fresh client creation
     import pobapi.util
 
-    pobapi.util._default_http_client = None
+    # Save original value to restore it later
+    original_client = pobapi.util._default_http_client
+    try:
+        pobapi.util._default_http_client = None
 
-    # Mock successful response
-    mock_response = mocker.Mock()
-    mock_response.text = "valid_import_code"
-    mock_response.raise_for_status = mocker.Mock()
+        # Mock successful response
+        mock_response = mocker.Mock()
+        mock_response.text = "valid_import_code"
+        mock_response.raise_for_status = mocker.Mock()
 
-    mocker.patch("requests.get", return_value=mock_response)
-    mock_fetch = mocker.patch("pobapi.util._fetch_xml_from_import_code")
-    mock_fetch.return_value = b"""<?xml version="1.0"?>
-    <PathOfBuilding>
-        <Build className="Scion" level="1"/>
-        <Skills/>
-        <Items/>
-        <Tree/>
-    </PathOfBuilding>"""
-    build = api.from_url("https://pastebin.com/test")
-    assert build.class_name == "Scion"
+        mocker.patch("requests.get", return_value=mock_response)
+        mock_fetch = mocker.patch("pobapi.util._fetch_xml_from_import_code")
+        mock_fetch.return_value = b"""<?xml version="1.0"?>
+        <PathOfBuilding>
+            <Build className="Scion" level="1"/>
+            <Skills/>
+            <Items/>
+            <Tree/>
+        </PathOfBuilding>"""
+        build = api.from_url("https://pastebin.com/test")
+        assert build.class_name == "Scion"
+    finally:
+        # Restore original value to avoid polluting other tests
+        pobapi.util._default_http_client = original_client
 
 
 @pytest.mark.parametrize(

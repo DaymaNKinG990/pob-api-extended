@@ -199,7 +199,10 @@ class ModifierSystem:
                 # "LifePerStrength" directly)
                 # Only remove if it's for the base stat
                 # (e.g., "LifePerStrength" when calculating "Life")
-                if mod.stat != stat and mod in applicable_mods:
+                # Note: This condition is currently unreachable because per-attribute
+                # modifiers have different stat names and won't be in applicable_mods
+                # (which only contains modifiers with stat == stat_name)
+                if mod.stat != stat and mod in applicable_mods:  # pragma: no cover
                     applicable_mods.remove(mod)
 
         # Separate modifiers by type
@@ -245,6 +248,13 @@ class ModifierSystem:
             result *= mod.value
 
         return result
+
+    def count(self) -> int:
+        """Get the total number of modifiers in the system.
+
+        :return: Total count of modifiers.
+        """
+        return len(self._modifiers)
 
     def clear(self) -> None:
         """Clear all modifiers."""

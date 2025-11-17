@@ -1,6 +1,7 @@
 import logging
 
 from .api import PathOfBuildingAPI, create_build, from_import_code, from_url
+from .builders import ConfigBuilder, StatsBuilder
 from .cache import clear_cache, get_cache
 from .exceptions import (
     InvalidImportCodeError,
@@ -10,11 +11,14 @@ from .exceptions import (
     PobAPIError,
     ValidationError,
 )
+from .factory import BuildFactory
 from .types import (
     Ascendancy,
     BanditChoice,
     CharacterClass,
+    DamageType,
     ItemSlot,
+    ModType,
     PassiveNodeID,
     SkillName,
 )
@@ -31,12 +35,17 @@ __all__ = [
     "from_url",
     "from_import_code",
     "create_build",
+    "BuildFactory",
+    "StatsBuilder",
+    "ConfigBuilder",
     "CharacterClass",
     "Ascendancy",
     "ItemSlot",
     "BanditChoice",
     "SkillName",
     "PassiveNodeID",
+    "DamageType",
+    "ModType",
     "PobAPIError",
     "InvalidImportCodeError",
     "InvalidURLError",

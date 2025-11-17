@@ -10,6 +10,8 @@ This report shows which component integrations are covered by integration tests.
 
 ## Coverage by Component Group
 
+> **Note:** [FULL] indicates each listed component has at least one test, whereas the overall coverage percentage (see line 125) reflects the fraction of possible component-pair integrations exercised by tests.
+
 | Group | Components | Coverage Status |
 |-------|------------|-----------------|
 | API | 3/3 | [FULL] |

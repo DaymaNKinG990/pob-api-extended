@@ -1,5 +1,7 @@
 """Integration tests for calculator components working together."""
 
+import copy
+
 import pytest
 
 pytestmark = pytest.mark.integration
@@ -166,6 +168,9 @@ class TestCalculatorComponentsIntegration:
 
         engine = CalculationEngine()
 
+        # Create a copy of build to avoid mutating the shared fixture
+        build_copy = copy.deepcopy(build)
+
         # Add party members
         party_members = [
             PartyMember(
@@ -175,11 +180,11 @@ class TestCalculatorComponentsIntegration:
             )
         ]
 
-        build.party_members = party_members  # type: ignore
-        engine.load_build(build)
+        build_copy.party_members = party_members  # type: ignore
+        engine.load_build(build_copy)
 
         # Calculate stats
-        stats = engine.calculate_all_stats(build_data=build)
+        stats = engine.calculate_all_stats(build_data=build_copy)
         assert stats is not None
 
 
@@ -237,6 +242,10 @@ class TestAdditionalCalculatorIntegrations:
         engine = CalculationEngine()
         engine.load_build(build)
 
+        # Calculate stats before applying pantheon to get baseline
+        stats_before = engine.calculate_all_stats(build_data=build)
+        fire_res_before = stats_before.fire_resistance or 0.0
+
         # Create pantheon god with souls
         souls = [
             PantheonSoul(
@@ -244,13 +253,17 @@ class TestAdditionalCalculatorIntegrations:
                 mods=["+5% to Fire Resistance"],
             )
         ]
-        # Create pantheon god (not used directly, but demonstrates integration)
-        PantheonGod(name="Test God", souls=souls)
+        god = PantheonGod(name="Test God", souls=souls)
 
-        # Pantheon tools should integrate with modifier system
-        # (pantheon modifiers are added via engine)
+        # Apply pantheon god to engine
+        engine.pantheon_tools.apply_soul_mod(god)
+
+        # Calculate stats after applying pantheon
         stats = engine.calculate_all_stats(build_data=build)
         assert stats is not None
+        # Verify that pantheon soul modifier affected fire resistance
+        fire_res_after = stats.fire_resistance or 0.0
+        assert fire_res_after >= fire_res_before
 
     def test_config_modifier_parser_with_engine(self, build):
         """Test ConfigModifierParser integration with CalculationEngine."""

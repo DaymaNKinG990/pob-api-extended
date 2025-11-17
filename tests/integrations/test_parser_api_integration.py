@@ -7,6 +7,7 @@ pytestmark = pytest.mark.integration
 from pobapi import PathOfBuildingAPI  # noqa: E402
 from pobapi.calculator.item_modifier_parser import ItemModifierParser  # noqa: E402
 from pobapi.calculator.jewel_parser import JewelParser, JewelType  # noqa: E402
+from pobapi.calculator.modifiers import Modifier, ModifierType  # noqa: E402
 from pobapi.calculator.unique_item_parser import UniqueItemParser  # noqa: E402
 
 
@@ -26,8 +27,29 @@ class TestItemModifierParserAPIIntegration:
             modifiers = ItemModifierParser.parse_item_text(item.text)
             all_modifiers.extend(modifiers)
 
-        # Should have parsed some modifiers
-        assert isinstance(all_modifiers, list)
+        # Verify parsing occurred - should have at least some modifiers
+        assert (
+            len(all_modifiers) > 0
+        ), "Expected at least one modifier to be parsed from items"
+
+        # Verify modifier structure - each modifier should be a Modifier
+        # object with required attributes
+        for modifier in all_modifiers:
+            assert isinstance(
+                modifier, Modifier
+            ), f"Expected Modifier object, got {type(modifier)}"
+            assert (
+                isinstance(modifier.stat, str) and modifier.stat
+            ), "Modifier must have non-empty stat name"
+            assert isinstance(
+                modifier.value, int | float
+            ), "Modifier must have numeric value"
+            assert isinstance(
+                modifier.mod_type, ModifierType
+            ), "Modifier must have valid ModifierType"
+            assert (
+                isinstance(modifier.source, str) and modifier.source
+            ), "Modifier must have non-empty source"
 
     def test_parse_item_and_add_to_modifier_system(
         self, build: PathOfBuildingAPI
@@ -52,7 +74,7 @@ class TestItemModifierParserAPIIntegration:
         engine.modifiers.add_modifiers(modifiers)
 
         # Verify modifiers were added
-        assert len(engine.modifiers._modifiers) >= len(modifiers)
+        assert engine.modifiers.count() >= len(modifiers)
 
 
 class TestUniqueItemParserAPIIntegration:
@@ -94,33 +116,91 @@ class TestUniqueItemParserAPIIntegration:
         if not unique_items:
             pytest.skip("No unique items in build")
 
+        # Record initial modifier count before adding unique item modifiers
+        initial_modifier_count = engine.modifiers.count()
+
         # Parse and add unique item modifiers
         for unique_item in unique_items:
             modifiers = UniqueItemParser.parse_unique_item(
                 unique_item.name, unique_item.text
             )
+            assert isinstance(modifiers, list), "Expected list of modifiers from parser"
+
+            # Record modifier count before adding this item's modifiers
+            modifier_count_before = engine.modifiers.count()
+
+            # Add modifiers to the system
             engine.modifiers.add_modifiers(modifiers)
 
-        # Verify modifiers were added
-        assert engine.modifiers is not None
+            # Verify modifiers were actually added (count increased or
+            # modifiers present)
+            modifier_count_after = engine.modifiers.count()
+            delta = modifier_count_after - modifier_count_before
+
+            # Assert that modifiers were added (delta > 0) or at least one
+            # modifier from parsed set exists
+            if len(modifiers) > 0:
+                assert delta > 0, (
+                    f"Expected modifier count to increase after adding "
+                    f"{len(modifiers)} modifiers from {unique_item.name}, "
+                    f"but count remained {modifier_count_before}"
+                )
+
+                # Verify at least one modifier from parsed set exists in the system
+                # by checking if any modifier stat appears in the system
+                parsed_stats = {mod.stat for mod in modifiers}
+                found_stats = {
+                    stat
+                    for stat in parsed_stats
+                    if len(engine.modifiers.get_modifiers(stat)) > 0
+                }
+                assert len(found_stats) > 0, (
+                    f"Expected at least one modifier stat from parsed set "
+                    f"{parsed_stats} to be present in modifier system for "
+                    f"{unique_item.name}"
+                )
+
+        # Verify total modifier count increased from initial state
+        final_modifier_count = engine.modifiers.count()
+        assert final_modifier_count > initial_modifier_count, (
+            f"Expected modifier count to increase from initial "
+            f"{initial_modifier_count} to at least "
+            f"{initial_modifier_count + 1}, but got {final_modifier_count}"
+        )
 
 
 class TestJewelParserAPIIntegration:
     """Test integration between JewelParser and PathOfBuildingAPI."""
 
-    def test_detect_jewel_type_from_build_items(self, build: PathOfBuildingAPI) -> None:
+    def test_detect_jewel_type_from_build_items(
+        self, build_with_jewels: PathOfBuildingAPI
+    ) -> None:
         """Test detecting jewel types from build items."""
-        items = list(build.items)
+        items = list(build_with_jewels.items)
 
         if not items:
             pytest.skip("No items in build")
 
-        # Try to detect jewel types (jewels might not be in build)
-        for item in items:
-            # Check if item might be a jewel (simplified check)
-            if "jewel" in item.base.lower() or "jewel" in item.name.lower():
-                jewel_type = JewelParser.detect_jewel_type(item)
-                assert isinstance(jewel_type, JewelType)
+        # Collect all jewels first
+        jewels = [
+            item
+            for item in items
+            if "jewel" in item.base.lower() or "jewel" in item.name.lower()
+        ]
+
+        if not jewels:
+            pytest.skip("No jewels found in build items")
+
+        # Iterate over filtered jewels and validate jewel type detection
+        for jewel in jewels:
+            jewel_type = JewelParser.detect_jewel_type(jewel.text)
+            # JewelType is a class with constants, not an Enum
+            assert jewel_type in (
+                JewelType.NORMAL,
+                JewelType.RADIUS,
+                JewelType.CONVERSION,
+                JewelType.TIMELESS,
+            ), f"Invalid jewel type: {jewel_type}"
 
     def test_parse_jewel_socket_from_build(self, build: PathOfBuildingAPI) -> None:
         """Test parsing jewel socket from build tree."""
@@ -162,8 +242,6 @@ class TestJewelParserAPIIntegration:
             if 0 <= item_id < len(items):
                 jewel_item = items[item_id]
                 # Use PassiveTreeParser to parse jewel socket
-                from pobapi.calculator.passive_tree_parser import PassiveTreeParser
-
                 jewel_modifiers = PassiveTreeParser.parse_jewel_socket(
                     socket_id, jewel_item, allocated_nodes
                 )
@@ -186,7 +264,39 @@ class TestParserModifierSystemIntegration:
 
         # Verify modifier system has modifiers from all sources
         assert engine.modifiers is not None
-        # Modifiers should be added from items, tree, skills, config
+
+        # Verify that modifiers were actually populated by checking common
+        # stats. Try to get modifiers for several common stats that are
+        # typically present in builds
+        common_stats = [
+            "Life",
+            "EnergyShield",
+            "Mana",
+            "PhysicalDamage",
+            "CritChance",
+            "AccuracyRating",
+            "Armour",
+            "Evasion",
+            "Resist",
+            "Strength",
+            "Dexterity",
+            "Intelligence",
+            "MovementSpeed",
+            "AttackSpeed",
+        ]
+
+        # Check that at least one common stat has modifiers
+        modifiers_found = False
+        for stat in common_stats:
+            modifiers = engine.modifiers.get_modifiers(stat)
+            if len(modifiers) > 0:
+                modifiers_found = True
+                break
+
+        assert modifiers_found, (
+            "Expected modifiers to be populated after load_build, "
+            "but no modifiers found for common stats"
+        )
 
     def test_parser_chain_integration(self, build: PathOfBuildingAPI) -> None:
         """Test parser chain: ItemModifierParser -> ModifierSystem -> Calculator."""

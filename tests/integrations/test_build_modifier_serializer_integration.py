@@ -92,7 +92,7 @@ class TestBuildModifierSerializerIntegration:
                 level_req=1,
                 item_level=84,
                 implicit=None,
-                text=f"+{10*i} to Strength",
+                text=f"+{10 * i} to Strength",
             )
             for i in range(3)
         ]

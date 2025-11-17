@@ -61,7 +61,15 @@ class TestTreesParserAPIIntegration:
         active_tree = build.active_skill_tree
 
         # Find corresponding parsed tree
-        active_spec_index = int(xml_root.find("Tree").get("activeSpec")) - 1
+        tree_element = xml_root.find("Tree")
+        if tree_element is None:
+            pytest.fail("Tree element not found in XML root")
+
+        active_spec_attr = tree_element.get("activeSpec")
+        if active_spec_attr is None:
+            pytest.fail("activeSpec attribute not found in Tree element")
+
+        active_spec_index = int(active_spec_attr) - 1
         if 0 <= active_spec_index < len(trees):
             parsed_active_tree = trees[active_spec_index]
             assert parsed_active_tree["nodes"] == active_tree.nodes

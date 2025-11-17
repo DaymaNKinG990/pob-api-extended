@@ -838,4 +838,3 @@ class TestItemCraftingAPI:
 
         # Should use "{value}% less {display_stat}" format (covers line 627)
         assert "15% less" in item_text
-        assert "15% less" in item_text

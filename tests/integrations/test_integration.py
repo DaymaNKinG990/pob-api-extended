@@ -127,7 +127,9 @@ class TestFullWorkflow:
 
         # Step 3: Build
         stats = StatsBuilder.build(xml_root)
-        config = ConfigBuilder.build(xml_root, character_level=int(build_info["level"]))
+        level_str = build_info.get("level")
+        character_level = int(level_str) if level_str else 1
+        config = ConfigBuilder.build(xml_root, character_level=character_level)
         item_sets = ItemSetBuilder.build_all(xml_root)
 
         # Step 4: Verify all components

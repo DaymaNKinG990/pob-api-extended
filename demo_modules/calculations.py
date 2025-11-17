@@ -7,12 +7,12 @@ from pobapi.calculator.engine import CalculationEngine
 def print_calculations(build: PathOfBuildingAPI) -> None:
     """
     Print a comprehensive, PoB-style report of calculated build statistics to stdout.
-    
+
     Generates a detailed human-readable breakdown (attributes, life/mana/ES, defenses,
     resists, damage, skill-specific stats, minion stats, modifier sources, etc.) by
     loading the provided PathOfBuildingAPI build into the CalculationEngine and
     querying its calculators.
-    
+
     Parameters:
         build (PathOfBuildingAPI): The PoB build to evaluate and display.
     """
@@ -975,9 +975,12 @@ def print_calculations(build: PathOfBuildingAPI) -> None:
 
 def main():
     """
-    Entry point that loads a demonstration Path of Building build and prints its calculated report.
-    
-    Adds the repository parent to sys.path, constructs a PathOfBuildingAPI instance from the demo import code, and calls print_calculations(build) to render the build report to stdout.
+    Entry point that loads a demonstration Path of Building build and
+    prints its calculated report.
+
+    Adds the repository parent to sys.path, constructs a PathOfBuildingAPI
+    instance from the demo import code, and calls print_calculations(build)
+    to render the build report to stdout.
     """
     import sys
     from pathlib import Path

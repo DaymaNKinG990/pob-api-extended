@@ -176,14 +176,8 @@ class TestItemStr:
         # implicit=0 is not printed (only if > 0)
         assert "Implicits:" not in item_str
 
-    @pytest.mark.parametrize(
-        "elder,expected_in_str",
-        [
-            (True, "Elder Item"),
-            (False, "Elder Item"),
-        ],
-    )
-    def test_item_str_elder_field(self, elder, expected_in_str):
+    @pytest.mark.parametrize("elder", [True, False])
+    def test_item_str_elder_field(self, elder):
         """Test Item __str__ with elder field (line 236)."""
         item = models.Item(
             rarity="Unique",
@@ -202,6 +196,6 @@ class TestItemStr:
         )
         item_str = str(item)
         if elder:
-            assert expected_in_str in item_str
+            assert "Elder Item" in item_str
         else:
-            assert expected_in_str not in item_str
+            assert "Elder Item" not in item_str

@@ -173,9 +173,8 @@ class TestConditionEvaluator:
 
     def test_evaluate_all_conditions_one_false(self) -> None:
         """Test evaluate_all_conditions when one condition is not met."""
-        # The current implementation has a bug: if required_value is True
-        # and condition fails, it doesn't return False. Let's test what it
-        # actually does.
+        # Fixed: evaluate_all_conditions now correctly returns False when
+        # any condition fails
         conditions = {
             "on_full_life": True,
             "enemy_is_shocked": True,
@@ -186,11 +185,8 @@ class TestConditionEvaluator:
             "enemy_is_shocked": True,
         }
         result = ConditionEvaluator.evaluate_all_conditions(conditions, context)
-        # on_full_life is False (50 < 99), but the bug causes it to return True
-        # So we test what it actually does, not what it should do
-        # The bug: if required_value is True and condition fails,
-        # it continues and returns True
-        assert result is True  # Current buggy behavior
+        # on_full_life is False (50 < 99), so the function should return False
+        assert result is False
 
     def test_evaluate_all_conditions_empty(self) -> None:
         """Test evaluate_all_conditions with empty conditions."""

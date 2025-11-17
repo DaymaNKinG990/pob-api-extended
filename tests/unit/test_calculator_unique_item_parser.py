@@ -115,9 +115,24 @@ class TestUniqueItemParser:
 
         Covers lines 523-525."""
         # Mock the import inside the function to raise ImportError
-        mocker.patch(
-            "pobapi.calculator.game_data.GameDataLoader",
-            side_effect=ImportError("Module not found"),
+        # Patch the import where it happens inside parse_unique_item
+        # The import is: from pobapi.calculator.game_data import GameDataLoader
+        # Patch the fully-qualified source path so the inner import raises ImportError
+        # Use patch.object on the GameDataLoader class from its source module
+        import pobapi.calculator.game_data
+
+        # Patch the class so that accessing it raises ImportError
+        # This simulates the import failing inside parse_unique_item
+        # When the import statement tries to access GameDataLoader, it
+        # will raise ImportError
+        def raise_import_error(*args, **kwargs):
+            raise ImportError("Module not found")
+
+        # Patch the class attribute so accessing it raises ImportError
+        mocker.patch.object(
+            pobapi.calculator.game_data,
+            "GameDataLoader",
+            side_effect=raise_import_error,
         )
 
         # Should handle ImportError gracefully (covers lines 523-525)

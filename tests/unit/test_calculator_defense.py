@@ -101,8 +101,12 @@ class TestDefenseCalculator:
         ("armour", "hit_damage", "expected_reduction"),
         [
             (0.0, 100.0, 0.0),  # No armour
-            (1000.0, 100.0, 9.09),  # Small hit, high reduction
-            (1000.0, 10000.0, 0.99),  # Large hit, low reduction
+            (1000.0, 100.0, 0.5),  # Small hit, high reduction: 1000/(1000+1000) = 0.5
+            (
+                1000.0,
+                10000.0,
+                0.009900990099009901,
+            ),  # Large hit, low reduction: 1000/(1000+100000) ≈ 0.0099
         ],
     )
     def test_calculate_physical_damage_reduction(
@@ -126,9 +130,11 @@ class TestDefenseCalculator:
         result = defense_calculator.calculate_physical_damage_reduction(
             hit_damage, context
         )
-        # Allow some tolerance for complex formula
+        # Validate against expected reduction with tolerance
+        assert result == pytest.approx(expected_reduction, abs=1e-6)
+        # Also check bounds for safety
         assert result >= 0.0
-        assert result <= 90.0  # Max reduction is 90%
+        assert result <= 0.9  # Max reduction is 90% (0.9 as decimal)
 
     def test_calculate_evade_chance(
         self,
@@ -611,16 +617,17 @@ class TestDefenseCalculator:
         modifier_system: "ModifierSystem",
         mocker,
     ) -> None:
-        """Test calculating maximum hit taken - line 226 is a safety fallback.
+        """Test calculating maximum hit taken with negative discriminant fallback.
 
         Formula check: discriminant = b^2 - 4ac
         where a = 10, b = -10*total_pool, c = -total_pool*armour
         discriminant = (-10*total_pool)^2 - 4*10*(-total_pool*armour)
                      = 100*total_pool^2 + 40*total_pool*armour
         This is always positive for positive total_pool and armour.
-        So line 226 is mathematically unreachable with correct formula.
+        So negative discriminant is mathematically unreachable with correct formula.
         However, it's a safety fallback for edge cases (e.g., floating point errors).
-        We'll patch the discriminant calculation to test the fallback path.
+        We mock only the discriminant calculation method to test the fallback path
+        while keeping the rest of the real logic intact.
         """
         modifier_system.add_modifier(
             Modifier(
@@ -640,50 +647,17 @@ class TestDefenseCalculator:
         )
         context = {"base_life": 100.0}
 
-        # Patch the discriminant calculation inside the method
-        # We'll intercept the calculation by patching the multiplication operation
-        # on the discriminant calculation line
-        original_calc = defense_calculator.calculate_maximum_hit_taken
-
-        def patched_calc(damage_type, context):
-            if damage_type != "Physical":
-                return original_calc(damage_type, context)
-
-            total_pool = defense_calculator.calculate_life(
-                context
-            ) + defense_calculator.calculate_energy_shield(context)
-            if total_pool <= 0.0:
-                return 0.0
-
-            armour = defense_calculator.calculate_armour(context)
-            if armour == 0.0:
-                return total_pool
-
-            a = 10.0
-            b = -10.0 * total_pool
-            # c = -total_pool * armour  # Not used in this test
-
-            # Patch discriminant to be negative to trigger line 226
-            # In real code: discriminant = b * b - 4.0 * a * c
-            # We'll mock the multiplication to return
-            # a value that makes discriminant negative
-            # Actually, we can't easily mock local variable assignment
-            # So we'll directly set discriminant to negative
-            discriminant = -1.0  # Force negative to cover line 226
-
-            if discriminant < 0:
-                # Line 226 - return fallback
-                return total_pool * 2.0
-
-            max_hit = (-b + (discriminant**0.5)) / (2.0 * a)
-            return max_hit
-
+        # Mock only the discriminant calculation to return negative value.
+        # This tests the real calculate_maximum_hit_taken logic with
+        # controlled discriminant
         mocker.patch.object(
-            defense_calculator, "calculate_maximum_hit_taken", side_effect=patched_calc
+            defense_calculator,
+            "_calculate_quadratic_discriminant",
+            return_value=-1.0,
         )
 
         result = defense_calculator.calculate_maximum_hit_taken("Physical", context)
-        # Should return total_pool * 2.0 when discriminant < 0 (covers line 232)
+        # Should return total_pool * 2.0 when discriminant < 0 (fallback path)
         # total_pool = base_life (100.0) + modifier (100.0) = 200.0
         # So result should be 200.0 * 2.0 = 400.0
         assert result == pytest.approx(400.0, rel=1e-6)  # total_pool * 2.0

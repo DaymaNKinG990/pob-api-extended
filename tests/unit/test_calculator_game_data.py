@@ -87,11 +87,27 @@ class TestGameDataLoader:
 
     def test_load_unique_item_data_from_file(self) -> None:
         """Test loading unique item data from JSON file."""
-        loader = GameDataLoader()
-        # Try to load from actual file if it exists
-        uniques = loader.load_unique_item_data()
-        # Should return dict (might be empty if file doesn't exist)
-        assert isinstance(uniques, dict)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            data_file = Path(tmpdir) / "uniques.json"
+            data = {
+                "uniques": {
+                    "TestUnique": {
+                        "name": "Test Unique",
+                        "baseType": "Leather Belt",
+                        "specialEffects": ["Effect 1"],
+                        "implicitMods": ["+10 to Strength"],
+                        "explicitMods": ["+20 to Life"],
+                    }
+                }
+            }
+            with open(data_file, "w") as f:
+                json.dump(data, f)
+
+            loader = GameDataLoader()
+            loader._data_paths = [str(tmpdir)]
+            uniques = loader.load_unique_item_data(str(data_file))
+            assert len(uniques) >= 1
+            assert "testunique" in uniques or "TestUnique" in uniques
 
     def test_get_unique_item_not_found(self) -> None:
         """Test getting unique item that doesn't exist."""
@@ -101,13 +117,35 @@ class TestGameDataLoader:
 
     def test_get_unique_item_by_name(self) -> None:
         """Test getting unique item by name."""
-        loader = GameDataLoader()
-        # Try to load data first
-        loader.load_unique_item_data()
-        # Try to get a known unique (if data is loaded)
-        item = loader.get_unique_item("Inpulsa's Broken Heart")
-        # Might be None if data not loaded
-        assert item is None or isinstance(item, UniqueItem)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            data_file = Path(tmpdir) / "uniques.json"
+            data = {
+                "uniques": {
+                    "inpulsasbrokenheart": {  # Normalized name
+                        "name": "Inpulsa's Broken Heart",
+                        "baseType": "Sadist Garb",
+                        "specialEffects": [
+                            (
+                                "Enemies you kill explode, dealing 5% of "
+                                "their Life as Lightning Damage"
+                            )
+                        ],
+                        "implicitMods": [],
+                        "explicitMods": ["+100 to maximum Life"],
+                    }
+                }
+            }
+            with open(data_file, "w") as f:
+                json.dump(data, f)
+
+            loader = GameDataLoader()
+            loader._data_paths = [str(tmpdir)]
+            loader.load_unique_item_data(str(data_file))
+            # Get the unique item - should be found
+            item = loader.get_unique_item("Inpulsa's Broken Heart")
+            assert item is not None
+            assert isinstance(item, UniqueItem)
+            assert item.name == "Inpulsa's Broken Heart"
 
     def test_get_passive_node_not_found(self) -> None:
         """Test getting passive node that doesn't exist - covers line 482."""

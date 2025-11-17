@@ -47,6 +47,10 @@
         "component_b": "BuildXMLSerializer"
       },
       {
+        "component_a": "CalculationEngine",
+        "component_b": "ModifierSystem"
+      },
+      {
         "component_a": "ModifierSystem",
         "component_b": "DamageCalculator"
       },
@@ -69,10 +73,6 @@
       {
         "component_a": "ModifierSystem",
         "component_b": "PartyCalculator"
-      },
-      {
-        "component_a": "CalculationEngine",
-        "component_b": "ModifierSystem"
       },
       {
         "component_a": "GameDataLoader",
@@ -107,9 +107,7 @@
       ],
       "test_methods": 7,
       "components": [
-        "BuildModifier",
-        "CalculationEngine",
-        "PathOfBuildingAPI"
+        "CalculationEngine"
       ]
     },
     {
@@ -120,9 +118,7 @@
       ],
       "test_methods": 6,
       "components": [
-        "BuildBuilder",
         "BuildFactory",
-        "BuildModifier",
         "BuildXMLSerializer",
         "ImportCodeGenerator",
         "PathOfBuildingAPI"
@@ -138,12 +134,10 @@
       "test_methods": 15,
       "components": [
         "CalculationEngine",
-        "ConfigModifierParser",
-        "DamageCalculator",
-        "GameDataLoader",
         "ItemModifierParser",
-        "PassiveTreeParser",
-        "SkillModifierParser"
+        "ModifierSystem",
+        "PartyCalculator",
+        "PassiveTreeParser"
       ]
     },
     {
@@ -211,6 +205,7 @@
         "InputValidator",
         "ItemsParser",
         "SkillsParser",
+        "TreesParser",
         "XMLValidator"
       ]
     },
@@ -240,7 +235,6 @@
       ],
       "test_methods": 6,
       "components": [
-        "BuildBuilder",
         "BuildXMLSerializer",
         "ImportCodeGenerator",
         "PathOfBuildingAPI"
@@ -253,7 +247,6 @@
       ],
       "test_methods": 8,
       "components": [
-        "BuildModifier",
         "PathOfBuildingAPI",
         "TradeAPI"
       ]
@@ -271,10 +264,13 @@
       "test_methods": 10,
       "components": [
         "BuildFactory",
+        "BuildInfoParser",
         "CalculationEngine",
         "DefaultBuildParser",
+        "ItemsParser",
         "PassiveTreeParser",
         "PathOfBuildingAPI",
+        "SkillsParser",
         "TreesParser"
       ]
     }

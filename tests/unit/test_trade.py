@@ -356,11 +356,26 @@ class TestTradeAPI:
         self, create_test_item, rarity, expected_multiplier
     ) -> None:
         """Test price estimation by rarity."""
+        # Get reference price for Normal rarity
+        normal_item = create_test_item(rarity="Normal", item_level=80, quality=0)
+        normal_price_range = TradeAPI.estimate_item_price(
+            normal_item, league="Standard"
+        )
+        assert isinstance(normal_price_range, PriceRange)
+        assert normal_price_range.min_price > 0
+
+        # Get price for the parametrized rarity
         item = create_test_item(rarity=rarity, item_level=80, quality=0)
         price_range = TradeAPI.estimate_item_price(item, league="Standard")
         assert isinstance(price_range, PriceRange)
         assert price_range.min_price > 0
         assert price_range.max_price > price_range.min_price
+
+        # Compute actual multiplier relative to Normal rarity
+        actual_multiplier = price_range.min_price / normal_price_range.min_price
+        # Compare relative to Normal rarity (expected_multiplier / 0.1)
+        expected_relative_multiplier = expected_multiplier / 0.1
+        assert actual_multiplier == pytest.approx(expected_relative_multiplier, rel=0.1)
 
     def test_estimate_item_price_with_quality(self, create_test_item) -> None:
         """Test price estimation with quality."""

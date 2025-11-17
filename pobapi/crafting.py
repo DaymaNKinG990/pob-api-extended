@@ -9,8 +9,12 @@ This module provides functionality for crafting items, including:
 
 from dataclasses import dataclass
 from enum import Enum
+from typing import TYPE_CHECKING, Union
 
 from pobapi.calculator.modifiers import Modifier, ModifierType
+
+if TYPE_CHECKING:
+    from pobapi.types import ModType
 
 __all__ = [
     "ModifierTier",
@@ -322,15 +326,23 @@ class ItemCraftingAPI:
 
     @staticmethod
     def get_modifiers_by_type(
-        modifier_type: str, item_level: int = 100, tags: list[str] | None = None
+        modifier_type: Union[str, "ModType"],
+        item_level: int = 100,
+        tags: list[str] | None = None,
     ) -> list[ItemModifier]:
         """Get available modifiers by type (prefix/suffix).
 
-        :param modifier_type: "prefix" or "suffix".
+        :param modifier_type: "prefix" or "suffix", or ModType enum.
         :param item_level: Item level (filters by item_level_required).
         :param tags: Optional list of item tags to filter by.
         :return: List of available ItemModifier objects.
         """
+        from pobapi.types import ModType
+
+        # Convert enum to string if needed
+        if isinstance(modifier_type, ModType):
+            modifier_type = modifier_type.value
+
         if modifier_type not in ItemCraftingAPI.MODIFIER_DATABASE:
             return []
 
@@ -363,8 +375,10 @@ class ItemCraftingAPI:
         :param tags: Optional list of item tags to filter by.
         :return: List of available ItemModifier objects.
         """
+        from pobapi.types import ModType
+
         all_modifiers: list[ItemModifier] = []
-        for modifier_type in ["prefix", "suffix"]:
+        for modifier_type in [ModType.PREFIX.value, ModType.SUFFIX.value]:
             all_modifiers.extend(
                 ItemCraftingAPI.MODIFIER_DATABASE.get(modifier_type, [])
             )
@@ -653,7 +667,9 @@ class ItemCraftingAPI:
         :param tags: Optional item tags.
         :return: List of available prefix modifiers.
         """
-        return ItemCraftingAPI.get_modifiers_by_type("prefix", item_level, tags)
+        from pobapi.types import ModType
+
+        return ItemCraftingAPI.get_modifiers_by_type(ModType.PREFIX, item_level, tags)
 
     @staticmethod
     def get_available_suffixes(
@@ -665,4 +681,6 @@ class ItemCraftingAPI:
         :param tags: Optional item tags.
         :return: List of available suffix modifiers.
         """
-        return ItemCraftingAPI.get_modifiers_by_type("suffix", item_level, tags)
+        from pobapi.types import ModType
+
+        return ItemCraftingAPI.get_modifiers_by_type(ModType.SUFFIX, item_level, tags)

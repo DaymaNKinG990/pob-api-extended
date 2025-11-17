@@ -10,6 +10,20 @@ from pobapi.crafting import (  # noqa: E402
     ItemCraftingAPI,
 )
 
+# Valid base item types for Path of Building
+VALID_BASE_TYPES = [
+    "Leather Belt",
+    "Iron Ring",
+    "Simple Robe",
+    "Vaal Gauntlets",
+    "Coral Ring",
+    "Topaz Ring",
+    "Sapphire Ring",
+    "Ruby Ring",
+    "Amethyst Ring",
+    "Two-Stone Ring",
+]
+
 
 class TestCraftingAPIPathOfBuildingAPIIntegration:
     """Test integration between ItemCraftingAPI and PathOfBuildingAPI."""
@@ -161,7 +175,7 @@ class TestCraftingAPIPathOfBuildingAPIIntegration:
             implicit=None,
             text=result.item_text,
         )
-        build._modifier.equip_item(crafted_item, "Ring1")
+        build.equip_item(crafted_item, "Ring1")
 
         # Serialize build
         xml = build.to_xml()
@@ -174,6 +188,18 @@ class TestCraftingAPIPathOfBuildingAPIIntegration:
         xml_root = fromstring(xml)
         items_elem = xml_root.find("Items")
         assert items_elem is not None
+
+        # Find the crafted item by uid attribute
+        crafted_item_elem = items_elem.xpath('.//Item[@uid="crafted-ring-1"]')
+        assert (
+            len(crafted_item_elem) > 0
+        ), "Crafted item with uid='crafted-ring-1' not found in serialized XML"
+
+        # Verify the found element is an Item
+        assert crafted_item_elem[0].tag == "Item", "Found element is not an Item"
+
+        # Optionally verify the item has expected attributes or children
+        assert crafted_item_elem[0].get("uid") == "crafted-ring-1"
 
     def test_craft_multiple_items_for_build(self, build: PathOfBuildingAPI) -> None:
         """Test crafting multiple items and adding them to build."""
@@ -189,8 +215,9 @@ class TestCraftingAPIPathOfBuildingAPIIntegration:
                 modifier=prefix_mod, roll_value=prefix_mod.max_value
             )
 
+            base_type = VALID_BASE_TYPES[i % len(VALID_BASE_TYPES)]
             result = ItemCraftingAPI.craft_item(
-                base_item_type=f"Test Item {i}",
+                base_item_type=base_type,
                 item_level=84,
                 prefixes=[crafting_mod],
             )
@@ -199,8 +226,8 @@ class TestCraftingAPIPathOfBuildingAPIIntegration:
                 from pobapi.models import Item
 
                 crafted_item = Item(
-                    name=f"Test Item {i}",
-                    base=f"Test Item {i}",
+                    name=f"Crafted {base_type}",
+                    base=base_type,
                     rarity="Rare",
                     uid=f"crafted-{i}",
                     shaper=False,

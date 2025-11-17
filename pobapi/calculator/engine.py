@@ -425,15 +425,23 @@ class CalculationEngine:
         leech_rates = self.defense_calc.calculate_leech_rates(context)
 
         # Calculate maximum hit taken
+        from pobapi.types import DamageType
+
         physical_max_hit = self.defense_calc.calculate_maximum_hit_taken(
-            "Physical", context
+            DamageType.PHYSICAL, context
         )
-        fire_max_hit = self.defense_calc.calculate_maximum_hit_taken("Fire", context)
-        cold_max_hit = self.defense_calc.calculate_maximum_hit_taken("Cold", context)
+        fire_max_hit = self.defense_calc.calculate_maximum_hit_taken(
+            DamageType.FIRE, context
+        )
+        cold_max_hit = self.defense_calc.calculate_maximum_hit_taken(
+            DamageType.COLD, context
+        )
         lightning_max_hit = self.defense_calc.calculate_maximum_hit_taken(
-            "Lightning", context
+            DamageType.LIGHTNING, context
         )
-        chaos_max_hit = self.defense_calc.calculate_maximum_hit_taken("Chaos", context)
+        chaos_max_hit = self.defense_calc.calculate_maximum_hit_taken(
+            DamageType.CHAOS, context
+        )
 
         # Calculate EHP
         total_ehp = self.defense_calc.calculate_effective_health_pool(context)

@@ -495,9 +495,12 @@ class PartyCalculator:
         # Examples: "X% increased Effect of Auras on you" or
         # "X% increased Effect of Non-Curse Auras"
         try:
-            party_aura_effectiveness_increased = self.modifiers.calculate_stat(
-                "PartyAuraEffectiveness", 0.0, context
+            # Use base_value=100.0 to get the percentage increase
+            # Then subtract 100 to get the actual increase percentage
+            calculated_value = self.modifiers.calculate_stat(
+                "PartyAuraEffectiveness", 100.0, context
             )
+            party_aura_effectiveness_increased = calculated_value - 100.0
         except (AttributeError, KeyError):
             # If modifier system doesn't have this stat yet, use 0
             party_aura_effectiveness_increased = 0.0
@@ -507,5 +510,6 @@ class PartyCalculator:
             1.0 + party_aura_effectiveness_increased / 100.0
         )
 
-        # Cap at 100% (can't exceed original aura effectiveness)
-        return min(100.0, final_effectiveness)
+        # Note: Effectiveness can exceed 100% per PoE mechanics
+        # (e.g., with high "increased Effect of Auras" modifiers)
+        return final_effectiveness

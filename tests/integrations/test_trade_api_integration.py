@@ -98,8 +98,8 @@ class TestTradeAPIPathOfBuildingAPIIntegration:
         filters = [TradeFilter(filter_type=FilterType.QUALITY, min_value=15)]
         filtered = TradeAPI.filter_items(items, filters)
 
-        # All filtered items should have quality >= 15 or None
-        assert all(item.quality is None or item.quality >= 15 for item in filtered)
+        # All filtered items should have non-None quality >= 15
+        assert all(item.quality is not None and item.quality >= 15 for item in filtered)
 
     def test_filter_build_items_by_sockets(self, build: PathOfBuildingAPI) -> None:
         """Test filtering items from build by socket count."""
@@ -114,7 +114,7 @@ class TestTradeAPIPathOfBuildingAPIIntegration:
 
         # All filtered items should have at least 4 sockets
         assert all(
-            item.sockets is None or sum(len(group) for group in item.sockets) >= 4
+            item.sockets is not None and sum(len(group) for group in item.sockets) >= 4
             for item in filtered
         )
 

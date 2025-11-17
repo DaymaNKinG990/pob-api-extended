@@ -215,8 +215,6 @@ class TestMinionCalculator:
         """Test calculating minion limit via modifiers.calculate_stat.
 
         Covers engine.py line 520."""
-        from pobapi.calculator.modifiers import Modifier, ModifierType
-
         # Test with no modifiers (base value 0.0)
         result = modifier_system.calculate_stat("MinionLimit", 0.0)
         assert result == 0.0

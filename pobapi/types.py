@@ -13,6 +13,17 @@ __all__ = [
     "BanditChoice",
     "SkillName",
     "PassiveNodeID",
+    "DamageType",
+    "ResistanceType",
+    "SocketColor",
+    "ItemRarity",
+    "ItemType",
+    "FlaskType",
+    "ChargeType",
+    "InfluenceType",
+    "ModType",
+    "SkillType",
+    "DefenseType",
 ]
 
 
@@ -41,7 +52,7 @@ class Ascendancy(str, Enum):
 
     # Ranger
     DEADEYE = "Deadeye"
-    RAIDER = "Raider"
+    WARDEN = "Warden"
     PATHFINDER = "Pathfinder"
 
     # Duelist
@@ -322,3 +333,124 @@ class PassiveNodeID:
         :return: Node ID or None if not found.
         """
         return getattr(cls, name.upper(), None)
+
+
+class DamageType(str, Enum):
+    """Damage type constants."""
+
+    PHYSICAL = "Physical"
+    FIRE = "Fire"
+    COLD = "Cold"
+    LIGHTNING = "Lightning"
+    CHAOS = "Chaos"
+    ELEMENTAL = "Elemental"  # Fire + Cold + Lightning
+
+
+class ResistanceType(str, Enum):
+    """Resistance type constants."""
+
+    FIRE = "Fire"
+    COLD = "Cold"
+    LIGHTNING = "Lightning"
+    CHAOS = "Chaos"
+    ELEMENTAL = "Elemental"  # Fire + Cold + Lightning
+
+
+class SocketColor(str, Enum):
+    """Socket color constants."""
+
+    RED = "R"
+    GREEN = "G"
+    BLUE = "B"
+    WHITE = "W"  # Prismatic socket
+
+
+class ItemRarity(str, Enum):
+    """Item rarity constants."""
+
+    NORMAL = "Normal"
+    MAGIC = "Magic"
+    RARE = "Rare"
+    UNIQUE = "Unique"
+
+
+class ItemType(str, Enum):
+    """Item type categories."""
+
+    WEAPON = "Weapon"
+    ARMOUR = "Armour"
+    ACCESSORY = "Accessory"
+    FLASK = "Flask"
+    JEWEL = "Jewel"
+    QUIVER = "Quiver"
+    SHIELD = "Shield"
+
+
+class FlaskType(str, Enum):
+    """Flask type constants."""
+
+    LIFE = "Life"
+    MANA = "Mana"
+    HYBRID = "Hybrid"
+    UTILITY = "Utility"
+
+
+class ChargeType(str, Enum):
+    """Charge type constants."""
+
+    POWER = "Power"
+    FRENZY = "Frenzy"
+    ENDURANCE = "Endurance"
+
+
+class InfluenceType(str, Enum):
+    """Item influence type constants."""
+
+    SHAPER = "Shaper"
+    ELDER = "Elder"
+    CRUSADER = "Crusader"
+    HUNTER = "Hunter"
+    REDEEMER = "Redeemer"
+    WARLORD = "Warlord"
+
+
+class ModType(str, Enum):
+    """Modifier type constants for items."""
+
+    PREFIX = "prefix"
+    SUFFIX = "suffix"
+    IMPLICIT = "implicit"
+    ENCHANT = "enchant"
+    CRAFTED = "crafted"
+
+
+class SkillType(str, Enum):
+    """Skill type categories."""
+
+    ATTACK = "Attack"
+    SPELL = "Spell"
+    MINION = "Minion"
+    SUPPORT = "Support"
+    AURA = "Aura"
+    CURSE = "Curse"
+    HERALD = "Herald"
+    GUARDIAN_SKILL = "Guardian Skill"
+    MOVEMENT = "Movement"
+    TRAP = "Trap"
+    MINE = "Mine"
+    TOTEM = "Totem"
+    BRAND = "Brand"
+
+
+class DefenseType(str, Enum):
+    """Defense type constants."""
+
+    ARMOUR = "Armour"
+    EVASION = "Evasion"
+    ENERGY_SHIELD = "Energy Shield"
+    WARD = "Ward"
+    BLOCK = "Block"
+    SPELL_BLOCK = "Spell Block"
+    DODGE = "Dodge"
+    SPELL_DODGE = "Spell Dodge"
+    SPELL_SUPPRESSION = "Spell Suppression"

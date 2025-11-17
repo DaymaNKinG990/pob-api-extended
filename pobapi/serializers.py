@@ -226,12 +226,18 @@ class BuildXMLSerializer:
             item_elem = SubElement(items_elem, "Item")
             if item.text:
                 item_elem.text = item.text
+            # Add uid as attribute if present
+            if item.uid:
+                item_elem.set("uid", item.uid)
         # Add pending items (from equip_item calls)
         if hasattr(api, "_pending_items"):
             for item in api._pending_items:
                 item_elem = SubElement(items_elem, "Item")
                 if item.text:
                     item_elem.text = item.text
+                # Add uid as attribute if present
+                if item.uid:
+                    item_elem.set("uid", item.uid)
 
         # Item sets
         for item_set in api.item_sets:

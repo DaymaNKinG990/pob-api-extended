@@ -1,9 +1,10 @@
 """Tests for CalculationEngine."""
 
 from typing import Any
+from unittest.mock import Mock
 
 from pobapi.calculator.engine import CalculationEngine
-from pobapi.calculator.modifiers import Modifier, ModifierType
+from pobapi.calculator.modifiers import Modifier, ModifierSystem, ModifierType
 
 
 class TestCalculationEngine:
@@ -73,29 +74,28 @@ class TestCalculationEngine:
         # Should load party modifiers
         assert engine.modifiers is not None
 
-    def test_load_build_invalid_jewel_socket_index(
+    def test_load_build_invalid_jewel_socket_indices(
         self, mock_build, mock_tree, mock_item
     ) -> None:
-        """Test loading build with invalid jewel socket index."""
+        """Test loading build with invalid jewel socket indices (positive
+        and negative)."""
         engine = CalculationEngine()
-        tree = mock_tree(nodes=[12345], sockets={12346: 999})  # Invalid item index
         items = [mock_item(name="Test Item")]
-        build = mock_build(active_skill_tree=tree, items=items)
-        engine.load_build(build)
-        # Should handle invalid index gracefully
+
+        # Test with invalid positive index (out of bounds)
+        tree1 = mock_tree(nodes=[12345], sockets={12346: 999})
+        build1 = mock_build(active_skill_tree=tree1, items=items)
+        engine.load_build(build1)
+        # Should handle invalid positive index gracefully
         assert engine.modifiers is not None
 
-    def test_load_build_jewel_socket_negative_index(
-        self, mock_build, mock_tree, mock_item
-    ) -> None:
-        """Test loading build with negative jewel socket index."""
-        engine = CalculationEngine()
-        tree = mock_tree(nodes=[12345], sockets={12346: -1})  # Negative index
-        items = [mock_item(name="Test Item")]
-        build = mock_build(active_skill_tree=tree, items=items)
-        engine.load_build(build)
+        # Test with negative index
+        engine2 = CalculationEngine()
+        tree2 = mock_tree(nodes=[12345], sockets={12346: -1})
+        build2 = mock_build(active_skill_tree=tree2, items=items)
+        engine2.load_build(build2)
         # Should handle negative index gracefully
-        assert engine.modifiers is not None
+        assert engine2.modifiers is not None
 
     def test_load_build_jewel_socket_type_error(
         self, mock_build, mock_tree, mock_item
@@ -112,8 +112,11 @@ class TestCalculationEngine:
         # Should handle TypeError gracefully
         assert engine.modifiers is not None
 
-    def test_load_build_multiple_trees(self, mock_build, mock_tree) -> None:
-        """Test loading build with multiple trees."""
+    def test_load_build_aggregates_modifiers_from_multiple_trees(
+        self, mock_build, mock_tree
+    ) -> None:
+        """Test loading build with multiple trees aggregates modifiers from
+        all trees."""
         engine = CalculationEngine()
         tree1 = mock_tree(nodes=[12345])
         tree2 = mock_tree(nodes=[12346])
@@ -164,7 +167,7 @@ class TestCalculationEngine:
         # (covers lines 120-121)
         assert engine.modifiers is not None
 
-    def test_load_build_keystones(self, mock_build, mocker) -> None:
+    def test_load_build_keystones_with_mocking(self, mock_build, mocker) -> None:
         """Test loading build with keystones - covers lines 125-127."""
         engine = CalculationEngine()
         build = mock_build()
@@ -386,26 +389,6 @@ class TestCalculationEngine:
         # Should load jewel modifiers
         assert engine.modifiers is not None
 
-    def test_load_build_with_multiple_trees(self, mock_build, mock_tree) -> None:
-        """Test loading build with multiple trees."""
-        engine = CalculationEngine()
-        tree1 = mock_tree(nodes=[12345])
-        tree2 = mock_tree(nodes=[12346])
-        build = mock_build()
-        build.trees = [tree1, tree2]
-        engine.load_build(build)
-        # Should load modifiers from all trees
-        assert engine.modifiers is not None
-
-    def test_load_build_with_keystones(self, mock_build) -> None:
-        """Test loading build with keystones."""
-        engine = CalculationEngine()
-        build = mock_build()
-        build.keystones = ["Acrobatics"]
-        engine.load_build(build)
-        # Should load keystone modifiers
-        assert engine.modifiers is not None
-
     def test_calculate_all_stats_with_skill_group(
         self, mock_build, mock_skill_group, mock_ability
     ) -> None:
@@ -420,18 +403,6 @@ class TestCalculationEngine:
         stats = engine.calculate_all_stats(build_data=build)
         # Should calculate stats including skill-specific ones
         assert stats is not None
-
-    def test_load_build_with_invalid_jewel_socket(
-        self, mock_build, mock_tree, mock_item
-    ) -> None:
-        """Test loading build with invalid jewel socket index."""
-        engine = CalculationEngine()
-        tree = mock_tree(nodes=[12345], sockets={1: 999})  # Invalid item index
-        items = [mock_item(name="Test Item", text="+10 to Strength")]
-        build = mock_build(active_skill_tree=tree, items=items)
-        engine.load_build(build)
-        # Should not crash, just skip invalid socket
-        assert engine.modifiers is not None
 
     def test_load_build_with_missing_attributes(self) -> None:
         """Test loading build with missing attributes."""
@@ -635,5 +606,56 @@ class TestCalculationEngine:
         build = mock_build()
         build.active_skill_group = skill_group
         engine.load_build(build)
+        stats = engine.calculate_all_stats(build_data=build)
+        assert stats is not None
+
+    def test_init_with_custom_modifier_system(self) -> None:
+        """Test CalculationEngine initialization with custom ModifierSystem
+        updates all calculators."""
+        custom_modifier_system = ModifierSystem()
+        engine = CalculationEngine(modifier_system=custom_modifier_system)
+
+        # All calculators should use the same modifier system
+        assert engine.modifiers is custom_modifier_system
+        assert engine.damage_calc.modifiers is custom_modifier_system
+        assert engine.defense_calc.modifiers is custom_modifier_system
+        assert engine.resource_calc.modifiers is custom_modifier_system
+        assert engine.skill_stats_calc.modifiers is custom_modifier_system
+        assert engine.minion_calc.modifiers is custom_modifier_system
+        assert engine.party_calc.modifiers is custom_modifier_system
+        assert engine.mirage_calc.modifiers is custom_modifier_system
+        assert engine.pantheon_tools.modifiers is custom_modifier_system
+
+    def test_calculate_all_stats_handles_invalid_skill_groups(self, mock_build) -> None:
+        """Test calculate_all_stats handles AttributeError/TypeError when
+        checking minion skills."""
+        engine = CalculationEngine()
+
+        # Create a build with skill_groups that will cause AttributeError/TypeError
+        # when trying to access skill names
+        build = mock_build()
+
+        # Mock skill_groups with invalid structure
+        invalid_skill_group = Mock()
+        invalid_skill_group.abilities = [Mock()]  # Mock without name attribute
+        # This will cause AttributeError when trying to access .name
+        build.skill_groups = [invalid_skill_group]
+
+        # Should not crash, should handle the error gracefully
+        stats = engine.calculate_all_stats(build_data=build)
+        assert stats is not None
+
+    def test_calculate_all_stats_handles_missing_skill_groups_attribute(
+        self, mock_build
+    ) -> None:
+        """Test calculate_all_stats handles missing skill_groups attribute."""
+        engine = CalculationEngine()
+        build = mock_build()
+
+        # Remove skill_groups attribute to trigger AttributeError
+        if hasattr(build, "skill_groups"):
+            delattr(build, "skill_groups")
+
+        # Should not crash, should handle the error gracefully
         stats = engine.calculate_all_stats(build_data=build)
         assert stats is not None

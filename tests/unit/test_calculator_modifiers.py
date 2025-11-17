@@ -101,15 +101,13 @@ class TestModifierSystem:
         )
         assert len(mods) == 1
         # Test that modifier doesn't apply when condition is not met
-        # Due to a bug in evaluate_all_conditions, if required_value is True
-        # and condition fails, it still returns True
-        # So the modifier will be returned even when condition is not met
+        # Fixed: evaluate_all_conditions now correctly returns False when
+        # condition fails
         mods = modifier_system.get_modifiers(
             "Life", {"current_life": 50.0, "max_life": 100.0}
         )
-        # Due to the bug, the modifier is returned even when condition fails
-        # So we just verify it doesn't crash
-        assert len(mods) >= 0
+        # Modifier should not be returned when condition is not met
+        assert len(mods) == 0
 
     @pytest.mark.parametrize(
         ("base_value", "flat_value", "expected"),
@@ -246,6 +244,8 @@ class TestModifierSystem:
             )
         )
         # 100 * (1 + (50 - 20)/100) = 130
+        result = modifier_system.calculate_stat("Life", 100.0)
+        assert result == pytest.approx(130.0, rel=1e-6)
 
     def test_calculate_stat_per_attribute_strength(
         self, modifier_system: "ModifierSystem"
@@ -710,3 +710,120 @@ class TestModifierSystem:
         modifier_system.clear()
         assert len(modifier_system._modifiers) == 0
         assert modifier_system._modifiers == []
+
+    def test_applies_excluding_requires_attribute_no_conditions(
+        self, modifier_system: "ModifierSystem"
+    ) -> None:
+        """Test _applies_excluding_requires_attribute returns True when
+        modifier has no conditions."""
+        mod = Modifier(
+            stat="Life",
+            value=100.0,
+            mod_type=ModifierType.FLAT,
+            source="test",
+            conditions=None,  # No conditions
+        )
+        result = modifier_system._applies_excluding_requires_attribute(mod, {})
+        assert result is True
+
+    def test_applies_excluding_requires_attribute_only_requires_attribute(
+        self, modifier_system: "ModifierSystem"
+    ) -> None:
+        """Test _applies_excluding_requires_attribute returns True when
+        only requires_attribute condition exists."""
+        mod = Modifier(
+            stat="LifePerStrength",
+            value=1.0,
+            mod_type=ModifierType.INCREASED,
+            source="test",
+            conditions={"requires_attribute": "strength"},  # Only requires_attribute
+        )
+        result = modifier_system._applies_excluding_requires_attribute(mod, {})
+        assert result is True
+
+    def test_applies_excluding_requires_attribute_with_other_conditions(
+        self, modifier_system: "ModifierSystem"
+    ) -> None:
+        """Test _applies_excluding_requires_attribute uses
+        ConditionEvaluator for other conditions."""
+        mod = Modifier(
+            stat="Damage",
+            value=50.0,
+            mod_type=ModifierType.INCREASED,
+            source="test",
+            conditions={
+                "requires_attribute": "strength",
+                "on_kill": True,  # Other condition
+            },
+        )
+        # With context that satisfies condition
+        context_satisfied = {"on_kill": True}
+        result_satisfied = modifier_system._applies_excluding_requires_attribute(
+            mod, context_satisfied
+        )
+        assert result_satisfied is True
+
+        # With context that doesn't satisfy condition
+        context_not_satisfied = {"on_kill": False}
+        result_not_satisfied = modifier_system._applies_excluding_requires_attribute(
+            mod, context_not_satisfied
+        )
+        assert result_not_satisfied is False
+
+    def test_calculate_stat_removes_per_attribute_modifier_from_applicable(
+        self, modifier_system: "ModifierSystem"
+    ) -> None:
+        """Test calculate_stat removes per-attribute modifier from
+        applicable_mods when calculating base stat."""
+        # Add a per-attribute modifier
+        per_attr_mod = Modifier(
+            stat="LifePerStrength",
+            value=1.0,
+            mod_type=ModifierType.INCREASED,
+            source="test",
+            conditions={"requires_attribute": "strength"},
+        )
+        modifier_system.add_modifier(per_attr_mod)
+
+        # Add a regular modifier for the base stat
+        base_mod = Modifier(
+            stat="Life",
+            value=50.0,
+            mod_type=ModifierType.INCREASED,
+            source="test2",
+        )
+        modifier_system.add_modifier(base_mod)
+
+        context = {"strength": 100.0}
+        # When calculating "Life", the per-attribute modifier should be:
+        # 1. Found and converted to a temp_mod
+        # 2. Removed from applicable_mods (line 203)
+        result = modifier_system.calculate_stat("Life", 100.0, context)
+
+        # The result should include both modifiers:
+        # - Base mod: +50% increased
+        # - Per-attr mod: +100% increased (100 strength * 1.0)
+        # Result: 100 * (1 + 0.5 + 1.0) = 250
+        assert result == pytest.approx(250.0, rel=1e-6)
+
+    def test_calculate_stat_does_not_remove_per_attribute_when_calculating_same_stat(
+        self, modifier_system: "ModifierSystem"
+    ) -> None:
+        """Test calculate_stat does not remove per-attribute modifier
+        when calculating the same stat."""
+        # Add a per-attribute modifier
+        per_attr_mod = Modifier(
+            stat="LifePerStrength",
+            value=1.0,
+            mod_type=ModifierType.INCREASED,
+            source="test",
+            conditions={"requires_attribute": "strength"},
+        )
+        modifier_system.add_modifier(per_attr_mod)
+
+        context = {"strength": 100.0}
+        # When calculating "LifePerStrength" directly, it should not be removed
+        # because mod.stat == stat (line 202 check)
+        result = modifier_system.calculate_stat("LifePerStrength", 1.0, context)
+        # Should still have the modifier
+        assert isinstance(result, float)

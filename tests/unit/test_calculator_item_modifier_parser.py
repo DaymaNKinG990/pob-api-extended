@@ -105,6 +105,18 @@ class TestItemModifierParser:
         assert any("Life" in m.stat for m in modifiers)
         assert any(m.mod_type == ModifierType.FLAT for m in modifiers)
 
+    def test_parse_line_to_maximum_pattern_with_plus(self) -> None:
+        """Test parsing '+X to maximum Y' pattern - covers lines 341-351."""
+        # TO_MAXIMUM_PATTERN requires "+" at the start
+        modifiers = ItemModifierParser.parse_line("+50 to maximum Life")
+        assert len(modifiers) > 0
+        assert any("Life" in m.stat for m in modifiers)
+        assert any(m.mod_type == ModifierType.FLAT for m in modifiers)
+        # Verify it matches the TO_MAXIMUM_PATTERN specifically
+        life_mods = [m for m in modifiers if "Life" in m.stat]
+        assert len(life_mods) > 0
+        assert life_mods[0].value == 50.0
+
     def test_parse_line_conversion_pattern(self) -> None:
         """Test parsing conversion pattern."""
         modifiers = ItemModifierParser.parse_line(
@@ -116,6 +128,33 @@ class TestItemModifierParser:
         """Test parsing 'X to all Y' pattern."""
         modifiers = ItemModifierParser.parse_line("+10 to all Resistances")
         assert len(modifiers) > 0
+
+    def test_parse_line_to_all_pattern_attributes_else_branch(self) -> None:
+        """Test parsing '+X to all Attributes' pattern - covers lines
+        411-412 (else branch)."""
+        modifiers = ItemModifierParser.parse_line("+10 to all Attributes")
+        assert len(modifiers) > 0
+        # Should create a modifier with normalized stat name (else branch)
+        assert any(
+            "Attributes" in m.stat or "AllAttributes" in m.stat for m in modifiers
+        )
+        assert any(m.mod_type == ModifierType.FLAT for m in modifiers)
+
+    def test_parse_line_to_all_pattern_else_branch(self) -> None:
+        """Test parsing 'X to all Y' pattern with non-resistance stat -
+        covers lines 395-396."""
+        # This should hit the else branch (lines 395-396) when stat is
+        # not resistance/resist
+        modifiers = ItemModifierParser.parse_line("+10 to all Attributes")
+        assert len(modifiers) > 0
+        # Should normalize and apply to the stat
+        assert any(
+            "Attribute" in m.stat
+            or "Strength" in m.stat
+            or "Dexterity" in m.stat
+            or "Intelligence" in m.stat
+            for m in modifiers
+        )
 
     def test_parse_line_veiled_pattern(self) -> None:
         """Test parsing veiled pattern."""
@@ -148,9 +187,27 @@ class TestItemModifierParser:
         assert isinstance(modifiers, list)
 
     def test_parse_line_per_stat_pattern(self) -> None:
-        """Test parsing per stat pattern."""
+        """Test parsing 'X% increased Y per Z Attribute' pattern - covers
+        lines 499-515."""
         modifiers = ItemModifierParser.parse_line("1% increased Damage per 10 Strength")
-        assert isinstance(modifiers, list)
+        assert len(modifiers) > 0
+        # Should create a modifier with requires_attribute condition
+        # Stat name format: "{stat_name}Per{attribute_name.capitalize()}"
+        # _normalize_stat_name("Damage") returns "Damage", so stat should
+        # be "DamagePerStrength"
+        assert any(
+            "PerStrength" in m.stat for m in modifiers
+        ), f"Expected PerStrength in stat, got {[m.stat for m in modifiers]}"
+        assert any(
+            m.conditions and m.conditions.get("requires_attribute") == "strength"
+            for m in modifiers
+        )
+        assert any(m.mod_type == ModifierType.INCREASED for m in modifiers)
+        # Verify the modifier has correct value (value_per_unit /
+        # units_per_bonus = 1.0 / 10.0 = 0.1)
+        per_strength_mods = [m for m in modifiers if "PerStrength" in m.stat]
+        assert len(per_strength_mods) > 0
+        assert per_strength_mods[0].value == pytest.approx(0.1, rel=1e-6)
 
     def test_parse_line_chance_when_pattern(self) -> None:
         """Test parsing chance when pattern."""
@@ -387,11 +444,13 @@ class TestItemModifierParser:
         assert any("Per" in m.stat or "Strength" in m.stat for m in modifiers)
 
     def test_parse_line_per_pattern_with_charge(self) -> None:
-        """Test parsing per pattern with charge - covers lines 426-429."""
-        modifiers = ItemModifierParser.parse_line(
-            "1% increased Damage per Frenzy Charge"
-        )
-        # Should skip charge-based modifiers (covers lines 426-429)
+        """Test parsing per pattern with charge - covers line 220 (pass statement)."""
+        # PER_PATTERN requires "+X to Y per Z" format
+        # This should match PER_PATTERN and hit the "charge" branch (line 220)
+        modifiers = ItemModifierParser.parse_line("+10 to Life per Frenzy Charge")
+        # Should skip charge-based modifiers (covers line 220 - pass)
+        # After pass, code continues and may match other patterns, so we
+        # just check it doesn't crash
         assert isinstance(modifiers, list)
 
     def test_parse_line_per_pattern_with_unknown(self) -> None:
@@ -416,11 +475,6 @@ class TestItemModifierParser:
         # But if PER_PATTERN doesn't match, it might not reach that code
         # Let's just check that we get modifiers
         assert isinstance(modifiers, list)
-
-    def test_parse_line_to_all_pattern_else_branch(self) -> None:
-        """Test parsing 'X to all Y' pattern else branch - covers lines 357-367."""
-        modifiers = ItemModifierParser.parse_line("+10 to all Attributes")
-        assert len(modifiers) > 0
 
     def test_parse_line_percent_to_all_pattern_else_branch(self) -> None:
         """Test parsing 'X% to all Y' pattern else branch - covers lines 388-398."""
@@ -1102,3 +1156,368 @@ Unique effect text"""
             modifiers = ItemModifierParser.parse_line(line)
             # Should create modifiers (else branch)
             assert isinstance(modifiers, list)
+
+    def test_parse_line_chance_when_effect_mappings(self) -> None:
+        """Test parsing chance when patterns with various effects - covers
+        lines 520-529."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze when you Hit", "FreezeChance"),
+            ("15% chance to ignite when you Kill", "IgniteChance"),
+            ("20% chance to shock when you Block", "ShockChance"),
+            ("25% chance to poison when you Crit", "PoisonChance"),
+            ("30% chance to bleed when you Hit", "BleedChance"),
+            ("5% chance to deal a critical strike when you Hit", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_if_recently_with_condition_none(self) -> None:
+        """Test parsing chance if recently patterns with recently_condition =
+        None - covers lines 603-614, 640-651."""
+        # Test with condition that doesn't match any recently_mappings key
+        test_cases = [
+            # "done something" not in mappings
+            "10% chance to freeze if you have done something recently",
+            # "performed action" not in mappings
+            "15% chance to ignite if you have performed action recently",
+        ]
+        for line in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            # Should still create modifier if effect matches, but with
+            # empty conditions (recently_condition = None)
+            if len(modifiers) > 0:
+                # If modifier created, recently_condition should be None
+                # (empty conditions)
+                for mod in modifiers:
+                    if "recently" in mod.conditions:
+                        # recently_condition should be None, so conditions
+                        # should be empty or not have "recently"
+                        assert (
+                            mod.conditions.get("recently") is None
+                            or "recently" not in mod.conditions
+                        )
+
+    def test_parse_line_chance_if_recently_with_condition_found(self) -> None:
+        """Test parsing chance if recently patterns with recently_condition
+        != None - covers lines 603-614, 640-651."""
+        # Test with conditions that match recently_mappings
+        # CHANCE_IF_RECENTLY_PATTERN requires "if you've" format
+        test_cases_pattern1 = [
+            ("10% chance to freeze if you've Killed Recently", "killed_recently"),
+            ("15% chance to ignite if you've Crit Recently", "crit_recently"),
+            ("20% chance to shock if you've Hit Recently", "hit_recently"),
+            ("25% chance to poison if you've Blocked Recently", "blocked_recently"),
+            (
+                "30% chance to bleed if you've Used a Skill Recently",
+                "used_skill_recently",
+            ),
+            (
+                "35% chance to freeze if you've Taken Damage Recently",
+                "been_hit_recently",
+            ),
+        ]
+        for line, expected_condition in test_cases_pattern1:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            # Should have recently condition
+            assert any(
+                m.conditions and m.conditions.get("recently") == expected_condition
+                for m in modifiers
+            ), (
+                f"Expected recently condition '{expected_condition}' in "
+                f"{line}, got {[m.conditions for m in modifiers]}"
+            )
+
+        # Test CHANCE_IF_RECENTLY_ALT_PATTERN format (requires "if you"
+        # without "have")
+        test_cases_pattern2 = [
+            ("10% chance to freeze if you Killed Recently", "killed_recently"),
+            ("15% chance to ignite if you Crit Recently", "crit_recently"),
+            ("20% chance to shock if you Hit Recently", "hit_recently"),
+            ("25% chance to poison if you Blocked Recently", "blocked_recently"),
+            ("30% chance to bleed if you Used a Skill Recently", "used_skill_recently"),
+            ("35% chance to freeze if you Took Damage Recently", "been_hit_recently"),
+        ]
+        for line, expected_condition in test_cases_pattern2:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            # Should have recently condition
+            assert any(
+                m.conditions and m.conditions.get("recently") == expected_condition
+                for m in modifiers
+            ), (
+                f"Expected recently condition '{expected_condition}' in "
+                f"{line}, got {[m.conditions for m in modifiers]}"
+            )
+
+    def test_match_effect_fallback_logic(self) -> None:
+        """Test _match_effect fallback logic - covers lines 932, 937."""
+        from pobapi.calculator.item_modifier_parser import ItemModifierParser
+
+        # Test fallback logic: effect that contains a key or key contains effect
+        # Line 932: effect_with_to in effect_mappings
+        effect1 = "freeze"  # Direct match should work
+        result1 = ItemModifierParser._match_effect(
+            effect1, ItemModifierParser._EFFECT_MAPPINGS
+        )
+        assert result1 == "FreezeChance"
+
+        # Line 937: key in effect or effect in key (fallback)
+        # Test with effect that contains key as substring
+        effect2 = "freeze enemy"  # Contains "freeze"
+        result2 = ItemModifierParser._match_effect(
+            effect2, ItemModifierParser._EFFECT_MAPPINGS
+        )
+        assert result2 == "FreezeChance", f"Expected FreezeChance, got {result2}"
+
+        # Test with effect that is substring of key
+        effect3 = "to"  # Is substring of "to freeze"
+        result3 = ItemModifierParser._match_effect(
+            effect3, ItemModifierParser._EFFECT_MAPPINGS
+        )
+        # Should match "to freeze" or "to ignite" etc. through fallback
+        assert result3 is not None, "Should match through fallback logic"
+
+    def test_parse_line_chance_on_effect_mappings(self) -> None:
+        """Test parsing chance on patterns with various effects - covers
+        lines 549-558."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze on Hit", "FreezeChance"),
+            ("15% chance to ignite on Kill", "IgniteChance"),
+            ("20% chance to shock on Block", "ShockChance"),
+            ("25% chance to poison on Crit", "PoisonChance"),
+            ("30% chance to bleed on Hit", "BleedChance"),
+            ("5% chance to deal a critical strike on Hit", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_if_recently_effect_mappings(self) -> None:
+        """Test parsing chance if recently patterns with various effects -
+        covers lines 623-634."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze if you have Killed Recently", "FreezeChance"),
+            ("15% chance to ignite if you have Killed Recently", "IgniteChance"),
+            ("20% chance to shock if you have Killed Recently", "ShockChance"),
+            ("25% chance to poison if you have Killed Recently", "PoisonChance"),
+            ("30% chance to bleed if you have Killed Recently", "BleedChance"),
+            (
+                "5% chance to deal a critical strike if you have Killed Recently",
+                "CritChance",
+            ),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_if_recently_alt_effect_mappings(self) -> None:
+        """Test parsing chance if recently alt patterns with various
+        effects - covers lines 669-680."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze if you Killed Recently", "FreezeChance"),
+            ("15% chance to ignite if you Killed Recently", "IgniteChance"),
+            ("20% chance to shock if you Killed Recently", "ShockChance"),
+            ("25% chance to poison if you Killed Recently", "PoisonChance"),
+            ("30% chance to bleed if you Killed Recently", "BleedChance"),
+            (
+                "5% chance to deal a critical strike if you Killed Recently",
+                "CritChance",
+            ),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_on_kill_effect_mappings(self) -> None:
+        """Test parsing chance on kill patterns with various effects -
+        covers lines 699-708."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze on Kill", "FreezeChance"),
+            ("15% chance to ignite on Kill", "IgniteChance"),
+            ("20% chance to shock on Kill", "ShockChance"),
+            ("25% chance to poison on Kill", "PoisonChance"),
+            ("30% chance to bleed on Kill", "BleedChance"),
+            ("5% chance to deal a critical strike on Kill", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_on_hit_effect_mappings(self) -> None:
+        """Test parsing chance on hit patterns with various effects -
+        covers lines 727-736."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze on Hit", "FreezeChance"),
+            ("15% chance to ignite on Hit", "IgniteChance"),
+            ("20% chance to shock on Hit", "ShockChance"),
+            ("25% chance to poison on Hit", "PoisonChance"),
+            ("30% chance to bleed on Hit", "BleedChance"),
+            ("5% chance to deal a critical strike on Hit", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_on_crit_effect_mappings(self) -> None:
+        """Test parsing chance on crit patterns with various effects -
+        covers lines 755-764."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze on Crit", "FreezeChance"),
+            ("15% chance to ignite on Crit", "IgniteChance"),
+            ("20% chance to shock on Crit", "ShockChance"),
+            ("25% chance to poison on Crit", "PoisonChance"),
+            ("30% chance to bleed on Crit", "BleedChance"),
+            ("5% chance to deal a critical strike on Crit", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_on_block_effect_mappings(self) -> None:
+        """Test parsing chance on block patterns with various effects -
+        covers lines 783-792."""
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze on Block", "FreezeChance"),
+            ("15% chance to ignite on Block", "IgniteChance"),
+            ("20% chance to shock on Block", "ShockChance"),
+            ("25% chance to poison on Block", "PoisonChance"),
+            ("30% chance to bleed on Block", "BleedChance"),
+            ("5% chance to deal a critical strike on Block", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_when_hit_effect_mappings(self) -> None:
+        """Test parsing chance when hit patterns with various effects -
+        covers lines 811-820."""
+        # CHANCE_WHEN_HIT_PATTERN requires "when hit" (without "you")
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze when hit", "FreezeChance"),
+            ("15% chance to ignite when hit", "IgniteChance"),
+            ("20% chance to shock when hit", "ShockChance"),
+            ("25% chance to poison when hit", "PoisonChance"),
+            ("30% chance to bleed when hit", "BleedChance"),
+            ("5% chance to deal a critical strike when hit", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_when_kill_effect_mappings(self) -> None:
+        """Test parsing chance when kill patterns with various effects -
+        covers lines 839-848."""
+        # CHANCE_WHEN_KILL_PATTERN requires "when you kill"
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze when you kill", "FreezeChance"),
+            ("15% chance to ignite when you kill", "IgniteChance"),
+            ("20% chance to shock when you kill", "ShockChance"),
+            ("25% chance to poison when you kill", "PoisonChance"),
+            ("30% chance to bleed when you kill", "BleedChance"),
+            ("5% chance to deal a critical strike when you kill", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_when_use_skill_effect_mappings(self) -> None:
+        """Test parsing chance when use skill patterns with various effects
+        - covers lines 867-876."""
+        # CHANCE_WHEN_USE_SKILL_PATTERN requires "when you use a skill"
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze when you use a skill", "FreezeChance"),
+            ("15% chance to ignite when you use a skill", "IgniteChance"),
+            ("20% chance to shock when you use a skill", "ShockChance"),
+            ("25% chance to poison when you use a skill", "PoisonChance"),
+            ("30% chance to bleed when you use a skill", "BleedChance"),
+            ("5% chance to deal a critical strike when you use a skill", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_when_take_damage_effect_mappings(self) -> None:
+        """Test parsing chance when take damage patterns with various
+        effects - covers lines 895-904."""
+        # CHANCE_WHEN_TAKE_DAMAGE_PATTERN requires "when you take damage"
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze when you take damage", "FreezeChance"),
+            ("15% chance to ignite when you take damage", "IgniteChance"),
+            ("20% chance to shock when you take damage", "ShockChance"),
+            ("25% chance to poison when you take damage", "PoisonChance"),
+            ("30% chance to bleed when you take damage", "BleedChance"),
+            ("5% chance to deal a critical strike when you take damage", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"
+
+    def test_parse_line_chance_when_block_effect_mappings(self) -> None:
+        """Test parsing chance when block patterns with various effects -
+        covers lines 923-932."""
+        # CHANCE_WHEN_BLOCK_PATTERN requires "when you block"
+        # Now supports both "freeze" and "to freeze" formats
+        test_cases = [
+            ("10% chance to freeze when you block", "FreezeChance"),
+            ("15% chance to ignite when you block", "IgniteChance"),
+            ("20% chance to shock when you block", "ShockChance"),
+            ("25% chance to poison when you block", "PoisonChance"),
+            ("30% chance to bleed when you block", "BleedChance"),
+            ("5% chance to deal a critical strike when you block", "CritChance"),
+        ]
+        for line, expected_stat in test_cases:
+            modifiers = ItemModifierParser.parse_line(line)
+            assert len(modifiers) > 0, f"No modifiers found for: {line}"
+            assert any(
+                m.stat == expected_stat for m in modifiers
+            ), f"Expected {expected_stat} in {line}, got {[m.stat for m in modifiers]}"

@@ -5,13 +5,18 @@ from pobapi import PathOfBuildingAPI
 
 def print_trees(build: PathOfBuildingAPI) -> None:
     """
-    Print a human-readable summary of all skill trees from the given PathOfBuildingAPI instance.
-    
-    For each tree this prints the tree index, tree URL, number of allocated nodes, and number of jewel sockets.
-    If a tree has jewel sockets, prints "Node ID -> Item ID" mappings and attempts to resolve each socket's item name from build.items; uses "Unknown" when the item cannot be resolved.
-    
+    Print a human-readable summary of all skill trees from the given
+    PathOfBuildingAPI instance.
+
+    For each tree this prints the tree index, tree URL, number of
+    allocated nodes, and number of jewel sockets. If a tree has jewel
+    sockets, prints "Node ID -> Item ID" mappings and attempts to resolve
+    each socket's item name from build.items; uses "Unknown" when the item
+    cannot be resolved.
+
     Parameters:
-        build (PathOfBuildingAPI): Source build data containing trees, items, and sockets.
+        build (PathOfBuildingAPI): Source build data containing trees,
+            items, and sockets.
     """
     print("=" * 80)
     print("  8. Skill Trees")
@@ -37,10 +42,11 @@ def print_trees(build: PathOfBuildingAPI) -> None:
 def print_active_tree(build: PathOfBuildingAPI):
     """
     Display the active skill tree and its jewel-socket mappings.
-    
+
     Parameters:
-        build (PathOfBuildingAPI): PathOfBuildingAPI instance whose active skill tree will be displayed.
-    
+        build (PathOfBuildingAPI): PathOfBuildingAPI instance whose
+            active skill tree will be displayed.
+
     Returns:
         active_tree: The active skill tree instance if available, `None` otherwise.
     """
@@ -70,7 +76,8 @@ def print_active_tree(build: PathOfBuildingAPI):
 
 def main():
     """
-    Construct a PathOfBuildingAPI build from the bundled demo import code and print its skill trees to standard output.
+    Construct a PathOfBuildingAPI build from the bundled demo import code
+    and print its skill trees to standard output.
     """
     import sys
     from pathlib import Path

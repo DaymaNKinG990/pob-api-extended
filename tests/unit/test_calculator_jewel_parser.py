@@ -28,7 +28,7 @@ class TestJewelParser:
             ("Cobalt Jewel", JewelType.NORMAL),
         ],
     )
-    def test_detect_jewel_type(self, jewel_text: str, expected_type: str) -> None:
+    def test_detect_jewel_type(self, jewel_text: str, expected_type: JewelType) -> None:
         """Test detecting jewel type from text."""
         result = JewelParser.detect_jewel_type(jewel_text)
         assert result == expected_type

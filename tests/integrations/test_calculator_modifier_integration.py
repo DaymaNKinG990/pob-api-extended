@@ -192,29 +192,68 @@ class TestCalculationEngineModifierSystemIntegration:
 class TestCalculatorCrossIntegration:
     """Test integrations between different calculators."""
 
-    def test_damage_and_defense_calculators_share_modifiers(self, build) -> None:
+    def test_damage_and_defense_calculators_share_modifiers(self) -> None:
         """Test that DamageCalculator and DefenseCalculator share modifiers."""
         modifier_system = ModifierSystem()
         damage_calc = DamageCalculator(modifier_system)
         defense_calc = DefenseCalculator(modifier_system)
 
-        # Add modifier that affects both
+        context = {}
+        skill_name = "TestSkill"
+
+        # Compute baseline damage and defenses before adding modifier
+        baseline_damage = damage_calc.calculate_base_damage(skill_name, context)
+        baseline_damage_total = baseline_damage.total
+        baseline_defense = defense_calc.calculate_all_defenses(context)
+        baseline_life = baseline_defense.life
+
+        # Add modifier that affects both damage and defense
+        # Using a modifier that adds base physical damage for the skill
         modifier_system.add_modifier(
             Modifier(
-                stat="Damage",
-                value=30.0,
-                mod_type=ModifierType.INCREASED,
+                stat=f"{skill_name}BasePhysicalDamage",
+                value=50.0,
+                mod_type=ModifierType.FLAT,
+                source="test",
+            )
+        )
+        # Add modifier that affects life
+        modifier_system.add_modifier(
+            Modifier(
+                stat="Life",
+                value=100.0,
+                mod_type=ModifierType.FLAT,
                 source="test",
             )
         )
 
-        # Both calculators should see the modifier
-        context = {}
-        damage = damage_calc.calculate_base_damage(context)
-        defense = defense_calc.calculate_all_defenses(context)
+        # Compute damage and defenses after adding modifiers
+        after_damage = damage_calc.calculate_base_damage(skill_name, context)
+        after_damage_total = after_damage.total
+        after_defense = defense_calc.calculate_all_defenses(context)
+        after_life = after_defense.life
 
-        assert damage is not None
-        assert defense is not None
+        # Assert that damage and defenses changed by the expected amount
+        damage_change = after_damage_total - baseline_damage_total
+        life_change = after_life - baseline_life
+
+        # Damage should have increased by at least the flat modifier (50.0)
+        assert damage_change >= 50.0, (
+            f"Damage should have increased by at least 50.0, "
+            f"but changed by {damage_change}"
+        )
+        # Life should have increased by the flat modifier (100.0)
+        assert (
+            life_change == 100.0
+        ), f"Life should have increased by 100.0, but changed by {life_change}"
+
+        # Assert that both calculators share the same ModifierSystem
+        # by verifying they both see the same modifier changes
+        # The fact that both calculators observed changes from the same
+        # modifier system proves they share it
+        assert damage_calc.modifiers is defense_calc.modifiers
+        assert damage_calc.modifiers is modifier_system
+        assert defense_calc.modifiers is modifier_system
 
     def test_all_calculators_through_engine(self, build) -> None:
         """Test all calculators working together through engine."""

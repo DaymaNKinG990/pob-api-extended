@@ -24,7 +24,7 @@ class HTTPClient(Protocol):
         :return: Response text content.
         :raises: Network-related exceptions.
         """
-        ...
+        ...  # pragma: no cover
 
 
 @runtime_checkable
@@ -39,7 +39,7 @@ class AsyncHTTPClient(Protocol):
         :return: Response text content.
         :raises: Network-related exceptions.
         """
-        ...
+        ...  # pragma: no cover
 
 
 class XMLParser(ABC):
@@ -107,39 +107,39 @@ class BuildData(Protocol):
     @property
     def items(self) -> list:
         """Get list of items in the build."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def trees(self) -> list:
         """Get list of skill trees in the build."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def skill_groups(self) -> list:
         """Get list of skill groups in the build."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def active_skill_tree(self):
         """Get the active skill tree."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def active_skill_group(self):
         """Get the active skill group."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def keystones(self):
         """Get keystones in the build."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def config(self):
         """Get configuration settings."""
-        ...
+        ...  # pragma: no cover
 
     @property
     def party_members(self) -> list:
         """Get party members (optional)."""
-        ...
+        ...  # pragma: no cover

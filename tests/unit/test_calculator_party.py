@@ -87,12 +87,18 @@ class TestPartyCalculator:
         modifiers = party_calculator.add_party_member_auras(member)
         assert len(modifiers) >= 1
         for stat in expected_stats:
-            assert any(stat in m.stat for m in modifiers)
+            assert any(
+                m.stat == stat for m in modifiers
+            ), f"Expected stat '{stat}' not found"
 
     def test_add_party_member_auras_effectiveness(
         self, party_calculator: "PartyCalculator"
     ) -> None:
         """Test aura effectiveness from party member."""
+        from pobapi.calculator.party import PartyCalculator
+
+        # Get base Hatred ColdDamage value from AURA_EFFECTS constant
+        base_hatred_cold_damage = PartyCalculator.AURA_EFFECTS["Hatred"][0].value
         member = PartyMember(auras=["Hatred"], aura_effectiveness=50.0)
         # Pass 50.0 as aura_effectiveness parameter
         modifiers = party_calculator.add_party_member_auras(
@@ -102,10 +108,10 @@ class TestPartyCalculator:
         assert len(modifiers) >= 1
         # Check that values are reduced (50% effectiveness)
         # The method divides by 100.0, so 50.0 / 100.0 = 0.5
-        # 36.0 * 0.5 = 18.0
+        expected_value = base_hatred_cold_damage * 0.5
         for mod in modifiers:
             if mod.stat == "ColdDamage":
-                assert mod.value == pytest.approx(18.0, rel=1e-6)
+                assert mod.value == pytest.approx(expected_value, rel=1e-6)
 
     def test_add_party_member_buffs_empty(
         self, party_calculator: "PartyCalculator"
@@ -158,9 +164,8 @@ class TestPartyCalculator:
         """Test calculating party aura effectiveness with modifiers."""
         from pobapi.calculator.modifiers import Modifier
 
-        # The method might not use modifiers, or use different stat name
-        # Let's check what it actually does
-        modifier_system.add_modifier(
+        # Add modifier to party_calculator's modifier system
+        party_calculator.modifiers.add_modifier(
             Modifier(
                 stat="PartyAuraEffectiveness",
                 value=20.0,
@@ -170,10 +175,11 @@ class TestPartyCalculator:
         )
         context: dict[str, Any] = {}
         effectiveness = party_calculator.calculate_party_aura_effectiveness(context)
-        # Base is 50%, but modifiers might not be applied
-        # Just check it returns a valid value
-        assert effectiveness >= 0.0
-        assert effectiveness <= 100.0
+        # Base is 50%, modifiers should increase it
+        assert (
+            effectiveness > 50.0
+        )  # Verify modifiers were applied and increased effectiveness
+        assert effectiveness <= 100.0  # Verify it remains within valid range
 
     def test_process_party_empty(self, party_calculator: "PartyCalculator") -> None:
         """Test processing empty party."""

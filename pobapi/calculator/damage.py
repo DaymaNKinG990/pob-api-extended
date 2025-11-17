@@ -12,19 +12,9 @@ from dataclasses import dataclass
 from typing import Any
 
 from pobapi.calculator.modifiers import ModifierSystem
+from pobapi.types import DamageType
 
 __all__ = ["DamageType", "DamageBreakdown", "DamageCalculator"]
-
-
-class DamageType:
-    """Damage type constants."""
-
-    PHYSICAL = "Physical"
-    FIRE = "Fire"
-    COLD = "Cold"
-    LIGHTNING = "Lightning"
-    CHAOS = "Chaos"
-    ELEMENTAL = "Elemental"  # Fire + Cold + Lightning
 
 
 @dataclass
@@ -48,7 +38,7 @@ class DamageBreakdown:
     def total(self) -> float:
         """
         Compute the sum of physical, fire, cold, lightning, and chaos damage.
-        
+
         Returns:
             total (float): Sum of all damage components.
         """
@@ -58,7 +48,7 @@ class DamageBreakdown:
     def elemental(self) -> float:
         """
         Compute the total elemental damage.
-        
+
         Returns:
             float: Sum of `fire`, `cold`, and `lightning` damage.
         """
@@ -73,10 +63,12 @@ class DamageCalculator:
 
     def __init__(self, modifier_system: ModifierSystem):
         """
-        Create a DamageCalculator that uses the provided ModifierSystem for all damage computations.
-        
+        Create a DamageCalculator that uses the provided ModifierSystem for
+        all damage computations.
+
         Parameters:
-            modifier_system (ModifierSystem): Modifier system used to read stats and modifiers for subsequent calculations.
+            modifier_system (ModifierSystem): Modifier system used to read
+                stats and modifiers for subsequent calculations.
         """
         self.modifiers = modifier_system
 
@@ -85,15 +77,20 @@ class DamageCalculator:
     ) -> DamageBreakdown:
         """
         Compute the base damage breakdown for a skill.
-        
-        Queries the modifier system for the skill's base physical, fire, cold, lightning, and chaos damage, then applies physical-to-other damage conversions.
-        
+
+        Queries the modifier system for the skill's base physical, fire,
+        cold, lightning, and chaos damage, then applies physical-to-other
+        damage conversions.
+
         Parameters:
-            skill_name (str): Skill identifier used to query base damage modifiers.
-            context (dict[str, Any] | None): Optional calculation context passed to the modifier system; defaults to an empty dict.
-        
+            skill_name (str): Skill identifier used to query base damage
+                modifiers.
+            context (dict[str, Any] | None): Optional calculation context
+                passed to the modifier system; defaults to an empty dict.
+
         Returns:
-            DamageBreakdown: Damage values for physical, fire, cold, lightning, and chaos after conversions.
+            DamageBreakdown: Damage values for physical, fire, cold,
+                lightning, and chaos after conversions.
         """
         if context is None:
             context = {}
@@ -129,15 +126,18 @@ class DamageCalculator:
         context: dict[str, Any],
     ) -> DamageBreakdown:
         """
-        Apply physical-to-elemental damage conversions for a skill's damage breakdown.
-        
+        Apply physical-to-elemental damage conversions for a skill's
+        damage breakdown.
+
         Parameters:
             damage (DamageBreakdown): Damage breakdown to modify in-place.
             skill_name (str): Skill identifier used to query conversion modifiers.
-            context (dict[str, Any]): Calculation context supplied to the modifier system.
-        
+            context (dict[str, Any]): Calculation context supplied to the
+                modifier system.
+
         Returns:
-            DamageBreakdown: Updated damage breakdown with the converted amounts applied.
+            DamageBreakdown: Updated damage breakdown with the converted
+                amounts applied.
         """
         # Get conversion percentages
         phys_to_fire = (
@@ -178,17 +178,23 @@ class DamageCalculator:
         context: dict[str, Any],
     ) -> DamageBreakdown:
         """
-        Add elemental damage equal to configured percentages of the current physical damage without reducing the physical component.
-        
-        This reads the `PhysicalAsExtraFire`, `PhysicalAsExtraCold`, `PhysicalAsExtraLightning`, and `PhysicalAsExtraChaos` modifiers (percentages) from the modifier system and increases the corresponding elemental fields by that fraction of `damage.physical`. The physical damage value is left unchanged.
-        
+        Add elemental damage equal to configured percentages of the
+        current physical damage without reducing the physical component.
+
+        This reads the `PhysicalAsExtraFire`, `PhysicalAsExtraCold`,
+        `PhysicalAsExtraLightning`, and `PhysicalAsExtraChaos` modifiers
+        (percentages) from the modifier system and increases the
+        corresponding elemental fields by that fraction of
+        `damage.physical`. The physical damage value is left unchanged.
+
         Parameters:
             damage (DamageBreakdown): Damage breakdown to adjust.
             skill_name (str): Skill identifier used for modifier lookups.
             context (dict[str, Any]): Calculation context passed to the modifier system.
-        
+
         Returns:
-            DamageBreakdown: The same `damage` object updated with added elemental damage.
+            DamageBreakdown: The same `damage` object updated with added
+                elemental damage.
         """
         # Get "extra damage" modifiers
         phys_as_extra_fire = (
@@ -220,16 +226,21 @@ class DamageCalculator:
         context: dict[str, Any],
     ) -> DamageBreakdown:
         """
-        Scale each damage type by its per-type multiplier and the skill's generic damage multiplier.
-        
+        Scale each damage type by its per-type multiplier and the skill's
+        generic damage multiplier.
+
         Parameters:
             damage (DamageBreakdown): Current damage values to be scaled.
-            skill_name (str): Skill identifier used to look up the skill-specific damage multiplier.
-            context (dict[str, Any]): Calculation context forwarded to the modifier system.
-        
+            skill_name (str): Skill identifier used to look up the
+                skill-specific damage multiplier.
+            context (dict[str, Any]): Calculation context forwarded to the
+                modifier system.
+
         Returns:
-            DamageBreakdown: The same damage breakdown with physical, fire, cold, lightning, and chaos
-            fields multiplied by their respective per-type multipliers and the skill's generic multiplier.
+            DamageBreakdown: The same damage breakdown with physical, fire,
+                cold, lightning, and chaos fields multiplied by their
+                respective per-type multipliers and the skill's generic
+                multiplier.
         """
         # Get damage multipliers for each type
         physical_mult = (
@@ -262,14 +273,18 @@ class DamageCalculator:
         self, skill_name: str, context: dict[str, Any] | None = None
     ) -> float:
         """
-        Calculate the average hit damage for a skill after conversions, extra damage, and multipliers.
-        
+        Calculate the average hit damage for a skill after conversions,
+        extra damage, and multipliers.
+
         Parameters:
             skill_name (str): Skill identifier used to query modifiers.
-            context (dict[str, Any] | None): Optional calculation context providing additional modifier sources (e.g., enemy stats, flags).
-        
+            context (dict[str, Any] | None): Optional calculation context
+                providing additional modifier sources (e.g., enemy stats,
+                flags).
+
         Returns:
-            float: Total average hit damage after applying conversions, extra damage, and damage multipliers.
+            float: Total average hit damage after applying conversions,
+                extra damage, and damage multipliers.
         """
         if context is None:
             context = {}
@@ -289,11 +304,12 @@ class DamageCalculator:
     ) -> float:
         """
         Compute a skill's damage per second including hit chance and criticals.
-        
+
         Parameters:
             skill_name (str): Skill identifier used to read modifiers and stats.
-            context (dict[str, Any] | None): Optional calculation context with situational or enemy-specific modifiers.
-        
+            context (dict[str, Any] | None): Optional calculation context
+                with situational or enemy-specific modifiers.
+
         Returns:
             float: Damage per second.
         """
@@ -336,18 +352,22 @@ class DamageCalculator:
     ) -> float:
         """
         Compute DPS contributed by a specified damage-over-time effect for a skill.
-        
-        If a "{DotType}DPS" stat is present (e.g., "IgniteDPS"), that value is returned. Otherwise the DoT is derived from the skill's base damage using the following scalings and then multiplied by the "{DotType}Damage" percentage:
+
+        If a "{DotType}DPS" stat is present (e.g., "IgniteDPS"), that value
+        is returned. Otherwise the DoT is derived from the skill's base
+        damage using the following scalings and then multiplied by the
+        "{DotType}Damage" percentage:
         - ignite: fire + 0.5 * physical
         - poison: physical + chaos
         - bleed: physical
         - decay: chaos
-        
+
         Parameters:
             skill_name (str): Name of the skill.
             dot_type (str): DoT type; one of "ignite", "poison", "bleed", or "decay".
-            context (dict[str, Any] | None): Optional calculation context passed to the modifier system.
-        
+            context (dict[str, Any] | None): Optional calculation context
+                passed to the modifier system.
+
         Returns:
             float: DPS contributed by the specified DoT.
         """
@@ -396,19 +416,24 @@ class DamageCalculator:
         context: dict[str, Any] | None = None,
     ) -> DamageBreakdown:
         """
-        Compute the damage breakdown for a skill after applying enemy resistances and penetration.
-        
+        Compute the damage breakdown for a skill after applying enemy
+        resistances and penetration.
+
         Parameters:
             skill_name (str): Name of the skill being evaluated.
-            context (dict[str, Any] | None): Calculation context. May include enemy resistance entries
-                `enemy_fire_resist`, `enemy_cold_resist`, `enemy_lightning_resist`, and `enemy_chaos_resist`
-                as floats representing resistance fraction (e.g., 0.2 for 20%). Other context keys used by
-                the modifier system and penetration calculations may also be provided.
-        
+            context (dict[str, Any] | None): Calculation context. May
+                include enemy resistance entries `enemy_fire_resist`,
+                `enemy_cold_resist`, `enemy_lightning_resist`, and
+                `enemy_chaos_resist` as floats representing resistance
+                fraction (e.g., 0.2 for 20%). Other context keys used by
+                the modifier system and penetration calculations may also
+                be provided.
+
         Returns:
-            DamageBreakdown: Damage breakdown with fire, cold, lightning, and chaos damage scaled by their
-            effective resistances (after reductions and penetration). Physical damage is not modified by
-            those resistances in this calculation.
+            DamageBreakdown: Damage breakdown with fire, cold, lightning,
+                and chaos damage scaled by their effective resistances
+                (after reductions and penetration). Physical damage is not
+                modified by those resistances in this calculation.
         """
         if context is None:
             context = {}
@@ -451,14 +476,19 @@ class DamageCalculator:
         self, skill_name: str, context: dict[str, Any] | None = None
     ) -> tuple[float, float, float]:
         """
-        Compute DPS from direct hits plus all applicable damage-over-time (DoT) contributions for a skill.
-        
+        Compute DPS from direct hits plus all applicable damage-over-time
+        (DoT) contributions for a skill.
+
         Parameters:
             skill_name (str): Skill identifier used to query modifiers.
-            context (dict[str, Any] | None): Optional calculation context; defaults to an empty dict.
-        
+            context (dict[str, Any] | None): Optional calculation context;
+                defaults to an empty dict.
+
         Returns:
-            tuple[float, float, float]: (hit_dps, total_dot_dps, total_dps) where `hit_dps` is DPS from direct hits, `total_dot_dps` is the combined DoT DPS (ignite, poison, bleed, decay), and `total_dps` is the sum of both.
+            tuple[float, float, float]: (hit_dps, total_dot_dps, total_dps)
+                where `hit_dps` is DPS from direct hits, `total_dot_dps` is
+                the combined DoT DPS (ignite, poison, bleed, decay), and
+                `total_dps` is the sum of both.
         """
         if context is None:
             context = {}

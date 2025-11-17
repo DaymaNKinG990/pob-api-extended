@@ -3,6 +3,9 @@
 import pytest
 from lxml.etree import fromstring
 
+# Import commonly used types to make them available in all tests
+from pobapi.types import DamageType  # noqa: F401
+
 
 @pytest.fixture(scope="module")
 def build():
@@ -396,3 +399,107 @@ def create_test_item():
         )
 
     return _create_item
+
+
+@pytest.fixture(scope="module")
+def build_with_jewels():
+    """Create a PathOfBuildingAPI instance with jewels for testing."""
+    from pobapi import create_build, models
+    from pobapi.types import Ascendancy, CharacterClass
+
+    # Create build builder
+    builder = create_build()
+
+    # Set character class and level
+    builder.set_class(CharacterClass.WITCH, Ascendancy.ELEMENTALIST)
+    builder.set_level(90)
+
+    # Create passive skill tree
+    builder.create_tree()
+
+    # Add several different types of jewels
+    jewels = [
+        models.Item(
+            rarity="Rare",
+            name="Crimson Jewel",
+            base="Crimson Jewel",
+            uid="jewel-1",
+            shaper=False,
+            elder=False,
+            crafted=False,
+            quality=None,
+            sockets=None,
+            level_req=1,
+            item_level=84,
+            implicit=None,
+            text="""Rarity: RARE
+Crimson Jewel
+--------
+Item Level: 84
+--------
++10% to Fire Resistance
++7% increased maximum Life
++12% increased Physical Damage
+--------
+""",
+        ),
+        models.Item(
+            rarity="Rare",
+            name="Viridian Jewel",
+            base="Viridian Jewel",
+            uid="jewel-2",
+            shaper=False,
+            elder=False,
+            crafted=False,
+            quality=None,
+            sockets=None,
+            level_req=1,
+            item_level=84,
+            implicit=None,
+            text="""Rarity: RARE
+Viridian Jewel
+--------
+Item Level: 84
+--------
++10% to Cold Resistance
++8% increased Attack Speed
++15% increased Evasion Rating
+--------
+""",
+        ),
+        models.Item(
+            rarity="Rare",
+            name="Cobalt Jewel",
+            base="Cobalt Jewel",
+            uid="jewel-3",
+            shaper=False,
+            elder=False,
+            crafted=False,
+            quality=None,
+            sockets=None,
+            level_req=1,
+            item_level=84,
+            implicit=None,
+            text="""Rarity: RARE
+Cobalt Jewel
+--------
+Item Level: 84
+--------
++10% to Lightning Resistance
++5% increased Cast Speed
++12% increased Energy Shield
+--------
+""",
+        ),
+    ]
+
+    # Add jewels to build
+    for jewel in jewels:
+        builder.add_item(jewel)
+
+    # Create item set (required for build)
+    builder.create_item_set()
+
+    # Build and return the PathOfBuildingAPI instance
+    build = builder.build()
+    return build

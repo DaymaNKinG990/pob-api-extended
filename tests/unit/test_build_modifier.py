@@ -173,3 +173,86 @@ class TestBuildModifier:
         aura_group = next((g for g in skill_groups if g.label == "Auras"), None)
         assert aura_group is not None
         assert ability in aura_group.abilities
+
+    def test_equip_item_creates_new_item_set(self, modifier, simple_build):
+        """Test equipping item to non-existent item set creates it and
+        initializes _pending_item_sets."""
+        # Ensure _pending_item_sets doesn't exist
+        if hasattr(simple_build, "_pending_item_sets"):
+            delattr(simple_build, "_pending_item_sets")
+
+        item = models.Item(
+            rarity="Rare",
+            name="Test Ring",
+            base="Iron Ring",
+            uid="",
+            shaper=False,
+            elder=False,
+            crafted=False,
+            quality=None,
+            sockets=None,
+            level_req=1,
+            item_level=80,
+            implicit=None,
+            text="",
+        )
+        # Equip to item_set_index=1 (doesn't exist yet)
+        item_index = modifier.equip_item(item, ItemSlot.RING1, item_set_index=1)
+        assert item_index >= 0
+        # Check that _pending_item_sets was initialized
+        assert hasattr(simple_build, "_pending_item_sets")
+        assert isinstance(simple_build._pending_item_sets, dict)
+        assert 1 in simple_build._pending_item_sets
+
+    def test_equip_item_modifies_existing_set_initializes_pending(
+        self, modifier, simple_build
+    ):
+        """Test modifying existing item set initializes _pending_item_sets
+        if not exists."""
+        # Ensure _pending_item_sets doesn't exist
+        if hasattr(simple_build, "_pending_item_sets"):
+            delattr(simple_build, "_pending_item_sets")
+
+        item = models.Item(
+            rarity="Rare",
+            name="Test Belt",
+            base="Leather Belt",
+            uid="",
+            shaper=False,
+            elder=False,
+            crafted=False,
+            quality=None,
+            sockets=None,
+            level_req=1,
+            item_level=80,
+            implicit=None,
+            text="",
+        )
+        # Equip to existing item_set_index=0
+        item_index = modifier.equip_item(item, ItemSlot.BELT, item_set_index=0)
+        assert item_index >= 0
+        # Check that _pending_item_sets was initialized
+        assert hasattr(simple_build, "_pending_item_sets")
+        assert isinstance(simple_build._pending_item_sets, dict)
+        assert 0 in simple_build._pending_item_sets
+
+    def test_add_skill_initializes_pending_skill_groups(self, modifier, simple_build):
+        """Test adding skill to new group initializes _pending_skill_groups
+        if not exists."""
+        # Ensure _pending_skill_groups doesn't exist
+        if hasattr(simple_build, "_pending_skill_groups"):
+            delattr(simple_build, "_pending_skill_groups")
+
+        gem = models.Gem(
+            name="Vaal Righteous Fire",
+            level=20,
+            quality=0,
+            enabled=True,
+            support=False,
+        )
+        # Add to a completely new group name
+        modifier.add_skill(gem, "Vaal Skills")
+        # Check that _pending_skill_groups was initialized
+        assert hasattr(simple_build, "_pending_skill_groups")
+        assert isinstance(simple_build._pending_skill_groups, list)
+        assert len(simple_build._pending_skill_groups) > 0

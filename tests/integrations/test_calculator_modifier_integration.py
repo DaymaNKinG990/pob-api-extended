@@ -38,7 +38,7 @@ class TestModifierSystemCalculatorIntegrations:
 
         # Damage calculator should use modifiers
         context = {}
-        damage = damage_calc.calculate_base_damage(context)
+        damage = damage_calc.calculate_base_damage("TestSkill", context)
         assert damage is not None
 
     def test_modifier_system_defense_calculator_integration(self, build) -> None:

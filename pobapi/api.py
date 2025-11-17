@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from lxml.etree import Element, _Element, fromstring
+from lxml.etree import Element, fromstring
 
 from pobapi import config, constants, models, stats
 
@@ -71,10 +71,10 @@ class PathOfBuildingAPI:
                 self.xml = fromstring(xml)
             except Exception as e:
                 raise ParsingError("Failed to parse XML") from e
-        elif isinstance(xml, _Element):
+        elif isinstance(xml, Element):
             self.xml = xml
         else:
-            raise ValidationError("xml must be bytes or Element")
+            raise ValidationError("xml must be bytes or Element instance")
 
         XMLValidator.validate_build_structure(self.xml)
         self._parser = parser or DefaultBuildParser()

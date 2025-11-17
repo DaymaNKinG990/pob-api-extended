@@ -136,6 +136,8 @@ class TestTreesParserCalculationEngineIntegration:
 
         # Load build into engine
         engine = CalculationEngine()
+        # Capture modifier count before loading build
+        initial_modifier_count = len(engine.modifiers._modifiers)
         engine.load_build(build)
 
         # Engine should have processed tree modifiers
@@ -143,8 +145,13 @@ class TestTreesParserCalculationEngineIntegration:
 
         # Verify tree nodes were processed
         if trees and trees[0]["nodes"]:
-            # Engine should have modifiers from tree
-            assert len(engine.modifiers._modifiers) >= 0
+            # Engine should have modifiers from tree - count should increase
+            final_modifier_count = len(engine.modifiers._modifiers)
+            assert final_modifier_count > initial_modifier_count, (
+                f"Expected modifiers to be added from tree nodes. "
+                f"Initial count: {initial_modifier_count}, "
+                f"Final count: {final_modifier_count}"
+            )
 
 
 class TestTreesParserPassiveTreeParserIntegration:

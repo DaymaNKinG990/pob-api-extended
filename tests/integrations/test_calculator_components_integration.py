@@ -4,10 +4,10 @@ import copy
 
 import pytest
 
-pytestmark = pytest.mark.integration
+from pobapi.calculator.engine import CalculationEngine
+from pobapi.calculator.modifiers import Modifier, ModifierType
 
-from pobapi.calculator.engine import CalculationEngine  # noqa: E402
-from pobapi.calculator.modifiers import Modifier, ModifierType  # noqa: E402
+pytestmark = pytest.mark.integration
 
 
 class TestCalculatorComponentsIntegration:

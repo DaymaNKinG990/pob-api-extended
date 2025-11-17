@@ -1,13 +1,12 @@
 """Integration tests for TreesParser and related components."""
 
 import pytest
+from lxml.etree import fromstring
+
+from pobapi import PathOfBuildingAPI
+from pobapi.parsers import TreesParser
 
 pytestmark = pytest.mark.integration
-
-from lxml.etree import fromstring  # noqa: E402
-
-from pobapi import PathOfBuildingAPI  # noqa: E402
-from pobapi.parsers import TreesParser  # noqa: E402
 
 
 class TestTreesParserAPIIntegration:
@@ -46,7 +45,7 @@ class TestTreesParserAPIIntegration:
         assert len(trees) == len(api_trees)
 
         # Verify structure matches
-        for parsed_tree, api_tree in zip(trees, api_trees):
+        for parsed_tree, api_tree in zip(trees, api_trees, strict=True):
             assert parsed_tree["nodes"] == api_tree.nodes
             assert parsed_tree["sockets"] == api_tree.sockets
 
@@ -93,7 +92,7 @@ class TestTreesParserDefaultBuildParserIntegration:
         trees_direct = TreesParser.parse_trees(xml_root)
 
         assert len(trees) == len(trees_direct)
-        for tree, tree_direct in zip(trees, trees_direct):
+        for tree, tree_direct in zip(trees, trees_direct, strict=True):
             assert tree["nodes"] == tree_direct["nodes"]
             assert tree["sockets"] == tree_direct["sockets"]
 
@@ -118,7 +117,7 @@ class TestTreesParserBuildFactoryIntegration:
         build_trees = list(build.trees)
 
         assert len(trees) == len(build_trees)
-        for parsed_tree, build_tree in zip(trees, build_trees):
+        for parsed_tree, build_tree in zip(trees, build_trees, strict=True):
             assert parsed_tree["nodes"] == build_tree.nodes
 
 
@@ -242,5 +241,5 @@ class TestTreesParserFullIntegration:
 
         # Should have same trees
         assert len(trees) == len(trees_serialized)
-        for tree, tree_serialized in zip(trees, trees_serialized):
+        for tree, tree_serialized in zip(trees, trees_serialized, strict=True):
             assert tree["nodes"] == tree_serialized["nodes"]

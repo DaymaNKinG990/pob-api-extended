@@ -2,26 +2,26 @@
 
 import pytest
 
-pytestmark = pytest.mark.integration
-
-from pobapi import CalculationEngine  # noqa: E402
-from pobapi.calculator.damage import DamageCalculator  # noqa: E402
-from pobapi.calculator.defense import DefenseCalculator  # noqa: E402
-from pobapi.calculator.minion import MinionCalculator  # noqa: E402
-from pobapi.calculator.modifiers import (  # noqa: E402
+from pobapi import CalculationEngine
+from pobapi.calculator.damage import DamageCalculator
+from pobapi.calculator.defense import DefenseCalculator
+from pobapi.calculator.minion import MinionCalculator
+from pobapi.calculator.modifiers import (
     Modifier,
     ModifierSystem,
     ModifierType,
 )
-from pobapi.calculator.party import PartyCalculator  # noqa: E402
-from pobapi.calculator.resource import ResourceCalculator  # noqa: E402
-from pobapi.calculator.skill_stats import SkillStatsCalculator  # noqa: E402
+from pobapi.calculator.party import PartyCalculator
+from pobapi.calculator.resource import ResourceCalculator
+from pobapi.calculator.skill_stats import SkillStatsCalculator
+
+pytestmark = pytest.mark.integration
 
 
 class TestModifierSystemCalculatorIntegrations:
     """Test explicit integrations between ModifierSystem and all calculators."""
 
-    def test_modifier_system_damage_calculator_integration(self, build) -> None:
+    def test_modifier_system_damage_calculator_integration(self) -> None:
         """Test explicit ModifierSystem ↔ DamageCalculator integration."""
         modifier_system = ModifierSystem()
         damage_calc = DamageCalculator(modifier_system)
@@ -41,7 +41,7 @@ class TestModifierSystemCalculatorIntegrations:
         damage = damage_calc.calculate_base_damage("TestSkill", context)
         assert damage is not None
 
-    def test_modifier_system_defense_calculator_integration(self, build) -> None:
+    def test_modifier_system_defense_calculator_integration(self) -> None:
         """Test explicit ModifierSystem ↔ DefenseCalculator integration."""
         modifier_system = ModifierSystem()
         defense_calc = DefenseCalculator(modifier_system)
@@ -61,7 +61,7 @@ class TestModifierSystemCalculatorIntegrations:
         defense = defense_calc.calculate_all_defenses(context)
         assert defense is not None
 
-    def test_modifier_system_resource_calculator_integration(self, build) -> None:
+    def test_modifier_system_resource_calculator_integration(self) -> None:
         """Test explicit ModifierSystem ↔ ResourceCalculator integration."""
         modifier_system = ModifierSystem()
         resource_calc = ResourceCalculator(modifier_system)
@@ -81,7 +81,7 @@ class TestModifierSystemCalculatorIntegrations:
         mana_cost = resource_calc.calculate_mana_cost("Test Skill", context)
         assert mana_cost is not None
 
-    def test_modifier_system_skill_stats_calculator_integration(self, build) -> None:
+    def test_modifier_system_skill_stats_calculator_integration(self) -> None:
         """Test explicit ModifierSystem ↔ SkillStatsCalculator integration."""
         modifier_system = ModifierSystem()
         skill_stats_calc = SkillStatsCalculator(modifier_system)
@@ -104,7 +104,7 @@ class TestModifierSystemCalculatorIntegrations:
         )
         assert aoe_radius is not None
 
-    def test_modifier_system_minion_calculator_integration(self, build) -> None:
+    def test_modifier_system_minion_calculator_integration(self) -> None:
         """Test explicit ModifierSystem ↔ MinionCalculator integration."""
         modifier_system = ModifierSystem()
         minion_calc = MinionCalculator(modifier_system)
@@ -124,7 +124,7 @@ class TestModifierSystemCalculatorIntegrations:
         minion_stats = minion_calc.calculate_all_minion_stats(context)
         assert minion_stats is not None
 
-    def test_modifier_system_party_calculator_integration(self, build) -> None:
+    def test_modifier_system_party_calculator_integration(self) -> None:
         """Test explicit ModifierSystem ↔ PartyCalculator integration."""
         from pobapi.calculator.party import PartyMember
 

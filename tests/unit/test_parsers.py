@@ -60,15 +60,47 @@ class TestSkillsParser:
         assert result[0]["main_active_skill"] == 1
         assert len(result[0]["abilities"]) == 1
 
-    def test_parse_skill_groups_multiple(self):
-        """Test parsing multiple skill groups."""
-        xml_str = """<?xml version="1.0"?>
+    @pytest.mark.parametrize(
+        (
+            "enabled1",
+            "enabled2",
+            "main_active1",
+            "main_active2",
+            "expected_main1",
+            "expected_main2",
+        ),
+        [
+            ("true", "false", "1", "nil", 1, None),
+            ("false", "true", "nil", "2", None, 2),
+            ("true", "true", "1", "2", 1, 2),
+            ("false", "false", "nil", "nil", None, None),
+        ],
+    )
+    def test_parse_skill_groups_multiple(
+        self,
+        enabled1,
+        enabled2,
+        main_active1,
+        main_active2,
+        expected_main1,
+        expected_main2,
+    ):
+        """Test parsing multiple skill groups (parametrized)."""
+        xml_str = f"""<?xml version="1.0"?>
         <PathOfBuilding>
             <Skills>
-                <Skill enabled="true" label="Group 1" mainActiveSkill="1">
+                <Skill
+                    enabled="{enabled1}"
+                    label="Group 1"
+                    mainActiveSkill="{main_active1}"
+                >
                     <Ability name="Arc" enabled="true" level="20" gemId="1"/>
                 </Skill>
-                <Skill enabled="false" label="Group 2" mainActiveSkill="nil">
+                <Skill
+                    enabled="{enabled2}"
+                    label="Group 2"
+                    mainActiveSkill="{main_active2}"
+                >
                     <Ability name="Fireball" enabled="true" level="20" gemId="2"/>
                 </Skill>
             </Skills>
@@ -76,9 +108,10 @@ class TestSkillsParser:
         xml_root = fromstring(xml_str.encode())
         result = SkillsParser.parse_skill_groups(xml_root)
         assert len(result) == 2
-        assert result[0]["enabled"] is True
-        assert result[1]["enabled"] is False
-        assert result[1]["main_active_skill"] is None
+        assert result[0]["enabled"] == (enabled1 == "true")
+        assert result[1]["enabled"] == (enabled2 == "true")
+        assert result[0]["main_active_skill"] == expected_main1
+        assert result[1]["main_active_skill"] == expected_main2
 
     def test_parse_skill_groups_empty(self):
         """Test parsing when Skills element is missing (covers line 56)."""
@@ -103,21 +136,37 @@ class TestItemsParser:
         assert item["name"] == "Inpulsa's Broken Heart"
         assert item["base"] == "Sadist Garb"
 
-    def test_parse_items_default_rarity(self):
-        """Test parsing items with no rarity specified (defaults to Normal)."""
-        xml_str = """<?xml version="1.0"?>
+    @pytest.mark.parametrize(
+        ("rarity_text", "expected_rarity"),
+        [
+            ("Rarity: NORMAL", "Normal"),
+            ("Rarity: MAGIC", "Magic"),
+            ("Rarity: RARE", "Rare"),
+            ("Rarity: UNIQUE", "Unique"),
+            ("", "Normal"),  # Default when not specified
+        ],
+    )
+    def test_parse_items_rarity(self, rarity_text, expected_rarity):
+        """Test parsing items with different rarity values (parametrized)."""
+        if rarity_text:
+            item_text = f"""{rarity_text}
+Test Item
+Test Base"""
+        else:
+            item_text = """Test Item
+Test Base"""
+        xml_str = f"""<?xml version="1.0"?>
         <PathOfBuilding>
             <Items>
                 <Item>
-                    Test Item
-                    Test Base
+                    {item_text}
                 </Item>
             </Items>
         </PathOfBuilding>"""
         xml_root = fromstring(xml_str.encode())
         items = ItemsParser.parse_items(xml_root)
         assert len(items) == 1
-        assert items[0]["rarity"] == "Normal"
+        assert items[0]["rarity"] == expected_rarity
 
     def test_parse_items_empty(self):
         """Test parsing when Items element is missing."""
@@ -160,27 +209,49 @@ class TestTreesParser:
         assert isinstance(tree["nodes"], list)
         assert isinstance(tree["sockets"], dict)
 
-    def test_parse_trees_empty(self):
-        """Test parsing when Tree element is missing."""
-        xml_str = """<?xml version="1.0"?>
+    @pytest.mark.parametrize(
+        ("has_tree", "has_spec", "has_url", "expected_count"),
+        [
+            (False, False, False, 0),  # No Tree element
+            (True, False, False, 0),  # Tree without Spec
+            (True, True, False, 0),  # Tree with Spec but no URL
+            (True, True, True, 1),  # Complete tree: Tree -> Spec -> URL
+        ],
+    )
+    def test_parse_trees_scenarios(
+        self, mocker, has_tree, has_spec, has_url, expected_count
+    ):
+        """Test parsing trees with different scenarios (parametrized)."""
+        # Mock _skill_tree_nodes to avoid dependency on base64 URL parsing
+        mocker.patch(
+            "pobapi.parsers.xml._skill_tree_nodes", return_value=[12345, 12346]
+        )
+
+        tree_part = ""
+        if has_tree:
+            if has_spec:
+                # Use a valid base64-encoded URL format for the test
+                url_part = (
+                    "<URL>https://pathofexile.com/passive-skill-tree/AAAA</URL>"
+                    if has_url
+                    else ""
+                )
+                spec_part = f'<Spec active="true">{url_part}</Spec>'
+                tree_part = f"""<Tree>
+                    {spec_part}
+                </Tree>"""
+            else:
+                tree_part = """<Tree>
+                </Tree>"""
+
+        xml_str = f"""<?xml version="1.0"?>
         <PathOfBuilding>
             <Build className="Scion" level="1"/>
+            {tree_part}
         </PathOfBuilding>"""
         xml_root = fromstring(xml_str.encode())
         result = TreesParser.parse_trees(xml_root)
-        assert result == []
-
-    def test_parse_trees_no_url(self):
-        """Test parsing when URL element is missing."""
-        xml_str = """<?xml version="1.0"?>
-        <PathOfBuilding>
-            <Tree>
-                <Spec/>
-            </Tree>
-        </PathOfBuilding>"""
-        xml_root = fromstring(xml_str.encode())
-        result = TreesParser.parse_trees(xml_root)
-        assert result == []
+        assert len(result) == expected_count
 
 
 class TestDefaultBuildParser:

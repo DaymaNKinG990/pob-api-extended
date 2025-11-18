@@ -3,6 +3,8 @@
 from typing import Any
 from unittest.mock import Mock
 
+import pytest
+
 from pobapi.calculator.engine import CalculationEngine
 from pobapi.calculator.modifiers import Modifier, ModifierSystem, ModifierType
 
@@ -29,37 +31,78 @@ class TestCalculationEngine:
         # Should not crash
         assert engine.modifiers is not None
 
-    def test_load_build_with_tree(self, mock_build, mock_tree) -> None:
-        """Test loading build with passive tree."""
+    @pytest.mark.parametrize(
+        ("node_ids", "expected_modifiers"),
+        [
+            ([12345, 12346], True),
+            ([12345], True),
+            ([], True),  # Empty tree should still work
+        ],
+    )
+    def test_load_build_with_tree(
+        self, mock_build, mock_tree, node_ids, expected_modifiers
+    ) -> None:
+        """Test loading build with passive tree (parametrized)."""
         engine = CalculationEngine()
-        tree = mock_tree(nodes=[12345, 12346])
+        tree = mock_tree(nodes=node_ids)
         build = mock_build(active_skill_tree=tree)
         engine.load_build(build)
         # Should load tree modifiers
         assert engine.modifiers is not None
 
-    def test_load_build_with_items(self, mock_build, mock_item) -> None:
-        """Test loading build with items."""
+    @pytest.mark.parametrize(
+        ("item_texts", "expected_modifiers"),
+        [
+            (["+10 to Strength"], True),
+            (["+10 to Strength", "+20 to Dexterity"], True),
+            ([], True),  # Empty items should still work
+        ],
+    )
+    def test_load_build_with_items(
+        self, mock_build, mock_item, item_texts, expected_modifiers
+    ) -> None:
+        """Test loading build with items (parametrized)."""
         engine = CalculationEngine()
-        items = [mock_item(name="Test Item", text="+10 to Strength")]
+        items = [
+            mock_item(name=f"Item {i}", text=text) for i, text in enumerate(item_texts)
+        ]
         build = mock_build(items=items)
         engine.load_build(build)
         # Should load item modifiers
         assert engine.modifiers is not None
 
-    def test_load_build_with_skills(self, mock_build, mock_skill_group) -> None:
-        """Test loading build with skills."""
+    @pytest.mark.parametrize(
+        ("skill_count", "expected_modifiers"),
+        [
+            (1, True),
+            (2, True),
+            (0, True),  # Empty skills should still work
+        ],
+    )
+    def test_load_build_with_skills(
+        self, mock_build, mock_skill_group, skill_count, expected_modifiers
+    ) -> None:
+        """Test loading build with skills (parametrized)."""
         engine = CalculationEngine()
-        skill_groups = [mock_skill_group()]
+        skill_groups = [mock_skill_group() for _ in range(skill_count)]
         build = mock_build(skill_groups=skill_groups)
         engine.load_build(build)
         # Should load skill modifiers
         assert engine.modifiers is not None
 
-    def test_load_build_with_config(self, mock_build, mock_config) -> None:
-        """Test loading build with config."""
+    @pytest.mark.parametrize(
+        ("has_config", "expected_modifiers"),
+        [
+            (True, True),
+            (False, True),  # No config should still work
+        ],
+    )
+    def test_load_build_with_config(
+        self, mock_build, mock_config, has_config, expected_modifiers
+    ) -> None:
+        """Test loading build with config (parametrized)."""
         engine = CalculationEngine()
-        config = mock_config()
+        config = mock_config() if has_config else None
         build = mock_build(config=config)
         engine.load_build(build)
         # Should load config modifiers

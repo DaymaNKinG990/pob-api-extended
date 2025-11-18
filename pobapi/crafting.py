@@ -324,6 +324,27 @@ class ItemCraftingAPI:
         ],
     }
 
+    # Stat display mapping for converting internal stat names to display format
+    STAT_DISPLAY_MAP: dict[str, str] = {
+        "Life": "Life",
+        "Mana": "Mana",
+        "EnergyShield": "Energy Shield",
+        "PhysicalDamage": "Physical Damage",
+        "FireDamage": "Fire Damage",
+        "ColdDamage": "Cold Damage",
+        "LightningDamage": "Lightning Damage",
+        "ChaosDamage": "Chaos Damage",
+        "AttackSpeed": "Attack Speed",
+        "CastSpeed": "Cast Speed",
+        "CritChance": "Critical Strike Chance",
+        "CritMultiplier": "Critical Strike Multiplier",
+        "FireResistance": "Fire Resistance",
+        "ColdResistance": "Cold Resistance",
+        "LightningResistance": "Lightning Resistance",
+        "ChaosResistance": "Chaos Resistance",
+        "MovementSpeed": "Movement Speed",
+    }
+
     @staticmethod
     def get_modifiers_by_type(
         modifier_type: Union[str, "ModType"],
@@ -456,47 +477,27 @@ class ItemCraftingAPI:
         for implicit in implicit_mods:
             item_lines.append(implicit)
 
-        # Import here to avoid circular dependency
-        from pobapi.calculator.item_modifier_parser import ItemModifierParser
-
         # Add prefixes
         for prefix in prefixes:
             mod: ItemModifier = prefix.modifier
             value = prefix.roll_value
-            # Convert stat name to display format
-            # Map internal stat names to display names
-            stat_display_map = {
-                "Life": "maximum Life",
-                "Mana": "maximum Mana",
-                "EnergyShield": "maximum Energy Shield",
-                "PhysicalDamage": "Physical Damage",
-                "FireDamage": "Fire Damage",
-                "ColdDamage": "Cold Damage",
-                "LightningDamage": "Lightning Damage",
-                "ChaosDamage": "Chaos Damage",
-                "AttackSpeed": "Attack Speed",
-                "CastSpeed": "Cast Speed",
-                "CritChance": "Critical Strike Chance",
-                "CritMultiplier": "Critical Strike Multiplier",
-                "FireResistance": "Fire Resistance",
-                "ColdResistance": "Cold Resistance",
-                "LightningResistance": "Lightning Resistance",
-                "ChaosResistance": "Chaos Resistance",
-                "MovementSpeed": "Movement Speed",
-            }
             display_stat = (
-                stat_display_map.get(mod.stat) or mod.stat.replace("_", " ").title()
+                ItemCraftingAPI.STAT_DISPLAY_MAP.get(mod.stat)
+                or mod.stat.replace("_", " ").title()
             )
             # Format modifier text based on type
             if mod.mod_type == ModifierType.FLAT:
                 # For life/mana/es, use "to maximum"
                 if mod.stat in ["Life", "Mana", "EnergyShield"]:
-                    clean_stat = display_stat.replace("maximum ", "")
-                    item_lines.append(f"+{int(value)} to maximum {clean_stat}")
+                    item_lines.append(f"+{int(value)} to maximum {display_stat}")
                 else:
                     item_lines.append(f"+{int(value)} to {display_stat}")
             elif mod.mod_type == ModifierType.INCREASED:
-                item_lines.append(f"{int(value)}% increased {display_stat}")
+                # For life/mana/es, use "maximum"
+                if mod.stat in ["Life", "Mana", "EnergyShield"]:
+                    item_lines.append(f"{int(value)}% increased maximum {display_stat}")
+                else:
+                    item_lines.append(f"{int(value)}% increased {display_stat}")
             elif mod.mod_type == ModifierType.MORE:
                 item_lines.append(f"{int(value)}% more {display_stat}")
             elif mod.mod_type == ModifierType.REDUCED:
@@ -508,12 +509,23 @@ class ItemCraftingAPI:
         for suffix in suffixes:
             suffix_mod: ItemModifier = suffix.modifier
             value = suffix.roll_value
-            stat_name = ItemModifierParser._normalize_stat_name(suffix_mod.stat)
-            display_stat = stat_name.replace("_", " ").title()
+            display_stat = (
+                ItemCraftingAPI.STAT_DISPLAY_MAP.get(suffix_mod.stat)
+                or suffix_mod.stat.replace("_", " ").title()
+            )
+            # Format modifier text based on type
             if suffix_mod.mod_type == ModifierType.FLAT:
-                item_lines.append(f"+{int(value)} to {display_stat}")
+                # For life/mana/es, use "to maximum"
+                if suffix_mod.stat in ["Life", "Mana", "EnergyShield"]:
+                    item_lines.append(f"+{int(value)} to maximum {display_stat}")
+                else:
+                    item_lines.append(f"+{int(value)} to {display_stat}")
             elif suffix_mod.mod_type == ModifierType.INCREASED:
-                item_lines.append(f"{int(value)}% increased {display_stat}")
+                # For life/mana/es, use "maximum"
+                if suffix_mod.stat in ["Life", "Mana", "EnergyShield"]:
+                    item_lines.append(f"{int(value)}% increased maximum {display_stat}")
+                else:
+                    item_lines.append(f"{int(value)}% increased {display_stat}")
             elif suffix_mod.mod_type == ModifierType.MORE:
                 item_lines.append(f"{int(value)}% more {display_stat}")
             elif suffix_mod.mod_type == ModifierType.REDUCED:
@@ -568,46 +580,27 @@ class ItemCraftingAPI:
         for implicit in implicit_mods:
             item_lines.append(implicit)
 
-        # Import here to avoid circular dependency
-
-        # Stat display mapping
-        stat_display_map = {
-            "Life": "maximum Life",
-            "Mana": "maximum Mana",
-            "EnergyShield": "maximum Energy Shield",
-            "PhysicalDamage": "Physical Damage",
-            "FireDamage": "Fire Damage",
-            "ColdDamage": "Cold Damage",
-            "LightningDamage": "Lightning Damage",
-            "ChaosDamage": "Chaos Damage",
-            "AttackSpeed": "Attack Speed",
-            "CastSpeed": "Cast Speed",
-            "CritChance": "Critical Strike Chance",
-            "CritMultiplier": "Critical Strike Multiplier",
-            "FireResistance": "Fire Resistance",
-            "ColdResistance": "Cold Resistance",
-            "LightningResistance": "Lightning Resistance",
-            "ChaosResistance": "Chaos Resistance",
-            "MovementSpeed": "Movement Speed",
-        }
-
         # Add prefixes
         for prefix in prefixes:
             mod: ItemModifier = prefix.modifier
             value = prefix.roll_value
             display_stat = (
-                stat_display_map.get(mod.stat) or mod.stat.replace("_", " ").title()
+                ItemCraftingAPI.STAT_DISPLAY_MAP.get(mod.stat)
+                or mod.stat.replace("_", " ").title()
             )
             # Format modifier text based on type
             if mod.mod_type == ModifierType.FLAT:
                 # For life/mana/es, use "to maximum"
                 if mod.stat in ["Life", "Mana", "EnergyShield"]:
-                    clean_stat = display_stat.replace("maximum ", "")
-                    item_lines.append(f"+{int(value)} to maximum {clean_stat}")
+                    item_lines.append(f"+{int(value)} to maximum {display_stat}")
                 else:
                     item_lines.append(f"+{int(value)} to {display_stat}")
             elif mod.mod_type == ModifierType.INCREASED:
-                item_lines.append(f"{int(value)}% increased {display_stat}")
+                # For life/mana/es, use "maximum"
+                if mod.stat in ["Life", "Mana", "EnergyShield"]:
+                    item_lines.append(f"{int(value)}% increased maximum {display_stat}")
+                else:
+                    item_lines.append(f"{int(value)}% increased {display_stat}")
             elif mod.mod_type == ModifierType.MORE:
                 item_lines.append(f"{int(value)}% more {display_stat}")
             elif mod.mod_type == ModifierType.REDUCED:
@@ -620,19 +613,22 @@ class ItemCraftingAPI:
             suffix_mod: ItemModifier = suffix.modifier
             value = suffix.roll_value
             display_stat = (
-                stat_display_map.get(suffix_mod.stat)
+                ItemCraftingAPI.STAT_DISPLAY_MAP.get(suffix_mod.stat)
                 or suffix_mod.stat.replace("_", " ").title()
             )
             # Format modifier text based on type
             if suffix_mod.mod_type == ModifierType.FLAT:
                 # For life/mana/es, use "to maximum"
                 if suffix_mod.stat in ["Life", "Mana", "EnergyShield"]:
-                    clean_stat = display_stat.replace("maximum ", "")
-                    item_lines.append(f"+{int(value)} to maximum {clean_stat}")
+                    item_lines.append(f"+{int(value)} to maximum {display_stat}")
                 else:
                     item_lines.append(f"+{int(value)} to {display_stat}")
             elif suffix_mod.mod_type == ModifierType.INCREASED:
-                item_lines.append(f"{int(value)}% increased {display_stat}")
+                # For life/mana/es, use "maximum"
+                if suffix_mod.stat in ["Life", "Mana", "EnergyShield"]:
+                    item_lines.append(f"{int(value)}% increased maximum {display_stat}")
+                else:
+                    item_lines.append(f"{int(value)}% increased {display_stat}")
             elif suffix_mod.mod_type == ModifierType.MORE:
                 item_lines.append(f"{int(value)}% more {display_stat}")
             elif suffix_mod.mod_type == ModifierType.REDUCED:

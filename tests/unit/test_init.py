@@ -149,6 +149,7 @@ def test_import_error_handling_crafting() -> None:
                 del sys.modules["pobapi"]
 
             # Import pobapi to trigger ImportError handling
+            import pobapi  # noqa: F401
 
             # Verify that pobapi module is present in sys.modules
             assert "pobapi" in sys.modules
@@ -207,7 +208,7 @@ def test_import_error_handling_trade() -> None:
             if "pobapi" in sys.modules:
                 importlib.reload(sys.modules["pobapi"])
             else:
-                pass
+                import pobapi  # noqa: F401
 
             # Remove trade module from sys.modules if it was re-added during reload
             if "pobapi.trade" in sys.modules:

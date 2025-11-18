@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from pobapi.exceptions import ValidationError
+from pobapi.exceptions import InvalidImportCodeError, InvalidURLError, ValidationError
 
 __all__ = ["InputValidator", "XMLValidator"]
 
@@ -15,26 +15,26 @@ class InputValidator:
         """Validate URL format.
 
         :param url: URL to validate.
-        :raises: ValidationError if URL is invalid.
+        :raises: InvalidURLError if URL is invalid.
         """
         if not isinstance(url, str):
-            raise ValidationError("URL must be a string")
+            raise InvalidURLError("URL must be a string")
         if not url.strip():
-            raise ValidationError("URL cannot be empty")
+            raise InvalidURLError("URL cannot be empty")
         if not url.startswith("https://pastebin.com/"):
-            raise ValidationError("URL must be a pastebin.com link")
+            raise InvalidURLError("URL must be a pastebin.com link")
 
     @staticmethod
     def validate_import_code(import_code: str) -> None:
         """Validate import code format.
 
         :param import_code: Import code to validate.
-        :raises: ValidationError if import code is invalid.
+        :raises: InvalidImportCodeError if import code is invalid.
         """
         if not isinstance(import_code, str):
-            raise ValidationError("Import code must be a string")
+            raise InvalidImportCodeError("Import code must be a string")
         if not import_code.strip():
-            raise ValidationError("Import code cannot be empty")
+            raise InvalidImportCodeError("Import code cannot be empty")
 
     @staticmethod
     def validate_xml_bytes(xml_bytes: bytes) -> None:

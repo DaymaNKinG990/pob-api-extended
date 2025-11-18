@@ -1,5 +1,7 @@
 """Builder for creating Path of Building builds programmatically."""
 
+from __future__ import annotations
+
 from typing import Any
 
 from pobapi import models
@@ -61,7 +63,7 @@ class BuildBuilder:
         self,
         class_name: CharacterClass | str,
         ascendancy_name: Ascendancy | str | None = None,
-    ) -> "BuildBuilder":
+    ) -> BuildBuilder:
         """
         Set the character class and optional ascendancy for the builder.
 
@@ -87,7 +89,7 @@ class BuildBuilder:
             self.ascendancy_name = None
         return self
 
-    def set_level(self, level: int) -> "BuildBuilder":
+    def set_level(self, level: int) -> BuildBuilder:
         """
         Set the character's level within the allowed range.
 
@@ -105,7 +107,7 @@ class BuildBuilder:
         self.level = level
         return self
 
-    def set_bandit(self, bandit: BanditChoice | str | None) -> "BuildBuilder":
+    def set_bandit(self, bandit: BanditChoice | str | None) -> BuildBuilder:
         """
         Set the chosen bandit for the build.
 
@@ -129,14 +131,27 @@ class BuildBuilder:
             self.bandit = bandit
         return self
 
-    def add_item(self, item: models.Item) -> int:
+    def add_item(
+        self, item: models.Item, slot: ItemSlot | str | None = None
+    ) -> int | BuildBuilder:
         """Add item to build.
 
         :param item: Item to add.
-        :return: Index of added item (0-based).
+        :param slot: Optional slot to equip item to (for method chaining).
+        :return: Index of added item (0-based) if slot is None,
+            otherwise self for method chaining.
         """
+        item_index = len(self.items)
         self.items.append(item)
-        return len(self.items) - 1
+        if slot is not None:
+            try:
+                return self.equip_item(item_index, slot)
+            except Exception:
+                # Rollback: remove the item that was just added
+                self.items.pop()
+                # Re-raise the exception preserving the original traceback
+                raise
+        return item_index
 
     def create_item_set(self) -> models.Set:
         """Create a new empty item set.
@@ -188,7 +203,7 @@ class BuildBuilder:
         item_index: int,
         slot: ItemSlot | str,
         item_set_index: int = 0,
-    ) -> "BuildBuilder":
+    ) -> BuildBuilder:
         """
         Equip an item into a specific slot of an item set.
 
@@ -266,7 +281,7 @@ class BuildBuilder:
         self.trees.append(tree)
         return tree
 
-    def allocate_node(self, node_id: int, tree_index: int = 0) -> "BuildBuilder":
+    def allocate_node(self, node_id: int, tree_index: int = 0) -> BuildBuilder:
         """
         Allocate the given passive skill tree node into the specified tree.
 
@@ -299,7 +314,7 @@ class BuildBuilder:
             tree.nodes.append(actual_node_id)
         return self
 
-    def remove_node(self, node_id: int, tree_index: int = 0) -> "BuildBuilder":
+    def remove_node(self, node_id: int, tree_index: int = 0) -> BuildBuilder:
         """
         Remove a node from the specified passive skill tree.
 
@@ -317,7 +332,7 @@ class BuildBuilder:
 
     def socket_jewel(
         self, socket_id: int, item_index: int, tree_index: int = 0
-    ) -> "BuildBuilder":
+    ) -> BuildBuilder:
         """
         Place a jewel item into a specified socket on a passive skill tree.
 
@@ -383,7 +398,7 @@ class BuildBuilder:
         self,
         gem: models.Gem | models.GrantedAbility,
         group_label: str = "Main",
-    ) -> "BuildBuilder":
+    ) -> BuildBuilder:
         """Add a skill gem to a skill group.
 
         :param gem: Gem or GrantedAbility to add.
@@ -403,7 +418,7 @@ class BuildBuilder:
         skill_group.abilities.append(gem)
         return self
 
-    def set_config(self, config: Any) -> "BuildBuilder":
+    def set_config(self, config: Any) -> BuildBuilder:
         """
         Set the build's configuration object.
 
@@ -416,7 +431,7 @@ class BuildBuilder:
         self.config = config
         return self
 
-    def set_notes(self, notes: str) -> "BuildBuilder":
+    def set_notes(self, notes: str) -> BuildBuilder:
         """
         Set the build's notes text.
 
@@ -426,7 +441,7 @@ class BuildBuilder:
         self.notes = notes
         return self
 
-    def set_active_spec(self, spec_index: int) -> "BuildBuilder":
+    def set_active_spec(self, spec_index: int) -> BuildBuilder:
         """
         Set the active specification index for the build.
 

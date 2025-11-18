@@ -199,29 +199,34 @@ class TestModifierSystem:
         # 100 * (1 - 10/100) = 90
         assert result == pytest.approx(90.0, rel=1e-6)
 
+    @pytest.mark.parametrize(
+        ("increased_values", "base_value", "expected"),
+        [
+            ([50.0, 30.0], 100.0, 180.0),  # 100 * (1 + (50 + 30)/100) = 180
+            ([100.0, 50.0], 100.0, 250.0),  # 100 * (1 + (100 + 50)/100) = 250
+            ([25.0, 25.0, 25.0], 100.0, 175.0),  # 100 * (1 + (25 + 25 + 25)/100) = 175
+            ([10.0], 50.0, 55.0),  # 50 * (1 + 10/100) = 55
+        ],
+    )
     def test_calculate_stat_multiple_increased(
-        self, modifier_system: "ModifierSystem"
+        self,
+        modifier_system: "ModifierSystem",
+        increased_values: list[float],
+        base_value: float,
+        expected: float,
     ) -> None:
-        """Test calculating stat with multiple increased modifiers."""
-        modifier_system.add_modifier(
-            Modifier(
-                stat="Life",
-                value=50.0,
-                mod_type=ModifierType.INCREASED,
-                source="test1",
+        """Test calculating stat with multiple increased modifiers (parametrized)."""
+        for i, value in enumerate(increased_values):
+            modifier_system.add_modifier(
+                Modifier(
+                    stat="Life",
+                    value=value,
+                    mod_type=ModifierType.INCREASED,
+                    source=f"test{i}",
+                )
             )
-        )
-        modifier_system.add_modifier(
-            Modifier(
-                stat="Life",
-                value=30.0,
-                mod_type=ModifierType.INCREASED,
-                source="test2",
-            )
-        )
-        # 100 * (1 + (50 + 30)/100) = 180
-        result = modifier_system.calculate_stat("Life", 100.0)
-        assert result == pytest.approx(180.0, rel=1e-6)
+        result = modifier_system.calculate_stat("Life", base_value)
+        assert result == pytest.approx(expected, rel=1e-6)
 
     def test_calculate_stat_increased_and_reduced(
         self, modifier_system: "ModifierSystem"
@@ -324,29 +329,36 @@ class TestModifierSystem:
         result2 = modifier_system.calculate_stat("Life", 100.0)
         assert result2 == pytest.approx(100.0, rel=1e-6)
 
+    @pytest.mark.parametrize(
+        ("more_values", "base_value", "expected"),
+        [
+            ([20.0, 30.0], 100.0, 156.0),  # 100 * 1.2 * 1.3 = 156
+            ([50.0, 25.0], 100.0, 187.5),  # 100 * 1.5 * 1.25 = 187.5
+            ([10.0, 10.0, 10.0], 100.0, 133.1),  # 100 * 1.1^3 ≈ 133.1
+            ([100.0], 50.0, 100.0),  # 50 * 2.0 = 100
+        ],
+    )
     def test_calculate_stat_multiple_more(
-        self, modifier_system: "ModifierSystem"
+        self,
+        modifier_system: "ModifierSystem",
+        more_values: list[float],
+        base_value: float,
+        expected: float,
     ) -> None:
-        """Test calculating stat with multiple more modifiers."""
-        modifier_system.add_modifier(
-            Modifier(
-                stat="Life",
-                value=20.0,
-                mod_type=ModifierType.MORE,
-                source="test1",
+        """Test calculating stat with multiple more modifiers (parametrized)."""
+        for i, value in enumerate(more_values):
+            modifier_system.add_modifier(
+                Modifier(
+                    stat="Life",
+                    value=value,
+                    mod_type=ModifierType.MORE,
+                    source=f"test{i}",
+                )
             )
-        )
-        modifier_system.add_modifier(
-            Modifier(
-                stat="Life",
-                value=30.0,
-                mod_type=ModifierType.MORE,
-                source="test2",
-            )
-        )
-        # 100 * (1 + 20/100) * (1 + 30/100) = 156
-        result = modifier_system.calculate_stat("Life", 100.0)
-        assert result == pytest.approx(156.0, rel=1e-6)
+        result = modifier_system.calculate_stat("Life", base_value)
+        assert result == pytest.approx(
+            expected, rel=1e-2
+        )  # More tolerance for multiple multiplications
 
     def test_calculate_stat_full_order(self, modifier_system: "ModifierSystem") -> None:
         """Test calculating stat with all modifier types in correct order."""

@@ -156,3 +156,56 @@ class TestItemSetBuilder:
         item_set = ItemSetBuilder._build_single(item_set_data)
         assert item_set.body_armour is None
         assert item_set.helmet is None
+
+
+class TestConfigBuilderEdgeCases:
+    """Tests for ConfigBuilder edge cases."""
+
+    def test_build_with_none_character_level(self):
+        """Test ConfigBuilder.build() with None character_level (TC-BUILDERS-014).
+
+        This test verifies that when None is passed as character_level,
+        the Config uses the default value of 84, which affects derived
+        fields like enemy_level.
+        """
+        from lxml.etree import fromstring
+
+        xml_str = """<?xml version="1.0"?>
+        <PathOfBuilding>
+            <Build className="Scion" level="1"/>
+        </PathOfBuilding>"""
+        xml_root = fromstring(xml_str.encode())
+        # character_level=None should use default value of 84
+        config = ConfigBuilder.build(xml_root, character_level=None)  # type: ignore[arg-type]
+        # Verify that default character_level (84) is used
+        # This affects enemy_level when it's not explicitly set
+        assert config.enemy_level == 84
+
+
+class TestStatsBuilderEdgeCases:
+    """Tests for StatsBuilder edge cases."""
+
+    def test_build_with_float_stat_values(self):
+        """Test StatsBuilder.build() with float stat values (TC-BUILDERS-015).
+
+        This test verifies that StatsBuilder correctly handles float values
+        in XML attributes. The builder should convert string values to float
+        and preserve decimal precision.
+        """
+        from lxml.etree import fromstring
+
+        xml_str = """<?xml version="1.0"?>
+        <PathOfBuilding>
+            <Build className="Scion" level="1">
+                <PlayerStat stat="Life" value="163.5"/>
+                <PlayerStat stat="Mana" value="60.5"/>
+            </Build>
+        </PathOfBuilding>"""
+        xml_root = fromstring(xml_str.encode())
+        stats = StatsBuilder.build(xml_root)
+        # Verify float values are correctly parsed
+        assert stats.life == 163.5
+        assert stats.mana == 60.5
+        # Verify types are float
+        assert isinstance(stats.life, float)
+        assert isinstance(stats.mana, float)

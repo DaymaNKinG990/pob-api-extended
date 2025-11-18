@@ -510,9 +510,7 @@ class UniqueItemParser:
                 unique_item = loader.get_unique_item(item_name)
                 if unique_item:
                     # Parse explicit mods from unique item data
-                    from pobapi.calculator.item_modifier_parser import (
-                        ItemModifierParser,
-                    )
+                    from pobapi.parsers.item_modifier import ItemModifierParser
 
                     if unique_item.explicit_mods:
                         for mod_text in unique_item.explicit_mods:
@@ -528,7 +526,7 @@ class UniqueItemParser:
         # (unique items still have regular modifiers)
         # But only if not skipping to avoid recursion
         if not skip_regular_parsing:
-            from pobapi.calculator.item_modifier_parser import ItemModifierParser
+            from pobapi.parsers.item_modifier import ItemModifierParser
 
             # Parse lines directly to avoid recursion
             lines = item_text.split("\n")

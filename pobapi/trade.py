@@ -9,6 +9,7 @@ from enum import Enum
 from typing import Any
 
 from pobapi.models import Item
+from pobapi.parsers.item_modifier import ItemModifierParser
 
 __all__ = [
     "TradeFilter",
@@ -118,7 +119,14 @@ class TradeAPI:
         :param items: List of items to filter.
         :param filters: List of TradeFilter objects.
         :return: Filtered list of items.
+        :raises TypeError: If items or filters is None.
         """
+        if items is None:
+            raise TypeError("items parameter cannot be None. Expected list[Item].")
+        if filters is None:
+            raise TypeError(
+                "filters parameter cannot be None. Expected list[TradeFilter]."
+            )
         filtered_items = items.copy()
 
         for trade_filter in filters:
@@ -252,9 +260,6 @@ class TradeAPI:
         :param min_value: Minimum stat value.
         :return: True if item has the stat with at least min_value.
         """
-        # Import here to avoid circular dependency
-        from pobapi.calculator.item_modifier_parser import ItemModifierParser
-
         # Parse item modifiers
         modifiers = ItemModifierParser.parse_item_text(item.text, source="trade_filter")
 
@@ -272,7 +277,12 @@ class TradeAPI:
         :param items: List of items to search.
         :param query: TradeQuery object.
         :return: List of TradeResult objects.
+        :raises TypeError: If items is None or query is None.
         """
+        if items is None:
+            raise TypeError("items parameter cannot be None. Expected list[Item].")
+        if query is None:
+            raise TypeError("query parameter cannot be None. Expected TradeQuery.")
         # Filter items
         filtered_items = TradeAPI.filter_items(items, query.filters)
 
@@ -356,13 +366,10 @@ class TradeAPI:
         :return: Trade URL string.
         """
         # Base URL for Path of Exile trade site
-        base_url = "https://www.pathofexile.com/trade/search"
+        base_url = "https://www.pathofexile.com/api/trade/search"
 
         # Build query parameters
         params: list[str] = []
-
-        # League parameter
-        params.append(f"league={query.league}")
 
         # Base type
         if query.base_type:

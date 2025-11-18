@@ -129,7 +129,14 @@ class BuildModifier:
         # Get or create item set
         # First, get current item_sets (may be cached)
         current_item_sets = list(self._api.item_sets)
+        if item_set_index < 0:
+            raise ValidationError(f"Invalid item_set_index: {item_set_index}")
         if item_set_index >= len(current_item_sets):
+            # Only create new item sets if index is reasonable
+            # (within 10 of current count)
+            # For very large indices, raise ValidationError
+            if item_set_index > len(current_item_sets) + 10:
+                raise ValidationError(f"Invalid item_set_index: {item_set_index}")
             from pobapi.builders import ItemSetBuilder
 
             empty_set_data = {
@@ -260,3 +267,223 @@ class BuildModifier:
 
         skill_group.abilities.append(gem)
         self._api._is_mutable = True
+
+    def remove_skill(
+        self,
+        gem: models.Gem | models.GrantedAbility,
+        group_label: str = "Main",
+    ) -> None:
+        """
+        Remove a skill gem from the named skill group.
+
+        If the skill group exists and contains the provided gem or granted
+        ability, it is removed from the group's abilities. The API is marked
+        as modified and cached skill-group data is invalidated.
+
+        Parameters:
+            gem (models.Gem | models.GrantedAbility): The gem or granted
+                ability to remove from the group.
+            group_label (str): Label of the skill group to remove from
+                (defaults to "Main").
+
+        Example:
+            >>> from pobapi import create_build, models
+            >>> build = create_build().build()
+            >>> modifier = BuildModifier(build)
+            >>> gem = models.Gem(
+            ...     name="Fireball", level=20, quality=0, enabled=True, support=False
+            ... )
+            >>> modifier.add_skill(gem, "Main")
+            >>> modifier.remove_skill(gem, "Main")  # Remove the gem
+        """
+        # Find skill group
+        skill_group = None
+        for group in self._api.skill_groups:
+            if group.label == group_label:
+                skill_group = group
+                break
+
+        if skill_group is not None and gem in skill_group.abilities:
+            skill_group.abilities.remove(gem)
+            self._api._is_mutable = True
+            # Invalidate cached properties
+            if hasattr(self._api, "_skill_groups"):
+                delattr(self._api, "_skill_groups")
+            if hasattr(self._api, "_active_skill_group"):
+                delattr(self._api, "_active_skill_group")
+
+    def unequip_item(
+        self,
+        slot: ItemSlot | str,
+        item_set_index: int = 0,
+    ) -> None:
+        """
+        Unequip an item from a specified item set slot.
+
+        Removes the item from the specified slot in the item set by setting
+        the slot attribute to None. The API is marked as modified and cached
+        item set data is invalidated.
+
+        Parameters:
+            slot (ItemSlot | str): Slot name (e.g., "Body Armour",
+                "Helmet") or an ItemSlot enum.
+            item_set_index (int): Index of the item set to modify
+                (defaults to 0).
+
+        Raises:
+            ValidationError: If the provided slot name is not recognized or
+                item_set_index is out of range.
+
+        Example:
+            >>> from pobapi import create_build, models
+            >>> from pobapi.types import ItemSlot
+            >>> build = create_build().build()
+            >>> modifier = BuildModifier(build)
+            >>> item = models.Item(
+            ...     rarity="Rare", name="Test Helmet", base="Iron Helmet", ...
+            ... )
+            >>> modifier.equip_item(item, ItemSlot.HELMET)
+            >>> modifier.unequip_item(ItemSlot.HELMET)  # Remove the helmet
+        """
+        # Get current item_sets
+        current_item_sets = list(self._api.item_sets)
+        if item_set_index < 0 or item_set_index >= len(current_item_sets):
+            raise ValidationError(f"Invalid item set index: {item_set_index}")
+
+        item_set = current_item_sets[item_set_index]
+
+        # Map slot names to Set attributes
+        slot_mapping = {
+            "Weapon1": "weapon1",
+            "Weapon1 Swap": "weapon1_swap",
+            "Weapon2": "weapon2",
+            "Weapon2 Swap": "weapon2_swap",
+            "Helmet": "helmet",
+            "Body Armour": "body_armour",
+            "Gloves": "gloves",
+            "Boots": "boots",
+            "Amulet": "amulet",
+            "Ring1": "ring1",
+            "Ring2": "ring2",
+            "Belt": "belt",
+            "Flask1": "flask1",
+            "Flask2": "flask2",
+            "Flask3": "flask3",
+            "Flask4": "flask4",
+            "Flask5": "flask5",
+        }
+
+        # Get slot string value
+        if isinstance(slot, ItemSlot):
+            slot_str = slot.value
+        else:
+            slot_str = slot
+
+        slot_attr = slot_mapping.get(slot_str)
+        if slot_attr is None:
+            raise ValidationError(f"Invalid slot name: {slot_str}")
+
+        # Set slot to None
+        setattr(item_set, slot_attr, None)
+        self._api._is_mutable = True
+
+        # Save modified item_set to pending list
+        if not hasattr(self._api, "_pending_item_sets"):
+            self._api._pending_item_sets = {}
+        self._api._pending_item_sets[item_set_index] = item_set
+
+        # Invalidate cached properties
+        if hasattr(self._api, "_active_item_set"):
+            delattr(self._api, "_active_item_set")
+        if hasattr(self._api, "_item_sets"):
+            delattr(self._api, "_item_sets")
+
+    def set_level(self, level: int) -> None:
+        """
+        Set the character's level within the allowed range.
+
+        Modifies the Build element in the XML to set the level attribute.
+        The API is marked as modified and cached build info is invalidated.
+
+        Parameters:
+            level (int): Character level; must be between 1 and 100 inclusive.
+
+        Raises:
+            ValidationError: If `level` is less than 1 or greater than 100.
+
+        Example:
+            >>> from pobapi import create_build
+            >>> build = create_build().build()
+            >>> modifier = BuildModifier(build)
+            >>> modifier.set_level(90)  # Set character to level 90
+            >>> assert build.level == 90
+        """
+        if not 1 <= level <= 100:
+            raise ValidationError(f"Level must be between 1 and 100, got {level}")
+
+        # Get or create Build element
+        build_element = self._api.xml.find("Build")
+        if build_element is None:
+            from lxml.etree import SubElement
+
+            build_element = SubElement(self._api.xml, "Build")
+
+        # Set level attribute
+        build_element.set("level", str(level))
+        self._api._is_mutable = True
+
+        # Invalidate cached build info
+        self._api._build_info = None
+        # Invalidate memoized property cache for level
+        if hasattr(self._api, "_level"):
+            delattr(self._api, "_level")
+
+    def set_bandit(self, bandit: str | None) -> None:
+        """
+        Set the chosen bandit for the build.
+
+        Modifies the Build element in the XML to set or remove the bandit
+        attribute. The API is marked as modified and cached build info is
+        invalidated.
+
+        Parameters:
+            bandit (str | None): Bandit selection as one of the strings
+                "Alira", "Oak", "Kraityn", or None to unset.
+
+        Raises:
+            ValidationError: If `bandit` is a string other than "Alira",
+                "Oak", "Kraityn", or None.
+
+        Example:
+            >>> from pobapi import create_build
+            >>> build = create_build().build()
+            >>> modifier = BuildModifier(build)
+            >>> modifier.set_bandit("Alira")  # Choose Alira
+            >>> assert build.bandit == "Alira"
+            >>> modifier.set_bandit(None)  # Unset bandit choice
+            >>> assert build.bandit is None
+        """
+        if bandit is not None and bandit not in ("Alira", "Oak", "Kraityn"):
+            raise ValidationError(f"Invalid bandit choice: {bandit}")
+
+        # Get or create Build element
+        build_element = self._api.xml.find("Build")
+        if build_element is None:
+            from lxml.etree import SubElement
+
+            build_element = SubElement(self._api.xml, "Build")
+
+        # Set or remove bandit attribute
+        if bandit is None:
+            if "bandit" in build_element.attrib:
+                del build_element.attrib["bandit"]
+        else:
+            build_element.set("bandit", bandit)
+
+        self._api._is_mutable = True
+
+        # Invalidate cached build info
+        self._api._build_info = None
+        # Invalidate memoized property cache for bandit
+        if hasattr(self._api, "_bandit"):
+            delattr(self._api, "_bandit")

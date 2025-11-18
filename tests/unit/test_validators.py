@@ -32,7 +32,9 @@ class TestInputValidator:
     )
     def test_validate_url_invalid(self, url, expected_error):
         """Test validation fails for invalid URL."""
-        with pytest.raises(ValidationError, match=expected_error):
+        from pobapi.exceptions import InvalidURLError
+
+        with pytest.raises(InvalidURLError, match=expected_error):
             InputValidator.validate_url(url)  # type: ignore[arg-type,unused-ignore]
 
     @pytest.mark.parametrize(
@@ -56,7 +58,9 @@ class TestInputValidator:
     )
     def test_validate_import_code_invalid(self, code, expected_error):
         """Test validation fails for invalid import code."""
-        with pytest.raises(ValidationError, match=expected_error):
+        from pobapi.exceptions import InvalidImportCodeError
+
+        with pytest.raises(InvalidImportCodeError, match=expected_error):
             InputValidator.validate_import_code(code)  # type: ignore[arg-type,unused-ignore]
 
     @pytest.mark.parametrize(

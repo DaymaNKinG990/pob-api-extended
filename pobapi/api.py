@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from lxml.etree import Element, fromstring
+from lxml.etree import _Element, fromstring
 
 from pobapi import config, constants, models, stats
 
@@ -44,7 +44,7 @@ class PathOfBuildingAPI:
 
     def __init__(
         self,
-        xml: bytes | Element,
+        xml: bytes | _Element,
         parser: BuildParser | None = None,
     ):
         """
@@ -61,7 +61,7 @@ class PathOfBuildingAPI:
 
         Raises:
             ParsingError: If XML bytes fail to parse into an Element.
-            ValidationError: If `xml` is neither bytes nor Element, or if the
+            ValidationError: If `xml` is neither bytes nor _Element, or if the
                 parsed/received XML does not conform to expected build
                 structure.
         """
@@ -71,7 +71,7 @@ class PathOfBuildingAPI:
                 self.xml = fromstring(xml)
             except Exception as e:
                 raise ParsingError("Failed to parse XML") from e
-        elif isinstance(xml, Element):
+        elif isinstance(xml, _Element):
             self.xml = xml
         else:
             raise ValidationError("xml must be bytes or Element instance")
@@ -246,9 +246,16 @@ class PathOfBuildingAPI:
             duplicate.append(gem)
         if len(duplicate) > 1 and duplicate[index] == duplicate[index - 1]:
             gem = duplicate[index - 1]
-            name = constants.VAAL_SKILL_MAP.get(
-                gem.name, gem.name.rpartition("Vaal ")[2]
-            )
+            # Try to get base name from map first
+            name = constants.VAAL_SKILL_MAP.get(gem.name)
+            if name is None:
+                # Try to extract base name by removing "Vaal" prefix
+                if gem.name.startswith("Vaal "):
+                    name = gem.name[5:]  # Remove "Vaal " prefix
+                elif gem.name.startswith("Vaal"):
+                    name = gem.name[4:]  # Remove "Vaal" prefix
+                else:
+                    name = gem.name
             return models.Gem(name, gem.enabled, gem.level, gem.quality, gem.support)
         return self.active_skill_group.abilities[index]  # type: ignore[no-any-return]
 
@@ -441,6 +448,67 @@ class PathOfBuildingAPI:
         """
         self._modifier.add_skill(gem, group_label)
 
+    def remove_skill(
+        self,
+        gem: models.Gem | models.GrantedAbility,
+        group_label: str = "Main",
+    ) -> None:
+        """
+        Remove a skill (gem or granted ability) from the named skill group.
+
+        Parameters:
+            gem (models.Gem | models.GrantedAbility): The gem or granted
+                ability to remove from the group.
+            group_label (str): Label of the skill group to remove from
+                (defaults to "Main").
+        """
+        self._modifier.remove_skill(gem, group_label)
+
+    def unequip_item(
+        self,
+        slot: ItemSlot | str,
+        item_set_index: int = 0,
+    ) -> None:
+        """
+        Unequip an item from a specified item set slot.
+
+        Parameters:
+            slot (ItemSlot | str): Slot name or ItemSlot value identifying
+                the slot to unequip (e.g., "Body Armour", "Helmet").
+            item_set_index (int): Zero-based index of the item set to modify
+                (defaults to 0).
+
+        Raises:
+            ValidationError: If the given slot or item_set_index is invalid.
+        """
+        self._modifier.unequip_item(slot, item_set_index)
+
+    def set_level(self, level: int) -> None:
+        """
+        Set the character's level within the allowed range.
+
+        Parameters:
+            level (int): Character level; must be between 1 and 100 inclusive.
+
+        Raises:
+            ValidationError: If `level` is less than 1 or greater than 100.
+        """
+        self._modifier.set_level(level)
+
+    def set_bandit(self, bandit: str | None) -> None:
+        """
+        Set the chosen bandit for the build.
+
+        Parameters:
+            bandit (str | None): Bandit selection as one of the strings
+                "Alira", "Oak", "Kraityn", or None to unset.
+
+        Raises:
+            ValidationError: If `bandit` is a string other than "Alira",
+                "Oak", "Kraityn", or None.
+        """
+        self._modifier.set_bandit(bandit)
+
     def to_xml(self) -> bytes:
         """
         Serialize the current API state to a Path of Building XML document.
@@ -512,7 +580,8 @@ class PathOfBuildingAPI:
             # "variantAlt" is for the second Watcher's Eye unique mod.
             # The 3-stat variant obtained from Uber Elder is not yet implemented in PoB.
             mod_ranges = [float(i.get("range")) for i in text.findall("ModRange")]
-            item_lines = text.text.strip("\n\r\t").splitlines()
+            item_text_content = text.text if text.text is not None else ""
+            item_lines = item_text_content.strip("\n\r\t").splitlines()
             # Strip leading/trailing whitespace from each line
             item_lines = [line.strip() for line in item_lines if line.strip()]
             rarity_stat = _get_stat(item_lines, "Rarity: ")
@@ -522,10 +591,13 @@ class PathOfBuildingAPI:
                 else "Normal"
             )
             name = item_lines[1] if len(item_lines) > 1 else ""
+            # For items with variant, name might be empty, use base as fallback
+            if not name and variant is not None:
+                name = item_lines[2] if len(item_lines) > 2 else "Unknown"
             base = (
                 name
                 if rarity in ("Normal", "Magic")
-                else (item_lines[2] if len(item_lines) > 2 else name)
+                else (item_lines[2] if len(item_lines) > 2 else name or "Unknown")
             )
             uid = _get_stat(item_lines, "Unique ID: ") or ""
             shaper = bool(_get_stat(item_lines, "Shaper Item"))
@@ -770,7 +842,13 @@ def from_url(url: str, timeout: float = 6.0) -> PathOfBuildingAPI:
     """
     InputValidator.validate_url(url)
     xml_bytes = _fetch_xml_from_url(url, timeout)
-    return PathOfBuildingAPI(xml_bytes)
+    try:
+        return PathOfBuildingAPI(xml_bytes)
+    except ValidationError as e:
+        # Convert ValidationError to ParsingError for invalid XML structure
+        if "Required element" in str(e) or "not found in XML" in str(e):
+            raise ParsingError(f"Invalid XML structure: {e}") from e
+        raise
 
 
 def from_import_code(import_code: str) -> PathOfBuildingAPI:
@@ -791,7 +869,13 @@ def from_import_code(import_code: str) -> PathOfBuildingAPI:
     """
     InputValidator.validate_import_code(import_code)
     xml_bytes = _fetch_xml_from_import_code(import_code)
-    return PathOfBuildingAPI(xml_bytes)
+    try:
+        return PathOfBuildingAPI(xml_bytes)
+    except ValidationError as e:
+        # Convert ValidationError to ParsingError for invalid XML structure
+        if "Required element" in str(e) or "not found in XML" in str(e):
+            raise ParsingError(f"Invalid XML structure: {e}") from e
+        raise
 
 
 def create_build() -> BuildBuilder:

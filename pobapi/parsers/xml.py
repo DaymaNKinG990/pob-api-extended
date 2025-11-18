@@ -1,10 +1,14 @@
 """XML parsers for different parts of Path of Building data."""
 
+import logging
+
 from lxml.etree import Element
 
 from pobapi.exceptions import ParsingError
 from pobapi.interfaces import BuildParser
 from pobapi.util import _get_stat, _get_text, _skill_tree_nodes
+
+logger = logging.getLogger(__name__)
 
 __all__ = [
     "DefaultBuildParser",
@@ -13,6 +17,21 @@ __all__ = [
     "ItemsParser",
     "TreesParser",
 ]
+
+
+def _safe_int(value: str | bool | None, default: int | None = 0) -> int | None:
+    """Safely convert a value to int, returning default on failure.
+
+    :param value: Value to convert to int.
+    :param default: Default value to return if conversion fails.
+    :return: Converted integer or default value.
+    """
+    if not value or value is True:
+        return default
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
 
 
 class BuildInfoParser:
@@ -43,6 +62,32 @@ class SkillsParser:
     """Parser for skills and skill groups."""
 
     @staticmethod
+    def _parse_skill_element(skill: Element) -> dict:
+        """Parse a single Skill element into a dictionary.
+
+        :param skill: Skill XML element.
+        :return: Dictionary with skill data (enabled, label,
+            main_active_skill, source, abilities).
+        """
+        main_active = skill.get("mainActiveSkill")
+        main_active_skill = None
+        if main_active and main_active != "nil" and main_active.strip():
+            try:
+                main_active_skill = int(main_active)
+            except ValueError:
+                logger.warning(
+                    f"Invalid mainActiveSkill value '{main_active}' "
+                    f"for skill '{skill.get('label')}', expected integer"
+                )
+        return {
+            "enabled": skill.get("enabled") == "true",
+            "label": skill.get("label"),
+            "main_active_skill": main_active_skill,
+            "source": skill.get("source"),
+            "abilities": list(skill),
+        }
+
+    @staticmethod
     def parse_skill_groups(xml_root: Element) -> list[dict]:
         """Parse skill groups from XML.
 
@@ -60,37 +105,11 @@ class SkillsParser:
             # New structure: Skills -> SkillSet -> Skill
             for skill_set in skill_sets:
                 for skill in skill_set.findall("Skill"):
-                    skill_groups.append(
-                        {
-                            "enabled": skill.get("enabled") == "true",
-                            "label": skill.get("label"),
-                            "main_active_skill": (
-                                int(main_active)
-                                if (main_active := skill.get("mainActiveSkill"))
-                                and main_active != "nil"
-                                else None
-                            ),
-                            "source": skill.get("source"),
-                            "abilities": list(skill),
-                        }
-                    )
+                    skill_groups.append(SkillsParser._parse_skill_element(skill))
         else:
             # Old structure: Skills -> Skill (direct)
             for skill in skills_element.findall("Skill"):
-                skill_groups.append(
-                    {
-                        "enabled": skill.get("enabled") == "true",
-                        "label": skill.get("label"),
-                        "main_active_skill": (
-                            int(main_active)
-                            if (main_active := skill.get("mainActiveSkill"))
-                            and main_active != "nil"
-                            else None
-                        ),
-                        "source": skill.get("source"),
-                        "abilities": list(skill),
-                    }
-                )
+                skill_groups.append(SkillsParser._parse_skill_element(skill))
         return skill_groups
 
 
@@ -112,9 +131,21 @@ class ItemsParser:
         for item_element in items_element.findall("Item"):
             variant = item_element.get("variant")
             alt_variant = item_element.get("variantAlt")
-            mod_ranges = [
-                float(i.get("range")) for i in item_element.findall("ModRange")
-            ]
+            mod_ranges = []
+            for mod_range_element in item_element.findall("ModRange"):
+                range_attr = mod_range_element.get("range")
+                if range_attr is None:
+                    logger.warning(
+                        "ModRange element missing 'range' attribute, skipping"
+                    )
+                    continue
+                try:
+                    mod_ranges.append(float(range_attr))
+                except (ValueError, TypeError) as e:
+                    logger.warning(
+                        f"Failed to parse ModRange 'range' attribute "
+                        f"'{range_attr}' as float: {e}, skipping"
+                    )
             item_text = (
                 item_element.text.strip("\n\r\t").splitlines()
                 if item_element.text
@@ -130,30 +161,29 @@ class ItemsParser:
             else:
                 rarity = "Normal"
             name = item_text[1] if len(item_text) > 1 else ""
+            # For items with variant, name might be empty, use base as fallback
+            if not name and variant is not None:
+                name = item_text[2] if len(item_text) > 2 else "Unknown"
             base = (
                 name
                 if rarity in ("Normal", "Magic")
-                else (item_text[2] if len(item_text) > 2 else name)
+                else (item_text[2] if len(item_text) > 2 else name or "Unknown")
             )
             uid = _get_stat(item_text, "Unique ID: ")
             shaper = bool(_get_stat(item_text, "Shaper Item"))
             elder = bool(_get_stat(item_text, "Elder Item"))
             crafted = bool(_get_stat(item_text, "{crafted}"))
             _quality = _get_stat(item_text, "Quality: ")
-            quality = int(_quality) if _quality else None
+            quality = _safe_int(_quality, None) if _quality else None
             _sockets = _get_stat(item_text, "Sockets: ")
             sockets = (
                 tuple(tuple(group.split("-")) for group in _sockets.split())
                 if isinstance(_sockets, str) and _sockets
                 else None
             )
-            level_req = int(_get_stat(item_text, "LevelReq: ") or 0)
-            item_level = int(_get_stat(item_text, "Item Level: ") or 1)
-            implicit = (
-                int(_get_stat(item_text, "Implicits: "))
-                if _get_stat(item_text, "Implicits: ")
-                else 0
-            )
+            level_req = _safe_int(_get_stat(item_text, "LevelReq: "), 0)
+            item_level = _safe_int(_get_stat(item_text, "Item Level: "), 1)
+            implicit = _safe_int(_get_stat(item_text, "Implicits: "), 0)
             item_text_processed = _get_text(item_text, variant, alt_variant, mod_ranges)
 
             items.append(
@@ -194,11 +224,20 @@ class ItemsParser:
             for slot in item_set.findall("Slot"):
                 slot_name = constants.SET_MAP.get(slot.get("name"))
                 if slot_name:
-                    item_id = (
-                        int(slot.get("itemId")) - 1
-                        if slot.get("itemId") != "0"
-                        else None
-                    )
+                    raw_item = slot.get("itemId")
+                    if raw_item == "0":
+                        item_id = None
+                    else:
+                        try:
+                            item_id = int(raw_item) - 1
+                        except (TypeError, ValueError):
+                            logger.debug(
+                                "Invalid itemId value '%s' in slot '%s', "
+                                "treating as None",
+                                raw_item,
+                                slot.get("name"),
+                            )
+                            item_id = None
                     slots[slot_name] = item_id
             item_sets.append(slots)
         return item_sets
@@ -234,9 +273,35 @@ class TreesParser:
                 socket_elements = sockets_element.findall("Socket")
             else:
                 socket_elements = spec.findall("Socket")
-            sockets = {
-                int(s.get("nodeId")): int(s.get("itemId")) for s in socket_elements
-            }
+            sockets = {}
+            for idx, s in enumerate(socket_elements):
+                node_id_attr = s.get("nodeId")
+                item_id_attr = s.get("itemId")
+
+                if node_id_attr is None or item_id_attr is None:
+                    logger.warning(
+                        "Skipping socket at index %d: missing attributes "
+                        "(nodeId=%r, itemId=%r)",
+                        idx,
+                        node_id_attr,
+                        item_id_attr,
+                    )
+                    continue
+
+                try:
+                    node_id = int(node_id_attr)
+                    item_id = int(item_id_attr)
+                    sockets[node_id] = item_id
+                except (ValueError, TypeError) as e:
+                    logger.warning(
+                        "Skipping socket at index %d: invalid numeric values "
+                        "(nodeId=%r, itemId=%r): %s",
+                        idx,
+                        node_id_attr,
+                        item_id_attr,
+                        e,
+                    )
+                    continue
             trees.append({"url": url, "nodes": nodes, "sockets": sockets})
         return trees
 

@@ -1,6 +1,9 @@
 """Unit tests for cache module."""
 
 import time
+from datetime import datetime, timedelta
+
+from freezegun import freeze_time
 
 from pobapi.cache import Cache, cached, clear_cache, get_cache
 
@@ -21,19 +24,25 @@ class TestCache:
 
     def test_expiry(self):
         """Test cache expiry."""
-        cache = Cache(default_ttl=1)  # 1 second TTL
-        cache.set("key1", "value1")
-        assert cache.get("key1") == "value1"
-        time.sleep(1.1)  # Wait for expiry
-        assert cache.get("key1") is None
+        base_time = datetime(2024, 1, 1, 0, 0, 0)
+        with freeze_time(base_time) as frozen_time:
+            cache = Cache(default_ttl=1)  # 1 second TTL
+            cache.set("key1", "value1")
+            assert cache.get("key1") == "value1"
+            # Advance time by 1.1 seconds
+            frozen_time.tick(timedelta(seconds=1.1))
+            assert cache.get("key1") is None
 
     def test_custom_ttl(self):
         """Test custom TTL."""
-        cache = Cache(default_ttl=10)
-        cache.set("key1", "value1", ttl=1)
-        assert cache.get("key1") == "value1"
-        time.sleep(1.1)
-        assert cache.get("key1") is None
+        base_time = datetime(2024, 1, 1, 0, 0, 0)
+        with freeze_time(base_time) as frozen_time:
+            cache = Cache(default_ttl=10)
+            cache.set("key1", "value1", ttl=1)
+            assert cache.get("key1") == "value1"
+            # Advance time by 1.1 seconds
+            frozen_time.tick(timedelta(seconds=1.1))
+            assert cache.get("key1") is None
 
     def test_clear(self):
         """Test clearing cache."""
@@ -91,11 +100,18 @@ class TestCache:
         assert cache.get("key2") == "value2"
 
     def test_evict_oldest_empty_cache(self):
-        """Test _evict_oldest with empty cache."""
-        cache = Cache(default_ttl=10, max_size=2)
-        # Should not raise error when cache is empty
-        cache._evict_oldest()
-        assert cache.size() == 0
+        """Test eviction when inserting into full cache via public API."""
+        cache = Cache(default_ttl=10, max_size=1)
+        # Insert first entry
+        cache.set("key1", "value1")
+        assert cache.size() == 1
+        assert cache.get("key1") == "value1"
+        # Insert second entry should evict first (cache is full)
+        cache.set("key2", "value2")
+        # Verify eviction occurred
+        assert cache.size() == 1  # Should not exceed max_size
+        assert cache.get("key1") is None  # Oldest entry evicted
+        assert cache.get("key2") == "value2"  # New entry present
 
 
 class TestCachedDecorator:
@@ -122,20 +138,23 @@ class TestCachedDecorator:
 
     def test_cache_expiry(self):
         """Test cache expiry for decorated function."""
-        call_count = 0
-        test_cache = Cache(default_ttl=1)
+        base_time = datetime(2024, 1, 1, 0, 0, 0)
+        with freeze_time(base_time) as frozen_time:
+            call_count = 0
+            test_cache = Cache(default_ttl=1)
 
-        @cached(ttl=1, cache_instance=test_cache)
-        def test_func(x: int) -> int:
-            nonlocal call_count
-            call_count += 1
-            return x * 2
+            @cached(ttl=1, cache_instance=test_cache)
+            def test_func(x: int) -> int:
+                nonlocal call_count
+                call_count += 1
+                return x * 2
 
-        test_func(5)
-        assert call_count == 1
-        time.sleep(1.1)
-        test_func(5)
-        assert call_count == 2  # Should call again after expiry
+            test_func(5)
+            assert call_count == 1
+            # Advance time by 1.1 seconds
+            frozen_time.tick(timedelta(seconds=1.1))
+            test_func(5)
+            assert call_count == 2  # Should call again after expiry
 
     def test_different_arguments(self):
         """Test that different arguments create different cache entries."""

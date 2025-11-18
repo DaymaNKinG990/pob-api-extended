@@ -83,9 +83,37 @@ class BuildXMLSerializer:
         items_elem.set("activeItemSet", "1")  # 1-based index, default to first set
         for item in builder.items:
             item_elem = SubElement(items_elem, "Item")
-            # Set item text
+            # Set item text - generate proper format if text is empty
             if item.text:
                 item_elem.text = item.text
+            else:
+                # Generate proper item text format from item properties
+                # This ensures name and base can be parsed correctly
+                item_text_lines = [
+                    f"Rarity: {item.rarity}",
+                    item.name,
+                    item.base,
+                ]
+                if item.shaper:
+                    item_text_lines.append("Shaper Item")
+                if item.elder:
+                    item_text_lines.append("Elder Item")
+                if item.crafted:
+                    item_text_lines.append("{crafted}")
+                if item.quality is not None:
+                    item_text_lines.append(f"Quality: {item.quality}")
+                if item.sockets:
+                    sockets_str = " ".join("-".join(group) for group in item.sockets)
+                    item_text_lines.append(f"Sockets: {sockets_str}")
+                if item.level_req is not None:
+                    item_text_lines.append(f"LevelReq: {item.level_req}")
+                if item.item_level is not None:
+                    item_text_lines.append(f"Item Level: {item.item_level}")
+                if item.implicit:
+                    item_text_lines.append(f"Implicits: {item.implicit}")
+                if item.uid:
+                    item_text_lines.append(f"Unique ID: {item.uid}")
+                item_elem.text = "\n".join(item_text_lines)
 
         # Item sets
         for item_set in builder.item_sets:

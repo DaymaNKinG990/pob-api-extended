@@ -1,0 +1,59 @@
+# CodeRabbit AI Configuration
+# This file configures CodeRabbit AI for code review of the entire project
+
+language: python
+project_type: python
+
+# Paths to include in review
+paths:
+  - pobapi/
+  - tests/
+  - test_cases/
+  - docs/
+  - scripts/
+  - utils/
+  - examples/
+  - demo_modules/
+  - data/
+  - pyproject.toml
+  - tests/pytest.ini
+  - tests/ruff.toml
+  - tests/Makefile
+
+# Paths to exclude from review
+exclude_paths:
+  - __pycache__/
+  - .venv/
+  - .git/
+  - htmlcov/
+  - .pytest_cache/
+  - "*.pyc"
+  - uv.lock
+
+# Review settings
+review:
+  # Review all files in the project
+  scope: full
+
+  # Focus areas for review
+  focus:
+    - code_quality
+    - best_practices
+    - performance
+    - security
+    - maintainability
+    - type_safety
+    - test_coverage
+
+# Python-specific settings
+python:
+  version: "3.13"
+  type_checker: mypy
+  linter: ruff
+  test_framework: pytest
+
+# Ignore patterns (if any specific files should be skipped)
+ignore:
+  - "**/__pycache__/**"
+  - "**/.venv/**"
+  - "**/htmlcov/**"

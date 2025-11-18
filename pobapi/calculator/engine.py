@@ -13,7 +13,6 @@ from pobapi import stats
 from pobapi.calculator.config_modifier_parser import ConfigModifierParser
 from pobapi.calculator.damage import DamageCalculator
 from pobapi.calculator.defense import DefenseCalculator
-from pobapi.calculator.item_modifier_parser import ItemModifierParser
 from pobapi.calculator.minion import MinionCalculator
 from pobapi.calculator.mirage import MirageCalculator
 from pobapi.calculator.modifiers import ModifierSystem
@@ -225,6 +224,8 @@ class CalculationEngine:
             items = build_data.items
             for item in items:
                 # Parse item text to extract modifiers
+                from pobapi.parsers.item_modifier import ItemModifierParser
+
                 item_modifiers = ItemModifierParser.parse_item_text(
                     item.text, source=f"item:{item.name}"
                 )
